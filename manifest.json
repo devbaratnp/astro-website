@@ -1,0 +1,13 @@
+{
+    "name": "श्रीहरि ज्योतिष परामर्श केन्द्र",
+    "short_name": "श्रीहरि ज्योतिष",
+    "description": "ज्योतिष तथा कर्मकाण्डमा १८ वर्षभन्दा बढी अनुभव — अनलाइन परामर्श",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#fffaf0",
+    "theme_color": "#711d29",
+    "icons": [
+        { "src": "/assets/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+        { "src": "/assets/logo.svg", "sizes": "any", "type": "image/svg+xml" }
+    ]
+}

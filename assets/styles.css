@@ -202,6 +202,12 @@ textarea{min-height:125px;resize:vertical}
 .back-top.show{opacity:1;pointer-events:auto;transform:none}
 .reveal{opacity:0;transform:translateY(22px);transition:.65s ease}
 .reveal.visible{opacity:1;transform:none}
+.lang-toggle{
+  border:1px solid rgba(113,29,41,.22);background:rgba(255,255,255,.55);color:var(--maroon);
+  min-width:44px;height:44px;border-radius:14px;font-weight:800;font-size:.85rem;
+  cursor:pointer;transition:.2s;
+}
+.lang-toggle:hover{background:var(--gold-light);border-color:var(--gold)}
 @media(max-width:960px){
   .topbar .container{justify-content:center}.topbar-links:first-child{display:none}
   .nav-links{position:fixed;left:16px;right:16px;top:96px;background:#fffaf0;border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow);display:grid;gap:4px;opacity:0;transform:translateY(-12px);pointer-events:none;transition:.25s}

@@ -23,38 +23,60 @@
 </div>
 <header class="site-header">
   <nav class="navbar container" aria-label="मुख्य नेभिगेसन">
-    <a class="brand" href="index.html">
+    <a class="brand" href="index.php">
       <img src="assets/logo.svg" alt="श्रीहरि ज्योतिष परामर्श केन्द्र लोगो">
       <span><strong>श्रीहरि ज्योतिष</strong><small>Sitaram Timsina · Nepali Astrologer</small></span>
     </a>
-    <div class="nav-links"><a href="index.html" class="">गृहपृष्ठ</a><a href="about.html" class="">हाम्रो बारेमा</a><a href="services.html" class="">सेवाहरू</a><a href="appointment.html" class="active">परामर्श</a><a href="contact.html" class="">सम्पर्क</a></div>
+    <div class="nav-links"><a href="index.php">गृहपृष्ठ</a><a href="about.php">हाम्रो बारेमा</a><a href="services.php">सेवाहरू</a><a href="kundali.php">कुण्डली</a><a href="panchang.php">पञ्चाङ्ग</a><a href="appointment.php" class="active">परामर्श</a><a href="contact.php">सम्पर्क</a></div>
     <div class="nav-actions">
-      <a class="btn btn-primary" href="appointment.html">परामर्श बुक गर्नुहोस्</a>
+      <a class="btn btn-primary" href="appointment.php">परामर्श बुक गर्नुहोस्</a>
       <button class="menu-toggle" aria-label="मेनु खोल्नुहोस्" aria-expanded="false">☰</button>
     </div>
   </nav>
 </header>
 <main>
-<section class="page-hero"><div class="container"><div class="eyebrow">समय लिनुहोस्</div><h1>परामर्श बुकिङ</h1><div class="breadcrumb"><a href="index.html">गृहपृष्ठ</a><span>›</span><span>परामर्श</span></div></div></section>
+<section class="page-hero"><div class="container"><div class="eyebrow">समय लिनुहोस्</div><h1>परामर्श बुकिङ</h1><div class="breadcrumb"><a href="index.php">गृहपृष्ठ</a><span>›</span><span>परामर्श</span></div></div></section>
 <section class="section"><div class="container contact-grid">
 <div class="reveal"><div class="eyebrow">बुकिङ प्रक्रिया</div><h2 class="content-title">आफ्नो विवरण पठाउनुहोस्</h2><p>फाराम भरेपछि तयार सन्देश WhatsApp मा खुल्नेछ। त्यसपछि समय, माध्यम र शुल्क सीधै पुष्टि गर्न सकिन्छ।</p>
 <ul class="check-list"><li>तपाईंको विवरण सुरक्षित रूपमा तपाईंले नै WhatsApp बाट पठाउनुहुन्छ</li><li>उपलब्ध समय संवादपछि निश्चित हुन्छ</li><li>जन्म विवरण सही भए अध्ययन अझ उपयोगी हुन्छ</li></ul>
 <div class="notice"><strong>नोट:</strong> जन्म समय थाहा नभए पनि आफ्नो अवस्थाबारे सन्देश पठाउन सक्नुहुन्छ।</div></div>
-<form class="form-card reveal" data-whatsapp data-form-title="नयाँ ज्योतिष परामर्श अनुरोध">
-<h2 style="margin-top:0;color:var(--maroon)">परामर्श अनुरोध फाराम</h2>
-<div class="form-grid">
-<div class="field"><label>पूरा नाम *</label><input name="नाम" required placeholder="तपाईंको पूरा नाम"></div>
-<div class="field"><label>फोन / WhatsApp *</label><input name="सम्पर्क नम्बर" required inputmode="tel" placeholder="+977..."></div>
-<div class="field"><label>परामर्शको विषय *</label><select name="परामर्श सेवा" required><option value="">छनोट गर्नुहोस्</option><option>जन्मकुण्डली विश्लेषण</option><option>विवाह तथा गुण मिलान</option><option>ग्रहदशा तथा गोचर</option><option>वास्तु परामर्श</option><option>पूजा तथा कर्मकाण्ड</option><option>अन्य जिज्ञासा</option></select></div>
-<div class="field"><label>मनपर्ने परामर्श समय</label><input name="मनपर्ने समय" placeholder="जस्तै: साँझ ६ बजेपछि"></div>
-<div class="field"><label>जन्म मिति</label><input name="जन्म मिति" type="date"></div>
-<div class="field"><label>जन्म समय</label><input name="जन्म समय" type="time"></div>
-<div class="field full"><label>जन्म स्थान</label><input name="जन्म स्थान" placeholder="गाउँ/सहर, जिल्ला, देश"></div>
-<div class="field full"><label>तपाईंको जिज्ञासा *</label><textarea name="जिज्ञासा" required placeholder="छोटो रूपमा आफ्नो समस्या वा जिज्ञासा लेख्नुहोस्"></textarea></div>
-</div>
-<button class="btn btn-whatsapp" type="submit">WhatsApp मा अनुरोध पठाउनुहोस्</button>
-<div class="form-status" role="status"></div>
-<p class="form-note">यो फारामले विवरण वेबसाइटमा भण्डारण गर्दैन। सन्देश तपाईंको WhatsApp बाट मात्र पठाइन्छ।</p>
+<form class="form-card reveal" id="appointmentForm">
+    <h2 style="margin-top:0;color:var(--maroon)">परामर्श अनुरोध फाराम</h2>
+    <div class="form-grid">
+        <div class="field"><label>पूरा नाम *</label><input name="name" required placeholder="तपाईंको पूरा नाम"></div>
+        <div class="field"><label>फोन / WhatsApp *</label><input name="phone" required inputmode="tel" placeholder="+977..."></div>
+        <div class="field"><label>इमेल</label><input name="email" type="email" placeholder="example@email.com"></div>
+        <div class="field"><label>परामर्शको विषय *</label>
+            <select name="service_type" required>
+                <option value="">छनोट गर्नुहोस्</option>
+                <option value="kundali">जन्मकुण्डली विश्लेषण</option>
+                <option value="marriage">विवाह तथा गुण मिलान</option>
+                <option value="grahadasha">ग्रहदशा तथा गोचर</option>
+                <option value="vastu">वास्तु परामर्श</option>
+                <option value="pooja">पूजा तथा कर्मकाण्ड</option>
+                <option value="general">अन्य जिज्ञासा</option>
+            </select>
+        </div>
+        <div class="field"><label>मिति</label><input name="preferred_date" type="date"></div>
+        <div class="field"><label>समय</label><input name="preferred_time" type="time"></div>
+        <div class="field"><label>परामर्श माध्यम</label>
+            <select name="consultation_mode">
+                <option value="whatsapp">WhatsApp</option>
+                <option value="phone">फोन</option>
+                <option value="video">भिडियो (Zoom/Meet)</option>
+                <option value="inperson">व्यक्तिगत</option>
+            </select>
+        </div>
+        <div class="field"><label>जन्म मिति</label><input name="birth_date" type="date"></div>
+        <div class="field"><label>जन्म समय</label><input name="birth_time" type="time"></div>
+        <div class="field full"><label>जन्म स्थान</label><input name="birth_place" placeholder="गाउँ/सहर, जिल्ला, देश"></div>
+        <div class="field full"><label>तपाईंको जिज्ञासा *</label>
+            <textarea name="message" required placeholder="छोटो रूपमा आफ्नो समस्या वा जिज्ञासा लेख्नुहोस्"></textarea>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit" id="submitBtn">परामर्श अनुरोध पठाउनुहोस्</button>
+    <div class="form-status" role="status" id="formStatus"></div>
+    <p class="form-note">तपाईंको विवरण सुरक्षित रूपमा भण्डारण गरिन्छ। वैकल्पिक रूपमा, <a href="https://wa.me/9779844639228" target="_blank">WhatsApp</a> मा पनि पठाउन सक्नुहुन्छ।</p>
 </form>
 </div></section>
 </main>
@@ -63,11 +85,11 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a class="brand" href="index.html"><img src="assets/logo.svg" alt=""><span><strong style="color:#f4d782">श्रीहरि ज्योतिष परामर्श केन्द्र</strong><small style="color:#d5bdb5">परम्परा, अनुभव र व्यक्तिगत मार्गदर्शन</small></span></a>
+        <a class="brand" href="index.php"><img src="assets/logo.svg" alt=""><span><strong style="color:#f4d782">श्रीहरि ज्योतिष परामर्श केन्द्र</strong><small style="color:#d5bdb5">परम्परा, अनुभव र व्यक्तिगत मार्गदर्शन</small></span></a>
         <p>ज्योतिष तथा कर्मकाण्ड विषयमा १८ वर्षभन्दा बढी अनुभवसहित नेपाल तथा विश्वभर अनलाइन परामर्श।</p>
         <div class="social-links"><a class="social-link" href="https://www.facebook.com/share/19AnGtrMox/" target="_blank" rel="noopener" aria-label="Facebook">f</a><a class="social-link" href="https://youtube.com/@astrogurusitaram3m?si=x37KRR6Wv4PldyRq" target="_blank" rel="noopener" aria-label="YouTube">▶</a></div>
       </div>
-      <div><h3 class="footer-title">द्रुत लिंक</h3><div class="footer-links"><a href="about.html">हाम्रो बारेमा</a><a href="services.html">सेवाहरू</a><a href="appointment.html">परामर्श बुकिङ</a><a href="contact.html">सम्पर्क</a></div></div>
+      <div><h3 class="footer-title">द्रुत लिंक</h3><div class="footer-links"><a href="about.php">हाम्रो बारेमा</a><a href="services.php">सेवाहरू</a><a href="appointment.php">परामर्श बुकिङ</a><a href="contact.php">सम्पर्क</a></div></div>
       <div><h3 class="footer-title">सम्पर्क</h3><div class="footer-links"><a href="tel:+9779844639228">+977 9844639228</a><a href="mailto:shreeharijyotishparamarsakendr@gmail.com">shreeharijyotishparamarsakendr@gmail.com</a><a href="https://wa.me/9779844639228" target="_blank" rel="noopener">WhatsApp मा सन्देश</a><span>अनलाइन परामर्श उपलब्ध</span></div></div>
     </div>
     <div class="footer-bottom"><span>© <span data-year></span> श्रीहरि ज्योतिष परामर्श केन्द्र। सर्वाधिकार सुरक्षित।</span><span>www.astroshreehari.com</span></div>

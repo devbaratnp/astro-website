@@ -23,13 +23,13 @@
 </div>
 <header class="site-header">
   <nav class="navbar container" aria-label="मुख्य नेभिगेसन">
-    <a class="brand" href="index.html">
+    <a class="brand" href="index.php">
       <img src="assets/logo.svg" alt="श्रीहरि ज्योतिष परामर्श केन्द्र लोगो">
       <span><strong>श्रीहरि ज्योतिष</strong><small>Sitaram Timsina · Nepali Astrologer</small></span>
     </a>
-    <div class="nav-links"><a href="index.html" class="active">गृहपृष्ठ</a><a href="about.html" class="">हाम्रो बारेमा</a><a href="services.html" class="">सेवाहरू</a><a href="appointment.html" class="">परामर्श</a><a href="contact.html" class="">सम्पर्क</a></div>
+    <div class="nav-links"><a href="index.php" class="active">गृहपृष्ठ</a><a href="about.php" class="">हाम्रो बारेमा</a><a href="services.php" class="">सेवाहरू</a><a href="appointment.php" class="">परामर्श</a><a href="contact.php" class="">सम्पर्क</a></div>
     <div class="nav-actions">
-      <a class="btn btn-primary" href="appointment.html">परामर्श बुक गर्नुहोस्</a>
+      <a class="btn btn-primary" href="appointment.php">परामर्श बुक गर्नुहोस्</a>
       <button class="menu-toggle" aria-label="मेनु खोल्नुहोस्" aria-expanded="false">☰</button>
     </div>
   </nav>
@@ -41,7 +41,7 @@
    <div class="eyebrow">श्रीहरि ज्योतिष परामर्श केन्द्र</div>
    <h1>परम्परागत ज्ञानबाट <span>स्पष्ट मार्गदर्शन</span></h1>
    <p class="hero-lead">नेपाली ज्योतिषी <strong>सीताराम तिम्सिना</strong>बाट ज्योतिष तथा कर्मकाण्ड विषयमा १८ वर्षभन्दा बढी अनुभवसहित व्यक्तिगत र गोपनीय परामर्श।</p>
-   <div class="hero-actions"><a class="btn btn-primary" href="appointment.html">परामर्श बुक गर्नुहोस्</a><a class="btn btn-whatsapp" href="https://wa.me/9779844639228" target="_blank" rel="noopener">WhatsApp गर्नुहोस्</a></div>
+   <div class="hero-actions"><a class="btn btn-primary" href="appointment.php">परामर्श बुक गर्नुहोस्</a><a class="btn btn-whatsapp" href="https://wa.me/9779844639228" target="_blank" rel="noopener">WhatsApp गर्नुहोस्</a></div>
    <div class="trust-row"><div class="trust-item"><span class="trust-icon">✓</span>१८+ वर्षको अनुभव</div><div class="trust-item"><span class="trust-icon">⌁</span>अनलाइन परामर्श</div><div class="trust-item"><span class="trust-icon">◉</span>गोपनीय संवाद</div></div>
   </div>
   <div class="hero-visual reveal" aria-label="वैदिक ज्योतिष प्रतीक">
@@ -54,12 +54,12 @@
   <div class="section-header reveal"><div class="eyebrow">हाम्रा सेवाहरू</div><h2>जीवनका महत्वपूर्ण पक्षका लागि ज्योतिषीय परामर्श</h2><p>प्रत्येक परामर्श व्यक्तिको विवरण र आवश्यकताअनुसार व्यक्तिगत रूपमा गरिन्छ।</p></div>
   
 <div class="grid grid-3">
-  <article class="card reveal"><div class="service-icon">✦</div><h3>जन्मकुण्डली विश्लेषण</h3><p>जन्म मिति, समय र स्थानका आधारमा ग्रहस्थिति, स्वभाव र जीवनका प्रमुख पक्षको व्यक्तिगत अध्ययन।</p><a class="card-link" href="appointment.html">परामर्श लिनुहोस् →</a></article>
-  <article class="card reveal"><div class="service-icon">⚭</div><h3>विवाह तथा गुण मिलान</h3><p>विवाहपूर्व कुण्डली मिलान, अनुकूलता र आवश्यक वैदिक परामर्श।</p><a class="card-link" href="appointment.html">परामर्श लिनुहोस् →</a></article>
-  <article class="card reveal"><div class="service-icon">☉</div><h3>ग्रहदशा परामर्श</h3><p>वर्तमान ग्रहदशा, गोचर र जीवनमा देखिएका चुनौतीबारे व्यवस्थित ज्योतिषीय मार्गदर्शन।</p><a class="card-link" href="appointment.html">परामर्श लिनुहोस् →</a></article>
-  <article class="card reveal"><div class="service-icon">⌂</div><h3>वास्तु परामर्श</h3><p>घर, कार्यालय वा व्यवसायिक स्थानका लागि आधारभूत वास्तु विश्लेषण र सुधार सुझाव।</p><a class="card-link" href="appointment.html">परामर्श लिनुहोस् →</a></article>
-  <article class="card reveal"><div class="service-icon">🪔</div><h3>पूजा तथा कर्मकाण्ड</h3><p>सनातन विधिअनुसार आवश्यक पूजा, संस्कार र कर्मकाण्ड सम्बन्धी मार्गदर्शन।</p><a class="card-link" href="contact.html">सम्पर्क गर्नुहोस् →</a></article>
-  <article class="card reveal"><div class="service-icon">▣</div><h3>अनलाइन ज्योतिष परामर्श</h3><p>नेपाल वा विदेशबाट WhatsApp वा अनलाइन माध्यममार्फत समय मिलाएर व्यक्तिगत परामर्श।</p><a class="card-link" href="appointment.html">समय लिनुहोस् →</a></article>
+  <article class="card reveal"><div class="service-icon">✦</div><h3>जन्मकुण्डली विश्लेषण</h3><p>जन्म मिति, समय र स्थानका आधारमा ग्रहस्थिति, स्वभाव र जीवनका प्रमुख पक्षको व्यक्तिगत अध्ययन।</p><a class="card-link" href="appointment.php">परामर्श लिनुहोस् →</a></article>
+  <article class="card reveal"><div class="service-icon">⚭</div><h3>विवाह तथा गुण मिलान</h3><p>विवाहपूर्व कुण्डली मिलान, अनुकूलता र आवश्यक वैदिक परामर्श।</p><a class="card-link" href="appointment.php">परामर्श लिनुहोस् →</a></article>
+  <article class="card reveal"><div class="service-icon">☉</div><h3>ग्रहदशा परामर्श</h3><p>वर्तमान ग्रहदशा, गोचर र जीवनमा देखिएका चुनौतीबारे व्यवस्थित ज्योतिषीय मार्गदर्शन।</p><a class="card-link" href="appointment.php">परामर्श लिनुहोस् →</a></article>
+  <article class="card reveal"><div class="service-icon">⌂</div><h3>वास्तु परामर्श</h3><p>घर, कार्यालय वा व्यवसायिक स्थानका लागि आधारभूत वास्तु विश्लेषण र सुधार सुझाव।</p><a class="card-link" href="appointment.php">परामर्श लिनुहोस् →</a></article>
+  <article class="card reveal"><div class="service-icon">🪔</div><h3>पूजा तथा कर्मकाण्ड</h3><p>सनातन विधिअनुसार आवश्यक पूजा, संस्कार र कर्मकाण्ड सम्बन्धी मार्गदर्शन।</p><a class="card-link" href="contact.php">सम्पर्क गर्नुहोस् →</a></article>
+  <article class="card reveal"><div class="service-icon">▣</div><h3>अनलाइन ज्योतिष परामर्श</h3><p>नेपाल वा विदेशबाट WhatsApp वा अनलाइन माध्यममार्फत समय मिलाएर व्यक्तिगत परामर्श।</p><a class="card-link" href="appointment.php">समय लिनुहोस् →</a></article>
 </div>
  </div>
 </section>
@@ -76,7 +76,7 @@
   <div class="portrait-card reveal"><div class="portrait-initials"><div class="circle">सी.ति.</div></div><div class="portrait-note">यहाँ सीताराम तिम्सिनाज्यूको वास्तविक व्यावसायिक फोटो राख्न सकिन्छ।</div></div>
   <div class="reveal"><div class="eyebrow">ज्योतिषी परिचय</div><h2 class="content-title">सीताराम तिम्सिना</h2><p><strong>नेपाली ज्योतिषी</strong> तथा ज्योतिष र कर्मकाण्डका अनुभवी परामर्शदाता। १८ वर्षभन्दा बढी समयदेखि परम्परागत वैदिक ज्ञानलाई व्यवहारिक र बुझ्न सजिलो मार्गदर्शनसँग जोड्दै आउनुभएको छ।</p>
   <ul class="check-list"><li>जन्मकुण्डली र ग्रहदशाको व्यक्तिगत अध्ययन</li><li>विवाह, पारिवारिक र जीवनसम्बन्धी परामर्श</li><li>पूजा, संस्कार तथा कर्मकाण्ड मार्गदर्शन</li><li>WhatsApp र अनलाइन माध्यमबाट परामर्श</li></ul>
-  <a class="btn btn-outline" href="about.html">विस्तृत परिचय हेर्नुहोस्</a></div>
+  <a class="btn btn-outline" href="about.php">विस्तृत परिचय हेर्नुहोस्</a></div>
  </div>
 </section>
 <section class="section" style="padding-top:20px">
@@ -96,11 +96,11 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a class="brand" href="index.html"><img src="assets/logo.svg" alt=""><span><strong style="color:#f4d782">श्रीहरि ज्योतिष परामर्श केन्द्र</strong><small style="color:#d5bdb5">परम्परा, अनुभव र व्यक्तिगत मार्गदर्शन</small></span></a>
+        <a class="brand" href="index.php"><img src="assets/logo.svg" alt=""><span><strong style="color:#f4d782">श्रीहरि ज्योतिष परामर्श केन्द्र</strong><small style="color:#d5bdb5">परम्परा, अनुभव र व्यक्तिगत मार्गदर्शन</small></span></a>
         <p>ज्योतिष तथा कर्मकाण्ड विषयमा १८ वर्षभन्दा बढी अनुभवसहित नेपाल तथा विश्वभर अनलाइन परामर्श।</p>
         <div class="social-links"><a class="social-link" href="https://www.facebook.com/share/19AnGtrMox/" target="_blank" rel="noopener" aria-label="Facebook">f</a><a class="social-link" href="https://youtube.com/@astrogurusitaram3m?si=x37KRR6Wv4PldyRq" target="_blank" rel="noopener" aria-label="YouTube">▶</a></div>
       </div>
-      <div><h3 class="footer-title">द्रुत लिंक</h3><div class="footer-links"><a href="about.html">हाम्रो बारेमा</a><a href="services.html">सेवाहरू</a><a href="appointment.html">परामर्श बुकिङ</a><a href="contact.html">सम्पर्क</a></div></div>
+      <div><h3 class="footer-title">द्रुत लिंक</h3><div class="footer-links"><a href="about.php">हाम्रो बारेमा</a><a href="services.php">सेवाहरू</a><a href="appointment.php">परामर्श बुकिङ</a><a href="contact.php">सम्पर्क</a></div></div>
       <div><h3 class="footer-title">सम्पर्क</h3><div class="footer-links"><a href="tel:+9779844639228">+977 9844639228</a><a href="mailto:shreeharijyotishparamarsakendr@gmail.com">shreeharijyotishparamarsakendr@gmail.com</a><a href="https://wa.me/9779844639228" target="_blank" rel="noopener">WhatsApp मा सन्देश</a><span>अनलाइन परामर्श उपलब्ध</span></div></div>
     </div>
     <div class="footer-bottom"><span>© <span data-year></span> श्रीहरि ज्योतिष परामर्श केन्द्र। सर्वाधिकार सुरक्षित।</span><span>www.astroshreehari.com</span></div>

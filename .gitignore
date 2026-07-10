@@ -1,0 +1,5 @@
+backend/uploads/payments/*
+assets/payments/*
+!assets/payments/bank-details.txt
+.env
+*.log

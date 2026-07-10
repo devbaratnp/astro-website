@@ -51,3 +51,64 @@ qsa('form[data-whatsapp]').forEach(form=>{
 
 const year=qs('[data-year]');
 if(year) year.textContent=new Date().getFullYear();
+
+// Appointment form submission
+const apptForm = document.getElementById('appointmentForm');
+if (apptForm) {
+    apptForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const status = document.getElementById('formStatus');
+        btn.disabled = true;
+        btn.textContent = 'पठाउँदै...';
+        status.style.display = 'block';
+        status.textContent = 'कृपया प्रतिक्षा गर्नुहोस्...';
+        status.style.background = '#fff3cd';
+        status.style.color = '#66451d';
+
+        const data = Object.fromEntries(new FormData(apptForm).entries());
+
+        try {
+            const res = await fetch('https://api.astroshreehari.com/api/appointments.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            if (result.success) {
+                status.style.background = '#d4edda';
+                status.style.color = '#155724';
+                status.textContent = '✅ तपाईंको अनुरोध सफलतापूर्वक प्राप्त भयो। हामी चाँडै सम्पर्क गर्नेछौं।';
+                apptForm.reset();
+            } else {
+                throw new Error(result.message || 'Unknown error');
+            }
+        } catch (err) {
+            status.style.background = '#f8d7da';
+            status.style.color = '#721c24';
+            status.textContent = '❌ समस्या भयो। कृपया WhatsApp मा सिधै सम्पर्क गर्नुहोस्।';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'परामर्श अनुरोध पठाउनुहोस्';
+        }
+    });
+}
+
+// Service Worker registration
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+}
+
+// Language toggle button
+const langToggle = document.createElement('button');
+langToggle.className = 'lang-toggle';
+langToggle.textContent = localStorage.getItem('lang') === 'en' ? 'ने' : 'EN';
+langToggle.addEventListener('click', () => {
+    const current = localStorage.getItem('lang') || 'ne';
+    const next = current === 'ne' ? 'en' : 'ne';
+    localStorage.setItem('lang', next);
+    langToggle.textContent = next === 'en' ? 'ने' : 'EN';
+    location.reload();
+});
+const navActions = document.querySelector('.nav-actions');
+if (navActions) navActions.prepend(langToggle);
