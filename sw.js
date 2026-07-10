@@ -1,13 +1,13 @@
-const CACHE_NAME = 'astroshreehari-v1';
+const CACHE_NAME = 'astroshreehari-v2';
 const urlsToCache = [
     '/',
-    '/index.html',
-    '/about.html',
-    '/services.html',
-    '/appointment.html',
-    '/contact.html',
-    '/kundali.html',
-    '/panchang.html',
+    '/index.php',
+    '/about.php',
+    '/services.php',
+    '/appointment.php',
+    '/contact.php',
+    '/kundali.php',
+    '/panchang.php',
     '/assets/styles.css',
     '/assets/script.js',
     '/assets/logo.svg',

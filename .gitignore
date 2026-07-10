@@ -3,3 +3,5 @@ assets/payments/*
 !assets/payments/bank-details.txt
 .env
 *.log
+
+tmp_test.php
