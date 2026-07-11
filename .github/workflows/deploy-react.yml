@@ -8,6 +8,12 @@ on:
       - ".github/workflows/deploy-react.yml"
   workflow_dispatch:
 
+env:
+  npm_config_tmp: /tmp
+  TMPDIR: /tmp
+  TMP: /tmp
+  TEMP: /tmp
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -23,7 +29,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          mkdir -p /tmp/npm-cache
           npm config set cache /tmp/npm-cache
           npm install --no-audit --no-fund
         working-directory: astro-shree-hari-source
