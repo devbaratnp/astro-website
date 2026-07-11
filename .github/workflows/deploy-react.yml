@@ -1,0 +1,41 @@
+name: Build & Deploy React Frontend
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "astro-shree-hari-source/**"
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: astro-shree-hari-source/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: astro-shree-hari-source
+
+      - name: Build React app
+        run: npm run build
+        working-directory: astro-shree-hari-source
+
+      - name: Deploy to server via SSH rsync
+        uses: easingthemes/ssh-deploy@v5.1.0
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER: ${{ secrets.SSH_USERNAME }}
+          TARGET: ${{ secrets.SSH_TARGET_DIR }}
+          SOURCE: astro-shree-hari-source/dist/
+          ARGS: -avz --delete --exclude='.git*'

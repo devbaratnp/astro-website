@@ -1,0 +1,25 @@
+RewriteEngine On
+RewriteBase /
+
+# Allow PHP backend API
+RewriteRule ^backend/ - [L]
+
+# Allow admin panel
+RewriteRule ^admin/ - [L]
+
+# Allow existing files and directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# SPA: route everything else to React index.html
+RewriteRule ^ index.html [L]
+
+# Security
+<FilesMatch "\.(env|sql|md|log)$">
+    Require all denied
+</FilesMatch>
+
+# Cache static assets
+<FilesMatch "\.(js|css|png|jpg|jpeg|webp|svg|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>

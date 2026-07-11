@@ -5,3 +5,6 @@ assets/payments/*
 *.log
 
 tmp_test.php
+
+astro-shree-hari-source/node_modules/
+astro-shree-hari-source/dist/

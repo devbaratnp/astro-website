@@ -31,6 +31,7 @@ rsync -a --delete \
   --exclude='tmp_test.php' \
   --exclude='deploy-backups/' \
   --exclude='webhook.example.php' \
+  --exclude='astro-shree-hari-source/' \
   "$REPO_DIR/" "$HTML_DIR/"
 
 # deploy webhook.php only if it doesn't already exist (preserves secret)

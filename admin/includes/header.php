@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/../backend/includes/helpers.php';
 if (!isset($_SESSION['admin_id'])) {
     header('Location: ' . BASE_URL . '/admin/index.php');
     exit;
@@ -8,13 +9,33 @@ if (!isset($_SESSION['admin_id'])) {
 $page = basename($_SERVER['PHP_SELF']);
 
 $navItems = [
-    ['page' => 'dashboard.php',   'icon' => '📊', 'label' => 'ड्यासबोर्ड'],
-    ['page' => 'appointments.php','icon' => '📅', 'label' => 'परामर्श'],
-    ['page' => 'pooja-orders.php','icon' => '🙏', 'label' => 'पूजा अर्डर'],
-    ['page' => 'payments.php',    'icon' => '💳', 'label' => 'भुक्तानी'],
-    ['page' => 'rewards.php',     'icon' => '🎁', 'label' => 'पुरस्कार'],
-    ['section' => true, 'label' => 'सेटिङ्स'],
-    ['page' => 'settings.php',    'icon' => '⚙️', 'label' => 'सेटिङ्स'],
+    ['page' => 'dashboard.php',    'icon' => '◈', 'label' => 'ड्यासबोर्ड'],
+    ['section' => true, 'label' => 'बुकिङ'],
+    ['page' => 'appointments.php','icon' => '☰', 'label' => 'परामर्श'],
+    ['page' => 'pooja-orders.php','icon' => '⊛', 'label' => 'पूजा अर्डर'],
+    ['section' => true, 'label' => 'सामग्री'],
+    ['page' => 'pooja-services.php','icon' => '✦', 'label' => 'पूजा सेवाहरू'],
+    ['page' => 'articles.php',    'icon' => '✎', 'label' => 'लेखहरू'],
+    ['page' => 'panchang.php',    'icon' => '◉', 'label' => 'पञ्चाङ्ग'],
+    ['section' => true, 'label' => 'वित्त'],
+    ['page' => 'payments.php',    'icon' => '₨', 'label' => 'भुक्तानी'],
+    ['page' => 'rewards.php',     'icon' => '★', 'label' => 'पुरस्कार'],
+    ['section' => true, 'label' => 'अन्य'],
+    ['page' => 'messages.php',    'icon' => '✉', 'label' => 'सन्देशहरू'],
+    ['page' => 'settings.php',    'icon' => '⊙', 'label' => 'सेटिङ्स'],
+];
+
+$titles = [
+    'dashboard.php' => 'ड्यासबोर्ड',
+    'appointments.php' => 'परामर्श व्यवस्थापन',
+    'pooja-orders.php' => 'पूजा अर्डर',
+    'pooja-services.php' => 'पूजा सेवाहरू',
+    'articles.php' => 'लेख व्यवस्थापन',
+    'panchang.php' => 'पञ्चाङ्ग',
+    'payments.php' => 'भुक्तानी प्रमाणिकरण',
+    'rewards.php' => 'पुरस्कार व्यवस्थापन',
+    'messages.php' => 'सन्देशहरू',
+    'settings.php' => 'सेटिङ्स',
 ];
 ?>
 <!DOCTYPE html>
@@ -28,14 +49,15 @@ $navItems = [
 </head>
 <body>
 
-<!-- Sidebar -->
 <aside class="admin-sidebar" id="sidebar">
     <div class="sidebar-brand">
-        <img src="<?= BASE_URL ?>/assets/logo.svg" alt="श्रीहरि">
-        <div class="sidebar-brand-text">
-            <strong>श्रीहरि ज्योतिष</strong>
-            <small>प्रशासन प्रणाली</small>
-        </div>
+        <a href="<?= BASE_URL ?>/admin/dashboard.php" style="display:flex;align-items:center;gap:14px;color:inherit">
+            <div class="sidebar-logo">ॐ</div>
+            <div class="sidebar-brand-text">
+                <strong>श्रीहरि ज्योतिष</strong>
+                <small>प्रशासन प्रणाली</small>
+            </div>
+        </a>
     </div>
 
     <nav class="sidebar-nav">
@@ -57,37 +79,28 @@ $navItems = [
     </div>
 
     <div class="sidebar-footer">
-        <a href="<?= BASE_URL ?>/admin/index.php?logout=1">
-            <span class="sidebar-icon">🚪</span>
+        <a href="https://www.astroshreehari.com" target="_blank" rel="noreferrer">
+            <span class="sidebar-icon">↗</span>
+            साइट हेर्नुहोस्
+        </a>
+        <a href="<?= BASE_URL ?>/admin/index.php?logout=1" style="color:#f0a098">
+            <span class="sidebar-icon">⊘</span>
             बाहिरिनुहोस्
         </a>
     </div>
 </aside>
 
-<!-- Overlay for mobile -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<!-- Main wrapper -->
 <div class="admin-wrapper">
     <header class="admin-topbar">
         <div class="admin-topbar-left">
             <button class="sidebar-toggle" id="sidebarToggle">☰</button>
-            <h2><?php
-                $titles = [
-                    'dashboard.php' => 'ड्यासबोर्ड',
-                    'appointments.php' => 'परामर्श व्यवस्थापन',
-                    'pooja-orders.php' => 'पूजा अर्डर',
-                    'payments.php' => 'भुक्तानी प्रमाणिकरण',
-                    'rewards.php' => 'पुरस्कार व्यवस्थापन',
-                    'settings.php' => 'सेटिङ्स',
-                ];
-                echo $titles[$page] ?? 'प्रशासक';
-            ?></h2>
+            <h2><?= $titles[$page] ?? 'प्रशासक' ?></h2>
         </div>
-        <div class="admin-breadcrumb">
-            <a href="<?= BASE_URL ?>/admin/dashboard.php">प्रशासक</a>
-            <span>/</span>
-            <span><?= $titles[$page] ?? $page ?></span>
+        <div class="admin-topbar-right">
+            <span class="topbar-date"><?= date('Y-m-d') ?></span>
+            <a href="<?= BASE_URL ?>/admin/index.php?logout=1" class="topbar-logout" title="बाहिरिनुहोस्">⊘</a>
         </div>
     </header>
 

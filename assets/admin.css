@@ -56,7 +56,15 @@ button,input,textarea,select{font:inherit}
   display:flex;align-items:center;gap:14px;
   border-bottom:1px solid rgba(255,255,255,.1);
 }
-.sidebar-brand img{width:44px;height:44px;flex-shrink:0}
+.sidebar-logo{
+  width:44px;height:44px;flex-shrink:0;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:14px;
+  display:grid;place-items:center;
+  font-size:1.4rem;color:var(--gold-light);
+  font-family:"Tiro Devanagari Sanskrit",serif;
+}
 .sidebar-brand-text strong{
   display:block;color:#fff;font-size:1rem;line-height:1.2;
 }
@@ -140,6 +148,23 @@ button,input,textarea,select{font:inherit}
   color:var(--maroon);font-size:1.3rem;cursor:pointer;
   align-items:center;justify-content:center;
 }
+.admin-topbar-right{
+  display:flex;align-items:center;gap:16px;
+}
+.topbar-date{
+  font-size:.82rem;color:var(--muted);
+  background:rgba(113,29,41,.06);
+  padding:6px 14px;border-radius:999px;
+  font-weight:600;
+}
+.topbar-logout{
+  width:36px;height:36px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:10px;color:var(--maroon);
+  font-size:1.1rem;transition:all .2s;
+  text-decoration:none;
+}
+.topbar-logout:hover{background:rgba(113,29,41,.08);color:#a71d2a}
 .admin-main{
   flex:1;padding:32px;
 }
@@ -225,6 +250,7 @@ button,input,textarea,select{font:inherit}
 .btn-small.btn-primary{background:linear-gradient(135deg,var(--saffron),var(--deep-saffron));color:white;border-color:transparent;box-shadow:0 8px 20px rgba(189,76,19,.2)}
 .btn-small.btn-primary:hover{box-shadow:0 12px 25px rgba(189,76,19,.3);transform:translateY(-1px)}
 .btn-small.btn-danger{background:linear-gradient(135deg,#dc3545,#a71d2a);color:white;border-color:transparent}
+.btn-small svg{margin-right:4px}
 
 /* ==================== FORMS ==================== */
 .form-card{
@@ -254,6 +280,12 @@ textarea{min-height:80px;resize:vertical}
   transition:background .2s;
 }
 .password-toggle:hover{background:rgba(230,129,24,.08)}
+
+.no-data{
+  text-align:center;padding:40px 20px;color:var(--muted);
+}
+.no-data-icon{font-size:2.5rem;margin-bottom:12px;opacity:.4}
+.no-data p{margin:0;font-size:.95rem}
 
 /* ==================== ALERTS ==================== */
 .alert{
