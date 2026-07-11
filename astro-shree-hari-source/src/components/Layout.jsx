@@ -8,7 +8,7 @@ import { PHONE, EMAIL } from '../constants';
 function Logo() {
   return (
     <Link to="/" className="brand" aria-label="Astro Shree Hari home">
-      <span className="brand-mark">ॐ</span>
+      <img className="brand-logo" src="/assets/shreehari-logo.webp" alt="श्रीहरि ज्योतिष लोगो" width="56" height="56" />
       <span>
         <strong>Astro Shree Hari</strong>
         <small>श्रीहरि पूजा भण्डार एवं ज्योतिष परामर्श केन्द्र नेपाल</small>
