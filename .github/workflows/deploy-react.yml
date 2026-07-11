@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths:
       - "astro-shree-hari-source/**"
+      - ".github/workflows/deploy-react.yml"
   workflow_dispatch:
 
 jobs:
