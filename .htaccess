@@ -1,6 +1,11 @@
 RewriteEngine On
 RewriteBase /
 
+# Redirect to canonical: https://www.astroshreehari.com
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule ^ https://www.astroshreehari.com%{REQUEST_URI} [L,R=301]
+
 # Serve React SPA for root URL
 RewriteRule ^$ index.html [L]
 
@@ -16,6 +21,14 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 # SPA: route everything else to React index.html
 RewriteRule ^ index.html [L]
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "geolocation=(), camera=(), microphone=()"
+</IfModule>
 
 # Security
 <FilesMatch "\.(env|sql|md|log)$">

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /assets/
+Disallow: /admin/
+Disallow: /backend/
+
+Sitemap: https://www.astroshreehari.com/sitemap.xml
