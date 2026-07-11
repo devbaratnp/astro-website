@@ -12,6 +12,6 @@ if ($hash !== hash_hmac('sha256', $payload, $secret)) {
 }
 
 $home = posix_getpwuid(posix_geteuid())['dir'] ?? '/home/ektamultp';
-$log = shell_exec("export HOME=$home && cd $home/repositories/astro-website && bash deploy.sh 2>&1");
+$log = shell_exec("export HOME=$home && cd $home/astroshreehari.com && bash deploy.sh 2>&1");
 
 echo json_encode(['ok' => true, 'output' => $log]);

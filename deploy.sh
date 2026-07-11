@@ -1,47 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_DIR="$HOME/repositories/astro-website"
-HTML_DIR="$HOME/astroshreehari.com"
+REPO_DIR="$HOME/astroshreehari.com"
 BACKUP_DIR="$HOME/deploy-backups"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-SSH_KEY="$HOME/.ssh/github_repo"
 
 mkdir -p "$BACKUP_DIR"
-mkdir -p "$HTML_DIR/logs"
-cat > "$HTML_DIR/logs/.htaccess" << 'EOF'
-Require all denied
-EOF
+mkdir -p "$REPO_DIR/logs"
 
-tar -czf "$BACKUP_DIR/astroshreehari-$TIMESTAMP.tar.gz" \
-  -C "$(dirname "$HTML_DIR")" "$(basename "$HTML_DIR")" \
-  2>/dev/null || true
+if [ ! -f "$REPO_DIR/logs/.htaccess" ]; then
+  echo "Require all denied" > "$REPO_DIR/logs/.htaccess"
+fi
 
 cd "$REPO_DIR"
 
-GIT_SSH_COMMAND="ssh -i $SSH_KEY -o StrictHostKeyChecking=no" \
-  git fetch origin main
-GIT_SSH_COMMAND="ssh -i $SSH_KEY -o StrictHostKeyChecking=no" \
-  git reset --hard origin/main
+git fetch origin main
+git reset --hard origin/main
 
-rsync -a --delete \
-  --exclude='.git' \
-  --exclude='.gitignore' \
-  --exclude='.nojekyll' \
-  --exclude='README.md' \
-  --exclude='GITHUB-PAGES-SETUP.md' \
-  --exclude='preview-single-file.html' \
-  --exclude='docs/' \
-  --exclude='tmp_test.php' \
-  --exclude='deploy-backups/' \
-  --exclude='webhook.example.php' \
-  --exclude='backend/config/database.php' \
-  --exclude='logs/' \
-  --exclude='astro-shree-hari-source/' \
-  "$REPO_DIR/" "$HTML_DIR/"
-
-# webhook.php is tracked in repo directly
-
-chmod +x "$HTML_DIR/deploy.sh" 2>/dev/null || true
+chmod +x "$REPO_DIR/deploy.sh" 2>/dev/null || true
 
 echo "Deployed $TIMESTAMP"
