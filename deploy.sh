@@ -34,7 +34,7 @@ rsync -a --delete \
   --exclude='astro-shree-hari-source/' \
   "$REPO_DIR/" "$HTML_DIR/"
 
-cp "$REPO_DIR/webhook.example.php" "$HTML_DIR/webhook.php"
+# webhook.php is tracked in repo directly
 
 chmod +x "$HTML_DIR/deploy.sh" 2>/dev/null || true
 
