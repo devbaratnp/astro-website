@@ -22,9 +22,14 @@ if ($cached) {
 $panchang = Panchang::getForDate($date);
 
 $stmt = $db->prepare("
-    INSERT INTO panchang (date, tithi, nakshatra, sunrise, sunset, special_events)
+    INSERT INTO panchang (date, tithi, nakshatra, sunrise, sunset, special_events_ne)
     VALUES (:date, :tithi, :nakshatra, :sunrise, :sunset, :events)
-    ON DUPLICATE KEY UPDATE tithi = VALUES(tithi), nakshatra = VALUES(nakshatra)
+    ON DUPLICATE KEY UPDATE
+        tithi = VALUES(tithi),
+        nakshatra = VALUES(nakshatra),
+        sunrise = VALUES(sunrise),
+        sunset = VALUES(sunset),
+        special_events_ne = VALUES(special_events_ne)
 ");
 $stmt->execute([
     ':date' => $date,
