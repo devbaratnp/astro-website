@@ -1,6 +1,9 @@
 RewriteEngine On
 RewriteBase /
 
+# Serve React SPA for root URL
+RewriteRule ^$ index.html [L]
+
 # Allow PHP backend API
 RewriteRule ^backend/ - [L]
 
