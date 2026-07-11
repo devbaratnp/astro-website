@@ -1,5 +1,5 @@
 <?php
-$secret = 'change-this-to-a-random-secret';
+$secret = 'ds2hmb9tiejy68up50vq1nxkozrcw7fg';
 
 $sig = $_SERVER['HTTP_X_HUB_SIGNATURE_256'] ?? '';
 $payload = file_get_contents('php://input');
