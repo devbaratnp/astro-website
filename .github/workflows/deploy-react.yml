@@ -22,7 +22,10 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: |
+          mkdir -p /tmp/npm-cache
+          npm config set cache /tmp/npm-cache
+          npm install --no-audit --no-fund
         working-directory: astro-shree-hari-source
 
       - name: Build React app
