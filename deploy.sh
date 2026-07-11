@@ -31,6 +31,7 @@ rsync -a --delete \
   --exclude='tmp_test.php' \
   --exclude='deploy-backups/' \
   --exclude='webhook.example.php' \
+  --exclude='backend/config/database.php' \
   --exclude='astro-shree-hari-source/' \
   "$REPO_DIR/" "$HTML_DIR/"
 
