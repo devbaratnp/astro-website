@@ -9,6 +9,9 @@ RewriteRule ^ https://www.astroshreehari.com%{REQUEST_URI} [L,R=301]
 # Serve React SPA for root URL
 RewriteRule ^$ index.html [L]
 
+# Allow webhook.php (must be before SPA rules)
+RewriteRule ^webhook\.php$ - [L]
+
 # Allow PHP backend API
 RewriteRule ^backend/ - [L]
 
