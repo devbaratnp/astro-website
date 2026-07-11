@@ -65,6 +65,7 @@ $appointments = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll(
         <tr id="details-<?= $a['id'] ?>" class="details-row" style="display:none">
             <td colspan="8">
                 <form method="POST" class="inline-form">
+                    <?= csrfField() ?>
                     <input type="hidden" name="id" value="<?= $a['id'] ?>">
                     <div class="detail-grid">
                         <div><strong>इमेल:</strong> <?= htmlspecialchars($a['email'] ?: '—') ?></div>

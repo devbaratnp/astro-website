@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/../backend/config/database.php';
 require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/../backend/includes/helpers.php';
 
 // Logout
 if (isset($_GET['logout'])) {
@@ -13,6 +14,7 @@ if (isset($_GET['logout'])) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    validateCsrf();
     $db = Database::getConnection();
     $stmt = $db->prepare("SELECT * FROM admin_users WHERE username = :username LIMIT 1");
     $stmt->execute([':username' => $_POST['username']]);
@@ -51,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="POST">
+            <?= csrfField() ?>
             <div class="field">
                 <label>प्रयोगकर्ता नाम</label>
                 <input name="username" required autocomplete="username" placeholder="admin">

@@ -49,6 +49,7 @@ $recent = $db->query("SELECT date, tithi, nakshatra FROM panchang ORDER BY date 
       सूर्योदय <?= $calculated['sunrise'] ?>/<?= $calculated['sunset'] ?>
     </p>
     <form method="POST">
+      <?= csrfField() ?>
       <div class="form-grid">
         <div class="field"><label>मिति</label><input name="date" type="date" value="<?= $selectedDate ?>" onchange="this.form.submit()" style="cursor:pointer;background:var(--cream)"></div>
         <div class="field"><label>तिथि</label><input name="tithi" value="<?= htmlspecialchars($panchang['tithi'] ?? $calculated['tithi']) ?>"></div>

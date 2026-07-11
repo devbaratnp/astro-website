@@ -6,6 +6,7 @@ if (!isset($_SESSION['admin_id'])) {
     header('Location: ' . BASE_URL . '/admin/index.php');
     exit;
 }
+validateCsrf();
 $page = basename($_SERVER['PHP_SELF']);
 
 $navItems = [

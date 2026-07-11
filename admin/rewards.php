@@ -31,6 +31,7 @@ $rewards = $db->query("SELECT r.*, a.display_name AS awarded_by_name FROM reward
 <div class="form-card" style="max-width:600px;margin-bottom:32px">
     <h3>नयाँ पुरस्कार दिनुहोस्</h3>
     <form method="POST">
+        <?= csrfField() ?>
         <div class="form-grid" style="grid-template-columns:1fr 1fr">
             <div class="field"><label>प्रयोगकर्ता नाम *</label><input name="user_name" required></div>
             <div class="field"><label>फोन नम्बर *</label><input name="user_phone" required></div>

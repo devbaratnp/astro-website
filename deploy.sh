@@ -8,6 +8,10 @@ TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 SSH_KEY="$HOME/.ssh/github_repo"
 
 mkdir -p "$BACKUP_DIR"
+mkdir -p "$HTML_DIR/logs"
+cat > "$HTML_DIR/logs/.htaccess" << 'EOF'
+Require all denied
+EOF
 
 tar -czf "$BACKUP_DIR/astroshreehari-$TIMESTAMP.tar.gz" \
   -C "$(dirname "$HTML_DIR")" "$(basename "$HTML_DIR")" \
@@ -32,6 +36,7 @@ rsync -a --delete \
   --exclude='deploy-backups/' \
   --exclude='webhook.example.php' \
   --exclude='backend/config/database.php' \
+  --exclude='logs/' \
   --exclude='astro-shree-hari-source/' \
   "$REPO_DIR/" "$HTML_DIR/"
 

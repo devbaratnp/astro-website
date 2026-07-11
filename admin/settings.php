@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
 <div class="form-card" style="max-width:500px">
     <h3>पासवर्ड परिवर्तन गर्नुहोस्</h3>
     <form method="POST">
+        <?= csrfField() ?>
         <div class="field">
             <label>नयाँ पासवर्ड</label>
             <input type="password" name="new_password" required minlength="6">

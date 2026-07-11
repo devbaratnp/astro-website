@@ -32,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_service'])) {
 
 // Toggle active
 if (isset($_GET['toggle'])) {
+    validateCsrfGet();
     $stmt = $db->prepare("UPDATE pooja_services SET is_active = NOT is_active WHERE id = :id");
     $stmt->execute([':id' => $_GET['toggle']]);
     echo '<div class="alert alert-success">स्थिति परिवर्तन गरियो</div>';
@@ -39,6 +40,7 @@ if (isset($_GET['toggle'])) {
 
 // Delete
 if (isset($_GET['delete'])) {
+    validateCsrfGet();
     $stmt = $db->prepare("DELETE FROM pooja_services WHERE id = :id");
     $stmt->execute([':id' => $_GET['delete']]);
     echo '<div class="alert alert-success">सेवा मेटाइयो</div>';
@@ -59,6 +61,7 @@ $services = $db->query("SELECT * FROM pooja_services ORDER BY category, title_ne
   <div class="form-card">
     <h3><?= $editService ? 'सेवा सम्पादन गर्नुहोस्' : 'नयाँ सेवा थप्नुहोस्' ?></h3>
     <form method="POST">
+      <?= csrfField() ?>
       <?php if ($editService): ?>
         <input type="hidden" name="id" value="<?= $editService['id'] ?>">
       <?php endif; ?>
@@ -109,8 +112,8 @@ $services = $db->query("SELECT * FROM pooja_services ORDER BY category, title_ne
           <td>
             <div style="display:flex;gap:6px">
               <a href="?edit=<?= $s['id'] ?>" class="btn-small">सम्पादन</a>
-              <a href="?toggle=<?= $s['id'] ?>" class="btn-small"><?= $s['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
-              <a href="?delete=<?= $s['id'] ?>" class="btn-small btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+              <a href="?toggle=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn-small"><?= $s['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
+              <a href="?delete=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn-small btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
             </div>
           </td>
         </tr>

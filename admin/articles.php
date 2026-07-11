@@ -48,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_article'])) {
 }
 
 if (isset($_GET['delete'])) {
+    validateCsrfGet();
     $stmt = $db->prepare("DELETE FROM articles WHERE id = :id");
     $stmt->execute([':id' => $_GET['delete']]);
     echo '<div class="alert alert-success">लेख मेटाइयो</div>';
@@ -68,6 +69,7 @@ $articles = $db->query("SELECT id, title_ne, title_en, slug, is_published, excer
   <div class="form-card">
     <h3><?= $editArticle ? 'लेख सम्पादन गर्नुहोस्' : 'नयाँ लेख लेख्नुहोस्' ?></h3>
     <form method="POST">
+      <?= csrfField() ?>
       <?php if ($editArticle): ?>
         <input type="hidden" name="id" value="<?= $editArticle['id'] ?>">
       <?php endif; ?>
@@ -111,7 +113,7 @@ $articles = $db->query("SELECT id, title_ne, title_en, slug, is_published, excer
           <td>
             <div style="display:flex;gap:6px">
               <a href="?edit=<?= $a['id'] ?>" class="btn-small">सम्पादन</a>
-              <a href="?delete=<?= $a['id'] ?>" class="btn-small btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+              <a href="?delete=<?= $a['id'] ?>&<?= csrfQuery() ?>" class="btn-small btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
             </div>
           </td>
         </tr>

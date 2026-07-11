@@ -3,7 +3,7 @@ assets/payments/*
 !assets/payments/bank-details.txt
 .env
 *.log
-
+logs/
 tmp_test.php
 
 astro-shree-hari-source/node_modules/

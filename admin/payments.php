@@ -80,6 +80,7 @@ $payments = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll();
             <td>
                 <?php if ($p['status'] === 'pending'): ?>
                 <form method="POST" style="display:flex;gap:6px">
+                    <?= csrfField() ?>
                     <input type="hidden" name="id" value="<?= $p['id'] ?>">
                     <input name="admin_notes" placeholder="नोट" style="width:100px;padding:4px 8px">
                     <button type="submit" name="payment_action" value="approved" class="btn-small" style="background:#155724;color:white">✔</button>

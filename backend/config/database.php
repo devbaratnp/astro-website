@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../includes/error-handler.php';
+
 class Database {
     private static ?PDO $instance = null;
 

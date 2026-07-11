@@ -59,6 +59,7 @@ $bookings = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll();
             <td><span class="badge badge-<?= $b['status'] ?>"><?= $b['status'] ?></span></td>
             <td>
                 <form method="POST" style="display:flex;gap:6px">
+                    <?= csrfField() ?>
                     <input type="hidden" name="id" value="<?= $b['id'] ?>">
                     <select name="status" onchange="this.form.submit()">
                         <option value="pending" <?= $b['status'] === 'pending' ? 'selected' : '' ?>>पेन्डिङ</option>
