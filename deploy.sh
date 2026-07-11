@@ -34,10 +34,7 @@ rsync -a --delete \
   --exclude='astro-shree-hari-source/' \
   "$REPO_DIR/" "$HTML_DIR/"
 
-# deploy webhook.php only if it doesn't already exist (preserves secret)
-if [ ! -f "$HTML_DIR/webhook.php" ]; then
-    cp "$REPO_DIR/webhook.example.php" "$HTML_DIR/webhook.php"
-fi
+cp "$REPO_DIR/webhook.example.php" "$HTML_DIR/webhook.php"
 
 chmod +x "$HTML_DIR/deploy.sh" 2>/dev/null || true
 
