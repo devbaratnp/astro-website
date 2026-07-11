@@ -1,4 +1,4 @@
-const API_BASE = 'https://www.astroshreehari.com/backend/api';
+const API_BASE = '/backend/api';
 
 async function request(endpoint, options = {}) {
   const url = `${API_BASE}/${endpoint}`;
@@ -6,7 +6,7 @@ async function request(endpoint, options = {}) {
     headers: { 'Content-Type': 'application/json' },
     ...options,
   });
-  const data = await res.json();
+  const data = await res.json().catch(() => ({ success: false, message: `Server error (${res.status})` }));
   if (!data.success) throw new Error(data.message);
   return data;
 }
@@ -57,3 +57,5 @@ export function submitPayment(payload) {
     body: JSON.stringify(payload),
   });
 }
+
+export function getHoroscope(date) { return request(`horoscope.php?date=${date}`); }

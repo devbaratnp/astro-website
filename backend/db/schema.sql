@@ -26,6 +26,7 @@ CREATE TABLE appointments (
     preferred_date DATE,
     preferred_time TIME,
     consultation_mode ENUM('phone', 'whatsapp', 'video', 'inperson') DEFAULT 'whatsapp',
+    meeting_url VARCHAR(500),
     birth_date DATE,
     birth_time TIME,
     birth_place VARCHAR(200),

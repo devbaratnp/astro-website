@@ -1,7 +1,23 @@
+import { useState } from 'react';
 import { Phone, WhatsappLogo, EnvelopeSimple, MapPin, Clock, YoutubeLogo, FacebookLogo } from '@phosphor-icons/react';
 import { PHONE, EMAIL } from '../constants';
+import { sendContactMessage } from '../services/api';
 
 export function Contact() {
+  const [state, setState] = useState({loading:false, success:'', error:''});
+  async function submit(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = Object.fromEntries(new FormData(form));
+    setState({loading:true, success:'', error:''});
+    try {
+      await sendContactMessage(data);
+      form.reset();
+      setState({loading:false, success:'सन्देश सफलतापूर्वक पठाइयो।', error:''});
+    } catch (error) {
+      setState({loading:false, success:'', error:error.message || 'सन्देश पठाउन सकिएन।'});
+    }
+  }
   return (
     <section className="section page-section">
       <div className="container" style={{ paddingTop: '40px' }}>
@@ -36,22 +52,18 @@ export function Contact() {
             </div>
           </div>
 
-          <div className="contact-card" style={{ background: 'var(--cream)' }}>
-            <h3>कार्यालय समय</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>आइतबार – शुक्रबार</span>
-                <strong>बिहान ९:०० – साँझ ६:००</strong>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>शनिबार</span>
-                <strong>बिहान ९:०० – दिउँसो १२:००</strong>
-              </div>
+          <form className="booking-form" onSubmit={submit}>
+            <div className="form-title"><span>सन्देश</span><h3>हामीलाई लेख्नुहोस्</h3></div>
+            <div className="form-grid">
+              <label>नाम *<input name="name" required maxLength="100" /></label>
+              <label>फोन<input name="phone" inputMode="tel" maxLength="20" /></label>
+              <label className="full">इमेल<input name="email" type="email" maxLength="100" /></label>
+              <label className="full">विषय *<input name="subject" required maxLength="200" /></label>
+              <label className="full">सन्देश *<textarea name="message" required rows="5" /></label>
             </div>
-            <p style={{ marginTop: '20px', fontSize: '14px', color: 'var(--muted)' }}>
-              अनलाइन परामर्शको लागि पूर्व समय मिलाउन WhatsApp मा सम्पर्क गर्नुहोस्।
-            </p>
-          </div>
+            <button className="button button-maroon full-button" disabled={state.loading}>{state.loading?'पठाउँदै…':'सन्देश पठाउनुहोस्'}</button>
+            {state.success&&<p className="success">{state.success}</p>}{state.error&&<p className="form-error">{state.error}</p>}
+          </form>
         </div>
       </div>
     </section>

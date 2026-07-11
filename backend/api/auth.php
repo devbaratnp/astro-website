@@ -6,11 +6,27 @@ require_once __DIR__ . '/../includes/helpers.php';
 require_once __DIR__ . '/../middleware/validate.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
-$db = Database::getConnection();
+session_set_cookie_params(['lifetime'=>0,'path'=>'/','secure'=>(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off'),'httponly'=>true,'samesite'=>'Strict']);
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+if ($method === 'GET') {
+    if (isset($_GET['logout'])) {
+        session_destroy();
+        jsonSuccess(null, 'Logged out');
+    }
+    if (empty($_SESSION['admin_id'])) jsonError('Unauthenticated', 401);
+    jsonSuccess(['user' => [
+        'id' => $_SESSION['admin_id'],
+        'display_name' => $_SESSION['admin_name'],
+        'role' => $_SESSION['admin_role'],
+    ]]);
+}
 
 if ($method !== 'POST') {
     jsonError('Method not allowed', 405);
 }
+
+$db = Database::getConnection();
 
 $input = getJsonInput();
 $error = validateRequired($input, ['username', 'password']);
@@ -21,9 +37,11 @@ $stmt->execute([':username' => $input['username']]);
 $user = $stmt->fetch();
 
 if ($user && password_verify($input['password'], $user['password_hash'])) {
-    $token = bin2hex(random_bytes(32));
+    session_regenerate_id(true);
+    $_SESSION['admin_id'] = $user['id'];
+    $_SESSION['admin_name'] = $user['display_name'];
+    $_SESSION['admin_role'] = $user['role'];
     jsonSuccess([
-        'token' => $token,
         'user' => [
             'id' => $user['id'],
             'display_name' => $user['display_name'],

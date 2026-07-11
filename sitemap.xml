@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.astroshreehari.com/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <url><loc>https://www.astroshreehari.com/</loc><priority>1.0</priority></url>
+  <url><loc>https://www.astroshreehari.com/about</loc></url>
+  <url><loc>https://www.astroshreehari.com/services</loc></url>
+  <url><loc>https://www.astroshreehari.com/appointment</loc><priority>0.9</priority></url>
+  <url><loc>https://www.astroshreehari.com/kundali</loc><priority>0.9</priority></url>
+  <url><loc>https://www.astroshreehari.com/pooja</loc><priority>0.9</priority></url>
+  <url><loc>https://www.astroshreehari.com/panchang</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.astroshreehari.com/payment</loc></url>
+  <url><loc>https://www.astroshreehari.com/contact</loc></url>
 </urlset>

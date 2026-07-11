@@ -17,6 +17,14 @@ cd "$REPO_DIR"
 git fetch origin main
 git reset --hard origin/main
 
+if [ ! -f "$REPO_DIR/backend/config/database.credentials.php" ] \
+  && { [ -z "${DB_USER:-}" ] || [ -z "${DB_PASS:-}" ]; }; then
+  echo "ERROR: database credentials are missing." >&2
+  echo "Create backend/config/database.credentials.php from database.credentials.example.php" >&2
+  echo "or configure DB_USER and DB_PASS in the hosting environment." >&2
+  exit 1
+fi
+
 chmod +x "$REPO_DIR/deploy.sh" 2>/dev/null || true
 
 echo "Deployed $TIMESTAMP"

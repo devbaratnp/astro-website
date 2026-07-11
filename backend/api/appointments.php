@@ -16,10 +16,13 @@ switch ($method) {
         if ($error) {
             jsonError($error);
         }
+        if (!in_array($input['service_type'], ['kundali','marriage','grahadasha','vastu','pooja','general'], true)) jsonError('Invalid service type');
+        if (!empty($input['consultation_mode']) && !in_array($input['consultation_mode'], ['phone','whatsapp','video','inperson'], true)) jsonError('Invalid consultation mode');
 
+        $meetingUrl = ($input['consultation_mode'] ?? '') === 'video' ? 'https://meet.jit.si/AstroShreeHari-' . bin2hex(random_bytes(8)) : null;
         $stmt = $db->prepare("
-            INSERT INTO appointments (name, phone, email, service_type, preferred_date, preferred_time, consultation_mode, birth_date, birth_time, birth_place, message, status)
-            VALUES (:name, :phone, :email, :service_type, :preferred_date, :preferred_time, :consultation_mode, :birth_date, :birth_time, :birth_place, :message, 'pending')
+            INSERT INTO appointments (name, phone, email, service_type, preferred_date, preferred_time, consultation_mode, meeting_url, birth_date, birth_time, birth_place, message, status)
+            VALUES (:name, :phone, :email, :service_type, :preferred_date, :preferred_time, :consultation_mode, :meeting_url, :birth_date, :birth_time, :birth_place, :message, 'pending')
         ");
 
         $stmt->execute([
@@ -30,6 +33,7 @@ switch ($method) {
             ':preferred_date' => $input['preferred_date'] ?? null,
             ':preferred_time' => $input['preferred_time'] ?? null,
             ':consultation_mode' => $input['consultation_mode'] ?? 'whatsapp',
+            ':meeting_url' => $meetingUrl,
             ':birth_date' => $input['birth_date'] ?? null,
             ':birth_time' => $input['birth_time'] ?? null,
             ':birth_place' => sanitize($input['birth_place'] ?? ''),
@@ -38,7 +42,7 @@ switch ($method) {
 
         $appointmentId = $db->lastInsertId();
 
-        jsonSuccess(['id' => $appointmentId], 'तपाईंको अनुरोध सफलतापूर्वक प्राप्त भयो। हामी चाँडै सम्पर्क गर्नेछौं।');
+        jsonSuccess(['id' => $appointmentId, 'meeting_url' => $meetingUrl], 'तपाईंको अनुरोध सफलतापूर्वक प्राप्त भयो। हामी चाँडै सम्पर्क गर्नेछौं।');
         break;
 
     case 'GET':

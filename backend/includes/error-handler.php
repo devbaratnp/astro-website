@@ -24,6 +24,18 @@ set_exception_handler(function (Throwable $e): void {
     if (isApiRequest()) {
         jsonResponse(['success' => false, 'message' => 'Internal server error'], 500);
     }
+
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: text/html; charset=utf-8');
+    }
+    echo '<!doctype html><html lang="ne"><head><meta charset="utf-8">'
+        . '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        . '<title>Server configuration error</title></head>'
+        . '<body style="font-family:system-ui,sans-serif;max-width:680px;margin:10vh auto;padding:24px">'
+        . '<h1>Admin panel is temporarily unavailable</h1>'
+        . '<p>The server configuration could not be loaded. Please check the private database credentials and the PHP error log.</p>'
+        . '</body></html>';
 });
 
 function severityName(int $severity): string {
