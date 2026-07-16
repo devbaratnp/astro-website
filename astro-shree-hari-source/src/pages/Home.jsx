@@ -14,7 +14,8 @@ export function Home() {
         <div className="container hero-grid">
           <div className="hero-copy">
             <span className="eyebrow">शास्त्रसम्मत ज्योतिषीय परामर्श</span>
-            <h1>जीवनका प्रश्नहरूमा<br /><em>शास्त्रीय मार्गदर्शन</em></h1>
+            <h1>तपाईँको जिज्ञासा हाम्रो परामर्श<br /><em>श्रीहरि ज्योतिष परामर्श केन्द्र नेपाल</em></h1>
+            <p className="hero-name-en">Nepali Astrologer Sitaram Timalsena</p>
             <p>धर्मशास्त्र, कर्मकाण्ड तथा ज्योतिषशास्त्रसँग सम्बन्धित गुरुकुलीय पद्धति अनुसारको अध्ययन र अध्यापनको लामो अनुभव।</p>
             <div className="hero-actions">
               <Link className="button button-maroon" to="/appointment"><CalendarBlank weight="bold" /> परामर्श बुक गर्नुहोस्</Link>
@@ -58,21 +59,22 @@ export function Home() {
 
       <section id="about" className="section about-section">
         <div className="container about-grid">
-          <div className="about-photo">
-            <img src="/assets/sitaram-timilsina.jpeg" alt="ज्योतिषाचार्य सीताराम तिमल्सेना" />
-            <div className="experience"><strong>१८+</strong><span>वर्षको अध्ययन,<br />अध्यापन र सेवा</span></div>
+          <div className="about-photo org-logo-panel">
+            <img src="/assets/shreehari-logo.webp" alt="श्रीहरि ज्योतिष परामर्श केन्द्र नेपालको लोगो" />
+            <div className="organization-badge"><strong>श्रीहरि</strong><span>ज्योतिष परामर्श केन्द्र नेपाल</span></div>
           </div>
           <div className="about-copy">
             <span className="section-kicker">हाम्रो बारेमा</span>
-            <h2>परम्परा, अध्ययन र अनुभवको सङ्गम</h2>
-            <p>पं. ज्यो. सीताराम तिमल्सेनाले धर्मशास्त्र, कर्मकाण्ड तथा ज्योतिषशास्त्रको गुरुकुलीय पद्धतिअनुसार अध्ययनसँगै अध्यापन र परामर्श सेवा प्रदान गर्दै आउनुभएको छ। शास्त्रसम्मत सिद्धान्त, व्यावहारिक अनुभव र सेवाग्राहीको गोपनीयतालाई केन्द्रमा राखेर स्पष्ट तथा उपयोगी मार्गदर्शन दिनु उहाँको प्रमुख विशेषता हो।</p>
+            <h2>शास्त्रीय परम्परा र विश्वसनीय परामर्शको केन्द्र</h2>
+            <p>श्रीहरि ज्योतिष परामर्श केन्द्र नेपाल वैदिक ज्योतिष, वास्तुशास्त्र, कर्मकाण्ड र आध्यात्मिक सेवाका लागि समर्पित संस्था हो। पण्डित तथा ज्योतिषी सीताराम तिमल्सेनाको नेतृत्वमा केन्द्रले शास्त्रसम्मत ज्ञानलाई सरल, व्यावहारिक र सेवाग्राहीको जीवनसँग उपयोगी हुने गरी प्रस्तुत गर्दछ।</p>
+            <p>नेपालस्थित प्रधान कार्यालय र अमेरिकास्थित अन्तर्राष्ट्रिय अनलाइन कार्यालयमार्फत देश–विदेशका सेवाग्राहीलाई प्रत्यक्ष तथा अनलाइन परामर्श उपलब्ध छ।</p>
             <ul>
-              <li><CheckCircle weight="fill" /> १८ महापुराणहरूको अध्ययन तथा वाचन</li>
-              <li><CheckCircle weight="fill" /> दक्षिण एसियाली ज्योतिष महासङ्घ केन्द्रीय सदस्य</li>
-              <li><CheckCircle weight="fill" /> राष्ट्रिय तथा अन्तर्राष्ट्रिय मान्यता प्राप्त ज्योतिषीय सेवा</li>
-              <li><CheckCircle weight="fill" /> अनलाइन तथा प्रत्यक्ष परामर्श उपलब्ध</li>
+              <li><CheckCircle weight="fill" /> जन्मकुण्डली, विवाह मिलान तथा ग्रहगोचर विश्लेषण</li>
+              <li><CheckCircle weight="fill" /> वास्तु परामर्श, पूजा तथा वैदिक कर्मकाण्ड</li>
+              <li><CheckCircle weight="fill" /> महापुराण वाचन र तीर्थयात्रा सहजीकरण</li>
+              <li><CheckCircle weight="fill" /> नेपाल तथा विदेशमा अनलाइन परामर्श सेवा</li>
             </ul>
-            <Link className="text-link" to="/about">विस्तृत परिचय हेर्नुहोस् <ArrowRight /></Link>
+            <Link className="text-link" to="/about">संस्था र गुरुज्यूको विस्तृत परिचय <ArrowRight /></Link>
           </div>
         </div>
       </section>

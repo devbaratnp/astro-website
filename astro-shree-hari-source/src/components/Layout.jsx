@@ -61,38 +61,36 @@ export function Layout({ children }) {
 
       <footer className="footer">
         <div className="container footer-grid">
-          <div>
-            <Logo />
+          <div className="footer-brand-block">
+            <Link to="/" className="footer-brand" aria-label="श्रीहरि ज्योतिष गृहपृष्ठ">
+              <img src="/assets/shreehari-logo.webp" alt="श्रीहरि ज्योतिष लोगो" width="64" height="64" />
+              <span><strong>श्रीहरि पूजा भण्डार</strong><b>एवं ज्योतिष परामर्श केन्द्र नेपाल</b></span>
+            </Link>
             <p>शास्त्र, संस्कार र जीवनका लागि विश्वसनीय मार्गदर्शन। धर्मशास्त्र, कर्मकाण्ड र ज्योतिषशास्त्रमा आधारित सेवा।</p>
-            <div className="socials">
-              <a href="https://youtube.com/@astrogurusitaram3m" target="_blank" rel="noreferrer" aria-label="YouTube"><YoutubeLogo /></a>
-              <a href="https://www.facebook.com/share/19AnGtrMox/" target="_blank" rel="noreferrer" aria-label="Facebook"><FacebookLogo /></a>
-              <a href={`https://wa.me/${PHONE}`} target="_blank" rel="noreferrer" aria-label="WhatsApp"><WhatsappLogo /></a>
-            </div>
           </div>
-          <div>
+          <div className="footer-column">
             <h3>द्रुत लिङ्कहरू</h3>
             <Link to="/">गृहपृष्ठ</Link>
             <Link to="/about">हाम्रो बारेमा</Link>
             <Link to="/services">सेवाहरू</Link>
             <Link to="/appointment">परामर्श प्रक्रिया</Link>
-            <Link to="/payment">भुक्तानी</Link>
+            <Link to="/contact">सम्पर्क</Link>
           </div>
-          <div>
-            <h3>सेवाहरू</h3>
-            <Link to="/services">जन्मकुण्डली विश्लेषण</Link>
-            <Link to="/services">विवाह मिलान</Link>
-            <Link to="/services">ग्रह शान्ति</Link>
-            <Link to="/services">वैदिक कर्मकाण्ड</Link>
-          </div>
-          <div>
+          <div className="footer-column footer-contact">
             <h3>सम्पर्क जानकारी</h3>
-            <a href={`tel:+${PHONE}`}><Phone /> +977 9844639228</a>
-            <a href={`mailto:${EMAIL}`}><EnvelopeSimple /> {EMAIL}</a>
-            <span><MapPin /> नेपाल</span>
+            <a href={`https://wa.me/${PHONE}`} target="_blank" rel="noreferrer"><WhatsappLogo weight="fill" /><span>+977 9844639228</span></a>
+            <a href={`mailto:${EMAIL}`}><EnvelopeSimple weight="fill" /><span>{EMAIL}</span></a>
+            <span><MapPin weight="fill" /><span>कमल–३, केर्खा, झापा, नेपाल</span></span>
+          </div>
+          <div className="footer-column footer-social-column">
+            <h3>हाम्रा सामाजिक सञ्जाल</h3>
+            <div className="footer-social-links">
+              <a href="https://youtube.com/@astrogurusitaram3m" target="_blank" rel="noreferrer" aria-label="YouTube"><YoutubeLogo weight="fill" /><span>YouTube</span></a>
+              <a href="https://www.facebook.com/share/19AnGtrMox/" target="_blank" rel="noreferrer" aria-label="Facebook"><FacebookLogo weight="fill" /><span>Facebook</span></a>
+            </div>
           </div>
         </div>
-        <div className="copyright container">© २०२६ Astro Shree Hari. सर्वाधिकार सुरक्षित।</div>
+        <div className="copyright">© २०२६ श्रीहरि पूजा भण्डार एवं ज्योतिष परामर्श केन्द्र नेपाल । सर्वाधिकार सुरक्षित।</div>
       </footer>
 
       <a className="floating-whatsapp" href={`https://wa.me/${PHONE}`} target="_blank" rel="noreferrer" aria-label="WhatsApp">

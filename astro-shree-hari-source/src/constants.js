@@ -1,7 +1,7 @@
 import { ChartPolar, Heart, Compass, Planet, Campfire, CalendarDots } from '@phosphor-icons/react';
 
 export const PHONE = '9779844639228';
-export const EMAIL = 'shreeharijyotishparamarsakendr@gmail.com';
+export const EMAIL = 'Astroshreeharee@gmail.com';
 
 export const services = [
   { icon: ChartPolar, title: 'जन्मकुण्डली विश्लेषण', text: 'व्यक्तित्व, करियर, स्वास्थ्य र जीवनका महत्वपूर्ण पक्षहरूको शास्त्रीय विश्लेषण।' },
