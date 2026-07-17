@@ -10,6 +10,11 @@ import { Kundali } from './pages/Kundali';
 import { Pooja } from './pages/Pooja';
 import { Panchang } from './pages/Panchang';
 import { Payment } from './pages/Payment';
+import { Blog } from './pages/Blog';
+import { Article } from './pages/Article';
+import { Events } from './pages/Events';
+import { Gallery } from './pages/Gallery';
+import { Muhurta } from './pages/Muhurta';
 import './styles.css';
 
 export function App() {
@@ -26,6 +31,11 @@ export function App() {
         <Route path="/pooja" element={<Pooja />} />
         <Route path="/panchang" element={<Panchang />} />
         <Route path="/payment" element={<Payment />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/article/:slug" element={<Article />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/muhurta" element={<Muhurta />} />
       </Routes>
     </Layout>
   );

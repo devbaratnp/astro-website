@@ -7,7 +7,7 @@ import {
   Campfire, Compass, Planet, Heart
 } from '@phosphor-icons/react';
 import { PHONE, services } from '../constants';
-import { getPanchang } from '../services/api';
+import { getPanchang, getTestimonials } from '../services/api';
 import { buildHomePanchangItems, getBsDateString } from '../utils/homeAstrology';
 import { ad2bs } from '../utils/bsDate';
 import '../homeAstrology.css';
@@ -23,6 +23,7 @@ export function Home() {
   const [panchangItems, setPanchangItems] = useState([]);
   const [panchangStatus, setPanchangStatus] = useState('loading');
   const [panchangRefresh, setPanchangRefresh] = useState(0);
+  const [testimonials, setTestimonials] = useState([]);
 
   useEffect(() => {
     let active = true;
@@ -37,6 +38,7 @@ export function Home() {
         if (!active) return;
         setPanchangStatus('error');
       });
+    getTestimonials().then(d => { if (active) setTestimonials(d.data); }).catch(() => {});
     return () => { active = false; };
   }, [panchangRefresh]);
 
@@ -199,16 +201,21 @@ export function Home() {
         </div>
       </section>
 
-      <section className="section testimonial-section">
+      {testimonials.length > 0 && <section className="section testimonial-section">
         <div className="container">
-          <div className="testimonial">
-            <Quotes weight="fill" />
-            <p>“गुरुज्यूले हाम्रो प्रश्नलाई धैर्यपूर्वक सुनेर स्पष्ट र व्यावहारिक मार्गदर्शन दिनुभयो। परामर्शपछि निर्णय लिन धेरै सहज भयो।”</p>
-            <strong>सन्तुष्ट सेवाग्राही</strong>
-            <span>काठमाडौं, नेपाल</span>
+          <div className="section-heading"><span>सेवाग्राहीको प्रतिक्रिया</span><h2>हाम्रा सन्तुष्ट सेवाग्राही</h2></div>
+          <div className="testimonial-grid">
+            {testimonials.map(t => (
+              <div className="testimonial" key={t.id}>
+                <Quotes weight="fill" />
+                <p>“{t.content}”</p>
+                <strong>{t.name}</strong>
+                {t.location && <span>{t.location}</span>}
+              </div>
+            ))}
           </div>
         </div>
-      </section>
+      </section>}
     </>
   );
 }

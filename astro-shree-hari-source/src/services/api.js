@@ -59,3 +59,9 @@ export function submitPayment(payload) {
 }
 
 export function getHoroscope(date) { return request(`horoscope.php?date=${date}`); }
+export function getTestimonials() { return request('testimonials.php'); }
+export function getArticles(page = 1) { return request(`articles.php?page=${page}`); }
+export function getArticle(slug) { return request(`articles.php?slug=${slug}`); }
+export function getEvents(type = '') { return request(`events.php${type ? '?type=' + type : ''}`); }
+export function getGallery(type = '') { return request(`gallery.php${type ? '?type=' + type : ''}`); }
+export function getMuhurta(type, date) { return request(`muhurta.php?type=${encodeURIComponent(type)}&date=${date}`); }

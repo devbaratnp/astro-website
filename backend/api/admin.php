@@ -15,6 +15,9 @@ $definitions = [
     'articles' => ['table'=>'articles','fields'=>['title_ne','title_en','slug','content_ne','content_en','excerpt_ne','excerpt_en','cover_image','is_published'],'required'=>['title_ne','slug','content_ne']],
     'rewards' => ['table'=>'rewards','fields'=>['user_name','user_phone','reward_type','title_ne','title_en','description_ne','description_en','is_redeemed','expires_at'],'required'=>['user_name','user_phone','reward_type','title_ne']],
     'panchang' => ['table'=>'panchang','fields'=>['date','tithi','nakshatra','sunrise','sunset','rahu_kaal','auspicious_times','special_events_ne','special_events_en'],'required'=>['date']],
+    'testimonials' => ['table'=>'testimonials','fields'=>['name','title','content','rating','photo','location','sort_order','is_active'],'required'=>['name','content']],
+    'events' => ['table'=>'events','fields'=>['type','title_ne','title_en','description_ne','description_en','date_from','date_to','time_from','location','cover_image','registration_url','contact_person','contact_phone','is_active'],'required'=>['title_ne','date_from']],
+    'gallery' => ['table'=>'gallery_items','fields'=>['type','title_ne','title_en','url','thumbnail','embed_url','source','sort_order','is_active'],'required'=>['title_ne']],
 ];
 
 if (in_array($_SERVER['REQUEST_METHOD'], ['POST','PUT'], true)) {
@@ -96,6 +99,9 @@ $queries = [
     'articles' => 'SELECT id,title_ne,title_en,slug,is_published,published_at,created_at FROM articles ORDER BY created_at DESC',
     'rewards' => 'SELECT * FROM rewards ORDER BY created_at DESC LIMIT 100',
     'panchang' => 'SELECT * FROM panchang ORDER BY date DESC LIMIT 100',
+    'testimonials' => 'SELECT * FROM testimonials ORDER BY sort_order ASC, created_at DESC',
+    'events' => 'SELECT * FROM events ORDER BY date_from DESC',
+    'gallery' => 'SELECT * FROM gallery_items ORDER BY sort_order ASC, created_at DESC',
 ];
 if (!isset($queries[$resource])) jsonError('Unknown resource', 404);
 jsonSuccess($db->query($queries[$resource])->fetchAll());

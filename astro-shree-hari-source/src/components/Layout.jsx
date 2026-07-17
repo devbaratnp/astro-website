@@ -22,8 +22,12 @@ const links = [
   { to: '/about', label: 'हाम्रो बारेमा' },
   { to: '/services', label: 'सेवाहरू' },
   { to: '/kundali', label: 'कुण्डली' },
-  { to: '/pooja', label: 'ई-पूजा' },
   { to: '/panchang', label: 'पञ्चाङ्ग' },
+  { to: '/muhurta', label: 'मुहूर्त' },
+  { to: '/blog', label: 'लेख' },
+  { to: '/events', label: 'कार्यक्रम' },
+  { to: '/gallery', label: 'ग्यालेरी' },
+  { to: '/pooja', label: 'ई-पूजा' },
   { to: '/appointment', label: 'परामर्श प्रक्रिया' },
   { to: '/contact', label: 'सम्पर्क' },
 ];
@@ -33,7 +37,7 @@ export function Layout({ children }) {
   const { pathname } = useLocation();
   const closeMenu = () => setMenuOpen(false);
   useEffect(() => {
-    const meta = {'/':['Best Astrologer in Nepal | Astro Shree Hari','Traditional astrology, Kundali and online consultation in Nepal.'],'/appointment':['Online Astrology Consultation Nepal','Book an appointment and secure video consultation.'],'/kundali':['Online Kundali Generation','Enter birth details for basic Rashi, Nakshatra and Lagna.'],'/pooja':['Online Pooja Booking Nepal','Book priests, ritual materials and live-streamed Pooja.'],'/panchang':['Daily Nepali Panchang and Rashifal','Today’s Tithi, Nakshatra, sunrise, sunset and horoscope.'],'/payment':['Secure Static QR Payment','Submit a static QR payment reference for verification.']}[pathname] || ['Astro Shree Hari','Astrology and Vedic ritual services in Nepal.'];
+    const meta = {'/':['Best Astrologer in Nepal | Astro Shree Hari','Traditional astrology, Kundali and online consultation in Nepal.'],'/appointment':['Online Astrology Consultation Nepal','Book an appointment and secure video consultation.'],'/kundali':['Online Kundali Generation','Enter birth details for basic Rashi, Nakshatra and Lagna.'],'/pooja':['Online Pooja Booking Nepal','Book priests, ritual materials and live-streamed Pooja.'],'/panchang':['Daily Nepali Panchang and Rashifal','Today’s Tithi, Nakshatra, sunrise, sunset and horoscope.'],'/payment':['Secure Static QR Payment','Submit a static QR payment reference for verification.'],'/blog':['Nepali Astrology Blog | Astro Shree Hari','Read articles on Vedic astrology, spiritual wisdom and Sanatan culture.'],'/events':['Upcoming Events & Pilgrimage Tours','Spiritual discourses, rituals and pilgrimage tour schedules.'],'/gallery':['Media Gallery | Astro Shree Hari','Video and photo gallery of discourses, bhajans and events.'],'/muhurta':['Muhurta Check | Auspicious Timing','Check auspicious timing for marriage, grihapravesh, business and travel.']}[pathname] || ['Astro Shree Hari','Astrology and Vedic ritual services in Nepal.'];
     document.title=meta[0]; document.querySelector('meta[name="description"]')?.setAttribute('content',meta[1]); document.querySelector('link[rel="canonical"]')?.setAttribute('href',`https://www.astroshreehari.com${pathname}`);
   },[pathname]);
 
@@ -73,6 +77,10 @@ export function Layout({ children }) {
             <Link to="/">गृहपृष्ठ</Link>
             <Link to="/about">हाम्रो बारेमा</Link>
             <Link to="/services">सेवाहरू</Link>
+            <Link to="/blog">लेख तथा रचनाहरू</Link>
+            <Link to="/events">कार्यक्रम तथा यात्रा</Link>
+            <Link to="/gallery">मिडिया ग्यालेरी</Link>
+            <Link to="/muhurta">मुहूर्त परीक्षण</Link>
             <Link to="/appointment">परामर्श प्रक्रिया</Link>
             <Link to="/contact">सम्पर्क</Link>
           </div>
