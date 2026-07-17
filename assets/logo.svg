@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f5cf69"/><stop offset="1" stop-color="#c75a1a"/></linearGradient></defs>
-<circle cx="60" cy="60" r="56" fill="#fff8e6" stroke="#711d29" stroke-width="3"/>
-<circle cx="60" cy="60" r="44" fill="none" stroke="url(#g)" stroke-width="4" stroke-dasharray="3 6"/>
-<path d="M60 8v11M60 101v11M8 60h11M101 60h11M23 23l8 8M89 89l8 8M97 23l-8 8M31 89l-8 8" stroke="#d6a83a" stroke-width="3" stroke-linecap="round"/>
-<text x="60" y="79" text-anchor="middle" font-family="serif" font-size="57" fill="#711d29">ॐ</text>
-</svg>
