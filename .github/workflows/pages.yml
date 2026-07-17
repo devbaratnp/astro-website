@@ -33,10 +33,11 @@ jobs:
           cache-dependency-path: astro-shree-hari-source/package-lock.json
 
       - name: Install frontend dependencies
-        run: |
-          npm config set cache /tmp/npm-cache
-          npm ci
+        run: npm ci
         working-directory: astro-shree-hari-source
+        env:
+          npm_config_cache: /tmp/npm-cache
+          TMPDIR: /tmp
 
       - name: Build frontend (Vite)
         run: npm run build
