@@ -21,8 +21,8 @@ switch ($method) {
 
         $meetingUrl = ($input['consultation_mode'] ?? '') === 'video' ? 'https://meet.jit.si/AstroShreeHari-' . bin2hex(random_bytes(8)) : null;
         $stmt = $db->prepare("
-            INSERT INTO appointments (name, phone, email, service_type, preferred_date, preferred_time, consultation_mode, meeting_url, birth_date, birth_time, birth_place, message, status)
-            VALUES (:name, :phone, :email, :service_type, :preferred_date, :preferred_time, :consultation_mode, :meeting_url, :birth_date, :birth_time, :birth_place, :message, 'pending')
+            INSERT INTO appointments (name, phone, email, service_type, preferred_date, preferred_time, consultation_mode, meeting_url, birth_date, birth_time, birth_place, nwaran_name, father_name, mother_name, birth_order, birth_gender, message, status)
+            VALUES (:name, :phone, :email, :service_type, :preferred_date, :preferred_time, :consultation_mode, :meeting_url, :birth_date, :birth_time, :birth_place, :nwaran_name, :father_name, :mother_name, :birth_order, :birth_gender, :message, 'pending')
         ");
 
         $stmt->execute([
@@ -37,6 +37,11 @@ switch ($method) {
             ':birth_date' => $input['birth_date'] ?? null,
             ':birth_time' => $input['birth_time'] ?? null,
             ':birth_place' => sanitize($input['birth_place'] ?? ''),
+            ':nwaran_name' => sanitize($input['nwaran_name'] ?? ''),
+            ':father_name' => sanitize($input['father_name'] ?? ''),
+            ':mother_name' => sanitize($input['mother_name'] ?? ''),
+            ':birth_order' => sanitize($input['birth_order'] ?? ''),
+            ':birth_gender' => sanitize($input['birth_gender'] ?? ''),
             ':message' => sanitize($input['message']),
         ]);
 
