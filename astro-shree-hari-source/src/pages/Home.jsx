@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   CalendarBlank, WhatsappLogo, ShieldCheck, Monitor,
@@ -6,8 +7,43 @@ import {
   Campfire, Compass, Planet, Heart
 } from '@phosphor-icons/react';
 import { PHONE, services } from '../constants';
+import { getPanchang } from '../services/api';
+import { buildHomePanchangItems } from '../utils/homeAstrology';
+import '../homeAstrology.css';
+
+const homeTools = [
+  { to: '/panchang', icon: CalendarDots, title: 'आजको पञ्चाङ्ग', text: 'तिथि, नक्षत्र, सूर्योदय, सूर्यास्त र दैनिक राशिफल हेर्नुहोस्।', link: 'आजको विवरण' },
+  { to: '/kundali', icon: ChartPolar, title: 'जन्मकुण्डली', text: 'आफ्नो जन्म विवरणका आधारमा प्रारम्भिक ज्योतिषीय विवरण पाउनुहोस्।', link: 'कुण्डली बनाउनुहोस्' },
+  { to: '/pooja', icon: Campfire, title: 'पूजा तथा मुहूर्त', text: 'वैदिक पूजा सेवा, अनुष्ठान र शुभ समयसम्बन्धी जानकारी लिनुहोस्।', link: 'सेवा हेर्नुहोस्' },
+  { to: '/appointment', icon: Heart, title: 'विवाह तथा परामर्श', text: 'विवाह मिलान वा व्यक्तिगत जिज्ञासाका लागि गुरुज्यूसँग समय लिनुहोस्।', link: 'परामर्श बुक गर्नुहोस्' },
+];
 
 export function Home() {
+  const [panchangItems, setPanchangItems] = useState([]);
+  const [panchangStatus, setPanchangStatus] = useState('loading');
+  const [panchangRefresh, setPanchangRefresh] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    setPanchangStatus('loading');
+    getPanchang()
+      .then((response) => {
+        if (!active) return;
+        setPanchangItems(buildHomePanchangItems(response.data.panchang));
+        setPanchangStatus('ready');
+      })
+      .catch(() => {
+        if (!active) return;
+        setPanchangStatus('error');
+      });
+    return () => { active = false; };
+  }, [panchangRefresh]);
+
+  const todayLabel = new Intl.DateTimeFormat('ne-NP', {
+    dateStyle: 'full',
+    timeZone: 'Asia/Kathmandu',
+  }).format(new Date());
+
   return (
     <>
       <section id="home" className="hero">
@@ -37,6 +73,66 @@ export function Home() {
         <div><UsersThree /><span><strong>केन्द्रीय सदस्य</strong>दक्षिण एसियाली ज्योतिष महासङ्घ</span></div>
       </section>
 
+      <section className="section astro-hub-section" aria-labelledby="astro-hub-title">
+        <div className="container">
+          <div className="astro-hub-heading">
+            <div>
+              <span className="section-kicker">दैनिक मार्गदर्शन र उपयोगी सेवा</span>
+              <h2 id="astro-hub-title">आजको ज्योतिष एकै स्थानमा</h2>
+              <p>दैनिक पञ्चाङ्ग हेर्नुहोस्, आवश्यक ज्योतिषीय सेवा छान्नुहोस् र विस्तृत परामर्शका लागि सहज रूपमा अगाडि बढ्नुहोस्।</p>
+            </div>
+            <Link className="button button-maroon" to="/appointment"><CalendarBlank weight="bold" /> परामर्श बुक गर्नुहोस्</Link>
+          </div>
+
+          <div className="astro-hub-layout">
+            <article className="astro-daily-card">
+              <div className="astro-daily-topline">
+                <div className="astro-daily-symbol"><Planet weight="duotone" /></div>
+                <div>
+                  <span>आजको पञ्चाङ्ग</span>
+                  <strong>{todayLabel}</strong>
+                </div>
+              </div>
+
+              <div className="astro-panchang-status" aria-live="polite">
+                {panchangStatus === 'loading' && <div className="astro-loading"><i></i><span>आजको पञ्चाङ्ग लोड हुँदैछ…</span></div>}
+                {panchangStatus === 'error' && (
+                  <div className="astro-error">
+                    <p>अहिले पञ्चाङ्ग प्राप्त गर्न सकिएन।</p>
+                    <button type="button" onClick={() => setPanchangRefresh((value) => value + 1)}>फेरि प्रयास गर्नुहोस्</button>
+                  </div>
+                )}
+                {panchangStatus === 'ready' && (
+                  <div className="astro-panchang-grid">
+                    {panchangItems.map((item) => (
+                      <div className={`astro-panchang-item astro-${item.key}`} key={item.key}>
+                        <span>{item.label}</span>
+                        <strong>{item.value}</strong>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <Link className="astro-daily-link" to="/panchang">पूर्ण पञ्चाङ्ग र १२ राशिको राशिफल <ArrowRight weight="bold" /></Link>
+              <small>पञ्चाङ्ग विवरण सामान्य जानकारीका लागि हो। व्यक्तिगत निर्णयका लागि विशेषज्ञ परामर्श लिनुहोस्।</small>
+            </article>
+
+            <div className="astro-tool-grid">
+              {homeTools.map(({ to, icon: Icon, title, text, link }) => (
+                <Link className="astro-tool-card" to={to} key={title}>
+                  <span className="astro-tool-icon"><Icon weight="duotone" /></span>
+                  <div>
+                    <h3>{title}</h3>
+                    <p>{text}</p>
+                    <strong>{link} <ArrowRight weight="bold" /></strong>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
       <section id="services" className="section services-section">
         <div className="container">
           <div className="section-heading">
