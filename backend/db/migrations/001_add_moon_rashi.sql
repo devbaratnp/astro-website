@@ -1,0 +1,1 @@
+ALTER TABLE panchang ADD COLUMN moon_rashi VARCHAR(50) DEFAULT NULL AFTER nakshatra;

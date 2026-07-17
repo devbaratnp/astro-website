@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ne">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Astro Shree Hari — Feature Expansion Concept</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Tiro+Devanagari+Sanskrit:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <style>
+    :root{--maroon:#641917;--maroon-deep:#3f0c0b;--maroon-soft:#8d2d28;--gold:#d5a33d;--gold-light:#f2cd74;--ivory:#fffaf1;--paper:#fffdf8;--sand:#f8ead1;--ink:#481d19;--body:#66534c;--line:#e5ca93;--green:#063d32;--shadow:0 18px 45px rgba(76,24,16,.12)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--body);font-family:'Noto Sans Devanagari',sans-serif;line-height:1.65}
+    a{color:inherit;text-decoration:none}
+    button,input,select{font:inherit}
+    .container{width:min(1180px,calc(100% - 40px));margin:auto}
+    .header{position:sticky;top:0;z-index:20;background:linear-gradient(90deg,var(--maroon-deep),#711c19 60%,#460e0d);color:#fff4dd;border-bottom:1px solid rgba(240,201,120,.35);box-shadow:0 8px 25px rgba(45,7,7,.18)}
+    .nav-wrap{height:82px;display:flex;align-items:center;gap:28px}
+    .brand{display:flex;align-items:center;gap:12px;min-width:275px}
+    .brand img{width:52px;height:52px;border:1px solid var(--gold);border-radius:50%;object-fit:cover;background:white}
+    .brand strong{display:block;color:var(--gold-light);font-family:'Tiro Devanagari Sanskrit',serif;font-size:19px;line-height:1.2}
+    .brand small{display:block;color:#f4ddad;font-size:9px;white-space:nowrap}
+    .nav{display:flex;align-items:center;gap:20px;margin-left:auto;font-size:13px}
+    .nav a:hover{color:var(--gold-light)}
+    .button{border:0;border-radius:6px;padding:12px 18px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;cursor:pointer;transition:.22s}
+    .button:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(75,20,18,.16)}
+    .button-gold{background:linear-gradient(135deg,var(--gold-light),#d49a2d);color:#4b1512}
+    .button-maroon{background:linear-gradient(135deg,#7c211e,#4a0e0d);color:white}
+    .button-outline{background:#fffdf8;border:1px solid var(--line);color:var(--maroon)}
+    .nav-cta{font-size:12px;white-space:nowrap}
+    .hero{padding:76px 0 70px;background:radial-gradient(circle at 82% 38%,rgba(224,173,85,.18),transparent 32%),linear-gradient(115deg,#fffaf2 5%,#fffdf8 60%,#f9ecd4 100%);overflow:hidden}
+    .hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:58px;align-items:center}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:7px 15px;color:#97322c;background:#fffaf2;font-size:13px;font-weight:700}
+    h1,h2,h3{color:#551513;font-family:'Tiro Devanagari Sanskrit',serif}
+    h1{font-size:58px;line-height:1.28;margin:23px 0 16px}
+    h1 em{font-style:normal;color:#9a3029}
+    .hero p{font-size:17px;max-width:620px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+    .feature-window{position:relative;background:#fffaf0;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
+    .feature-window:before{content:'ॐ';position:absolute;right:20px;top:-42px;font-family:serif;font-size:145px;color:rgba(198,139,39,.09);pointer-events:none}
+    .window-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:15px;border-bottom:1px solid #ead9b7}
+    .window-bar strong{color:var(--maroon);font-size:15px}
+    .live-pill{background:#e7f3eb;color:#14633b;border-radius:999px;padding:5px 10px;font-size:10px;font-weight:700}
+    .date-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0}
+    .date-row button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:white;color:var(--maroon);cursor:pointer}
+    .date-row b{color:var(--ink);font-size:13px;text-align:center}
+    .panchang-mini{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+    .mini-stat{background:white;border:1px solid #ead8b5;border-radius:9px;padding:11px 12px}
+    .mini-stat span{display:block;font-size:10px;color:#8a7468}
+    .mini-stat strong{display:block;color:#5d1714;font-size:13px;margin-top:2px}
+    .preview-link{display:flex;align-items:center;justify-content:center;gap:7px;color:#85241f;font-size:12px;font-weight:700;margin-top:16px}
+    .trust-bar{position:relative;margin-top:-27px;z-index:4;background:#fffaf2;border:1px solid var(--line);border-radius:12px;display:grid;grid-template-columns:repeat(3,1fr);padding:25px 28px;box-shadow:var(--shadow)}
+    .trust-bar>div{display:flex;align-items:center;gap:13px;padding:0 28px;border-right:1px solid #ecd8af}
+    .trust-bar>div:last-child{border:0}
+    .trust-bar i{font-size:37px;color:#bd8121}
+    .trust-bar span{font-size:11px;color:#826d64}
+    .trust-bar strong{display:block;color:var(--ink);font-size:15px}
+    .feature-section{padding:88px 0 95px;background:#fffdf8}
+    .section-heading{text-align:center;max-width:720px;margin:0 auto 35px}
+    .section-heading>span{color:#a73a31;font-weight:700;font-size:13px}
+    .section-heading h2{font-size:40px;margin:6px 0 8px}
+    .section-heading p{margin:0}
+    .module-tabs{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-bottom:32px}
+    .module-tab{border:1px solid var(--line);background:#fffaf1;color:#68201c;border-radius:999px;padding:10px 17px;display:flex;align-items:center;gap:7px;font-weight:700;cursor:pointer}
+    .module-tab.active{background:var(--maroon);color:#fff;border-color:var(--maroon);box-shadow:0 8px 18px rgba(100,25,23,.18)}
+    .module-panel{display:none;animation:rise .28s ease}
+    .module-panel.active{display:block}
+    @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .panchang-card{border:1px solid var(--line);border-radius:15px;overflow:hidden;background:#fffaf1;box-shadow:var(--shadow)}
+    .panchang-head{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:27px 30px;background:linear-gradient(110deg,#531210,#7b211e);color:#fff1d4}
+    .panchang-head h3{color:#ffe4a6;margin:0;font-size:24px}
+    .panchang-head p{margin:3px 0 0;font-size:11px;color:#e7cdbb}
+    .panchang-head .date-switch{display:flex;align-items:center;gap:8px}
+    .panchang-head button{border:1px solid rgba(255,224,164,.35);background:rgba(255,255,255,.08);color:white;width:34px;height:34px;border-radius:50%;cursor:pointer}
+    .panchang-content{padding:30px}
+    .daily-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+    .daily-item{background:white;border:1px solid #e9d7b5;border-radius:9px;padding:14px;text-align:center}
+    .daily-item i{font-size:25px;color:#bb7d1d}
+    .daily-item span{display:block;font-size:10px;color:#88736b;margin-top:3px}
+    .daily-item strong{display:block;color:#571715;font-size:12px;margin-top:3px}
+    .subheading{display:flex;align-items:end;justify-content:space-between;gap:20px;margin:29px 0 14px}
+    .subheading h3{margin:0;font-size:23px}
+    .subheading a{font-size:11px;color:#8f2b25;font-weight:700}
+    .zodiac-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}
+    .zodiac{border:1px solid #e5c98f;background:#fffdf8;border-radius:9px;padding:11px 8px;text-align:center;cursor:pointer;color:#68201c;font-weight:700}
+    .zodiac:hover,.zodiac.active{background:#681817;color:#ffe1a2;border-color:#681817}
+    .zodiac-result{margin-top:12px;background:#f9ebd2;border-left:3px solid #bd8121;padding:13px 16px;color:#5f3930;font-size:13px}
+    .tool-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+    .tool-card{background:#fffaf0;border:1px solid #e4c384;border-radius:11px;padding:28px 22px;min-height:250px;transition:.22s}
+    .tool-card:hover{transform:translateY(-5px);background:white;box-shadow:var(--shadow)}
+    .tool-card>i{font-size:46px;color:#c68b27}
+    .tool-card h3{font-size:20px;margin:12px 0 5px}
+    .tool-card p{font-size:12px;margin:0 0 18px}
+    .text-link{display:inline-flex;align-items:center;gap:5px;color:#8f2b25;font-size:12px;font-weight:700}
+    .trust-layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px}
+    .credential-panel{background:linear-gradient(145deg,#4b0f0e,#751d1a);border-radius:14px;padding:35px;color:#f4ded0}
+    .credential-panel h3{color:#ffe3a2;font-size:26px;margin:8px 0}
+    .credential-panel>i{font-size:48px;color:var(--gold-light)}
+    .credential-panel ul{list-style:none;padding:0;margin:22px 0}
+    .credential-panel li{display:flex;gap:9px;margin:11px 0;font-size:13px}
+    .testimonial-panel{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .review-card{background:#fffaf0;border:1px solid var(--line);border-radius:12px;padding:25px}
+    .stars{color:#c88d22;letter-spacing:2px}
+    .review-card p{font-family:'Tiro Devanagari Sanskrit',serif;color:#5b302b;font-size:16px}
+    .review-card strong,.review-card span{display:block}
+    .review-card span{font-size:10px;color:#8a746c}
+    .knowledge-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:20px}
+    .muhurat-list,.knowledge-list{background:#fffaf0;border:1px solid var(--line);border-radius:12px;padding:27px}
+    .muhurat-list h3,.knowledge-list h3{margin-top:0;font-size:24px}
+    .muhurat-row{display:grid;grid-template-columns:78px 1fr auto;gap:13px;align-items:center;padding:14px 0;border-bottom:1px solid #ead8b6}
+    .muhurat-row:last-child{border:0}
+    .muhurat-date{background:#681817;color:#ffe3a0;border-radius:7px;padding:7px;text-align:center;font-size:11px;font-weight:700}
+    .muhurat-row strong{display:block;color:#5a1816}
+    .muhurat-row span{font-size:10px;color:#846f66}
+    .muhurat-row i{color:#bd8121;font-size:25px}
+    .knowledge-link{display:grid;grid-template-columns:40px 1fr;gap:11px;padding:13px 0;border-bottom:1px solid #ead8b6}
+    .knowledge-link:last-child{border:0}
+    .knowledge-link i{width:37px;height:37px;border-radius:50%;background:#681817;color:#ffe1a0;display:grid;place-items:center;font-size:19px}
+    .knowledge-link strong{display:block;color:#5b1917;font-size:13px}
+    .knowledge-link span{font-size:10px}
+    .phase-note{margin-top:28px;padding:18px 22px;border:1px dashed #c69239;border-radius:9px;background:#fff7e6;display:flex;align-items:center;gap:13px;color:#6e3c27}
+    .phase-note i{font-size:28px;color:#a96d14}
+    .footer{background:var(--green);color:#d9e7de;padding:40px 0 22px;border-top:1px solid var(--gold)}
+    .footer-wrap{display:flex;align-items:center;justify-content:space-between;gap:25px;flex-wrap:wrap}
+    .footer-brand{display:flex;align-items:center;gap:12px}
+    .footer-brand img{width:54px;height:54px;border-radius:50%;border:1px solid var(--gold);object-fit:cover;background:white}
+    .footer strong{display:block;color:#e4bd61}
+    .footer small{color:#a9c0b2}
+    .footer-links{display:flex;gap:17px;font-size:12px}
+    .floating-whatsapp{position:fixed;right:22px;bottom:22px;width:58px;height:58px;border-radius:50%;background:#0b9852;color:white;display:grid;place-items:center;font-size:29px;box-shadow:0 12px 30px rgba(0,90,44,.3);z-index:15}
+    @media(max-width:980px){.nav a:not(.nav-cta){display:none}.hero-grid{grid-template-columns:1fr}.hero-copy{text-align:center}.hero p{margin-left:auto;margin-right:auto}.hero-actions{justify-content:center}.feature-window{max-width:600px;margin:auto}.daily-grid{grid-template-columns:repeat(3,1fr)}.tool-grid{grid-template-columns:repeat(2,1fr)}.trust-layout,.knowledge-grid{grid-template-columns:1fr}}
+    @media(max-width:620px){.container{width:min(100% - 26px,560px)}.nav-wrap{height:70px}.brand{min-width:0}.brand small{display:none}.nav-cta{padding:9px 11px}.hero{padding:48px 0 65px}h1{font-size:38px}.trust-bar{grid-template-columns:1fr;padding:10px 22px}.trust-bar>div{border-right:0;border-bottom:1px solid #ecd8af;padding:15px 0}.trust-bar>div:last-child{border-bottom:0}.feature-section{padding:68px 0}.section-heading h2{font-size:31px}.panchang-head{align-items:flex-start;flex-direction:column}.daily-grid{grid-template-columns:repeat(2,1fr)}.zodiac-grid{grid-template-columns:repeat(3,1fr)}.tool-grid,.testimonial-panel{grid-template-columns:1fr}.panchang-content{padding:20px}.muhurat-row{grid-template-columns:70px 1fr}.muhurat-row>i{display:none}.footer-wrap{align-items:flex-start;flex-direction:column}.footer-links{flex-wrap:wrap}}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container nav-wrap">
+      <a class="brand" href="#">
+        <img src="/files/assets/shreehari-logo.webp" alt="Astro Shree Hari logo">
+        <span><strong>Astro Shree Hari</strong><small>श्रीहरि पूजा भण्डार एवं ज्योतिष परामर्श केन्द्र नेपाल</small></span>
+      </a>
+      <nav class="nav" aria-label="मुख्य मेनु">
+        <a href="#">गृहपृष्ठ</a><a href="#features">दैनिक ज्योतिष</a><a href="#tools">निःशुल्क उपकरण</a><a href="#">ई-पूजा</a><a href="#">सम्पर्क</a>
+        <a class="button button-gold nav-cta" href="#features"><i class="ph ph-calendar-check"></i> परामर्श बुक गर्नुहोस्</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow"><i class="ph ph-sparkle"></i> नयाँ डिजिटल ज्योतिष सेवा</span>
+          <h1>दैनिक मार्गदर्शनदेखि <em>व्यक्तिगत विश्लेषणसम्म</em></h1>
+          <p>पञ्चाङ्ग, राशिफल, डिजिटल कुण्डली, अङ्क ज्योतिष र शुभ मुहूर्त—शास्त्रसम्मत ज्ञानलाई सरल र विश्वसनीय अनुभवमा।</p>
+          <div class="hero-actions">
+            <a class="button button-maroon" href="#features"><i class="ph ph-calendar-dots"></i> आजको पञ्चाङ्ग हेर्नुहोस्</a>
+            <a class="button button-outline" href="#tools"><i class="ph ph-magic-wand"></i> निःशुल्क उपकरण</a>
+          </div>
+        </div>
+        <div class="feature-window" aria-label="Daily Panchang preview">
+          <div class="window-bar"><strong>आजको पञ्चाङ्ग</strong><span class="live-pill">दैनिक अपडेट</span></div>
+          <div class="date-row"><button aria-label="अघिल्लो दिन"><i class="ph ph-caret-left"></i></button><b>२०८३ श्रावण १<br><small>शुक्रवार · July 17, 2026</small></b><button aria-label="अर्को दिन"><i class="ph ph-caret-right"></i></button></div>
+          <div class="panchang-mini">
+            <div class="mini-stat"><span>तिथि</span><strong>शुक्ल तृतीया</strong></div><div class="mini-stat"><span>नक्षत्र</span><strong>मघा</strong></div>
+            <div class="mini-stat"><span>योग</span><strong>सिद्धि</strong></div><div class="mini-stat"><span>सूर्योदय</span><strong>०५:१९</strong></div>
+          </div>
+          <a class="preview-link" href="#features">पूर्ण विवरण र राशिफल <i class="ph ph-arrow-right"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container trust-bar">
+      <div><i class="ph ph-seal-check"></i><span>शास्त्रसम्मत<strong>विश्वसनीय गणना</strong></span></div>
+      <div><i class="ph ph-file-pdf"></i><span>तुरुन्त प्राप्त हुने<strong>डिजिटल रिपोर्ट</strong></span></div>
+      <div><i class="ph ph-video-camera"></i><span>नेपाल तथा विदेश<strong>अनलाइन परामर्श</strong></span></div>
+    </div>
+
+    <section class="feature-section" id="features">
+      <div class="container">
+        <div class="section-heading"><span>नयाँ अनुभव</span><h2>ज्योतिष सेवा, अब अझ उपयोगी</h2><p>प्रयोगकर्ताले दैनिक जानकारी लिन, निःशुल्क जाँच गर्न र आवश्यक परे गुरुजीसँग परामर्श बुक गर्न सक्ने एउटै केन्द्र।</p></div>
+        <div class="module-tabs" role="tablist">
+          <button class="module-tab active" data-tab="panchang"><i class="ph ph-calendar-blank"></i> पञ्चाङ्ग र राशिफल</button>
+          <button class="module-tab" data-tab="tools"><i class="ph ph-sparkle"></i> निःशुल्क उपकरण</button>
+          <button class="module-tab" data-tab="trust"><i class="ph ph-medal"></i> विश्वास र समीक्षा</button>
+          <button class="module-tab" data-tab="knowledge"><i class="ph ph-books"></i> मुहूर्त र ज्ञान</button>
+        </div>
+
+        <div class="module-panel active" id="panel-panchang">
+          <div class="panchang-card">
+            <div class="panchang-head"><div><h3>आजको विस्तृत पञ्चाङ्ग</h3><p>नेपाल समयअनुसार दैनिक गणना</p></div><div class="date-switch"><button aria-label="अघिल्लो"><i class="ph ph-caret-left"></i></button><strong>२०८३ श्रावण १</strong><button aria-label="अर्को"><i class="ph ph-caret-right"></i></button></div></div>
+            <div class="panchang-content">
+              <div class="daily-grid">
+                <div class="daily-item"><i class="ph ph-moon-stars"></i><span>तिथि</span><strong>शुक्ल तृतीया</strong></div>
+                <div class="daily-item"><i class="ph ph-star-four"></i><span>नक्षत्र</span><strong>मघा</strong></div>
+                <div class="daily-item"><i class="ph ph-sparkle"></i><span>योग</span><strong>सिद्धि</strong></div>
+                <div class="daily-item"><i class="ph ph-circle-half"></i><span>करण</span><strong>गर</strong></div>
+                <div class="daily-item"><i class="ph ph-sun-horizon"></i><span>सूर्योदय</span><strong>०५:१९</strong></div>
+                <div class="daily-item"><i class="ph ph-sun-dim"></i><span>सूर्यास्त</span><strong>१८:५९</strong></div>
+              </div>
+              <div class="subheading"><h3>आजको राशिफल</h3><a href="#">सबै विस्तृत रूपमा हेर्नुहोस् <i class="ph ph-arrow-right"></i></a></div>
+              <div class="zodiac-grid">
+                <button class="zodiac active" data-rashi="मेष: नयाँ काम सुरु गर्न अनुकूल दिन। आत्मविश्वासका साथ अगाडि बढ्नुहोस्।">मेष</button><button class="zodiac" data-rashi="वृष: आर्थिक निर्णयमा धैर्य र स्पष्टता आवश्यक छ।">वृष</button><button class="zodiac" data-rashi="मिथुन: संवाद र छोटो यात्राबाट लाभ मिल्नेछ।">मिथुन</button><button class="zodiac" data-rashi="कर्कट: परिवारसँगको समय शुभ र सन्तोषजनक हुनेछ।">कर्कट</button><button class="zodiac" data-rashi="सिंह: नेतृत्व गर्ने अवसर प्राप्त हुनेछ।">सिंह</button><button class="zodiac" data-rashi="कन्या: स्वास्थ्य र दिनचर्यामा ध्यान दिनुहोस्।">कन्या</button>
+                <button class="zodiac" data-rashi="तुला: साझेदारीमा स्पष्ट संवादले फाइदा दिन्छ।">तुला</button><button class="zodiac" data-rashi="वृश्चिक: पुरानो रोकिएको काम पूरा हुने समय।">वृश्चिक</button><button class="zodiac" data-rashi="धनु: अध्ययन र यात्राका लागि राम्रो दिन।">धनु</button><button class="zodiac" data-rashi="मकर: योजनाबद्ध प्रयासले सफलता दिनेछ।">मकर</button><button class="zodiac" data-rashi="कुम्भ: नयाँ विचार व्यवहारमा ल्याउन सक्नुहुन्छ।">कुम्भ</button><button class="zodiac" data-rashi="मीन: ध्यान र आध्यात्मिक अभ्यास लाभदायक हुनेछ।">मीन</button>
+              </div>
+              <div class="zodiac-result" id="rashi-result">मेष: नयाँ काम सुरु गर्न अनुकूल दिन। आत्मविश्वासका साथ अगाडि बढ्नुहोस्।</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="module-panel" id="panel-tools">
+          <div class="tool-grid" id="tools">
+            <article class="tool-card"><i class="ph ph-hash-straight"></i><h3>अङ्क ज्योतिष</h3><p>नाम र जन्ममितिबाट मूलांक, भाग्यांक, व्यक्तित्व र उपयोगी सुझाव।</p><a class="text-link" href="#">निःशुल्क जाँच गर्नुहोस् <i class="ph ph-arrow-right"></i></a></article>
+            <article class="tool-card"><i class="ph ph-heart-half"></i><h3>गुण मिलान</h3><p>दुवै व्यक्तिको जन्म विवरणबाट अष्टकूट स्कोर र वैवाहिक अनुकूलता।</p><a class="text-link" href="#">मिलान सुरु गर्नुहोस् <i class="ph ph-arrow-right"></i></a></article>
+            <article class="tool-card"><i class="ph ph-chart-polar"></i><h3>डिजिटल कुण्डली</h3><p>लग्न, राशि, नवमांश, ग्रहस्थिति र प्रारम्भिक फलादेशसहित PDF रिपोर्ट।</p><a class="text-link" href="#">कुण्डली बनाउनुहोस् <i class="ph ph-arrow-right"></i></a></article>
+            <article class="tool-card"><i class="ph ph-compass-rose"></i><h3>वास्तु जाँच</h3><p>मुख्य दिशा र कोठाको स्थानबाट आधारभूत वैदिक वास्तु सुझाव।</p><a class="text-link" href="#">घरको जाँच गर्नुहोस् <i class="ph ph-arrow-right"></i></a></article>
+          </div>
+          <div class="phase-note"><i class="ph ph-info"></i><div><strong>प्रयोगकर्ता यात्रा:</strong> निःशुल्क छोटो परिणामपछि विस्तृत रिपोर्ट वा गुरुजीसँग व्यक्तिगत परामर्शको स्पष्ट विकल्प।</div></div>
+        </div>
+
+        <div class="module-panel" id="panel-trust">
+          <div class="trust-layout">
+            <div class="credential-panel"><i class="ph ph-graduation-cap"></i><h3>योग्यता र परम्परा स्पष्ट रूपमा</h3><p>गुरुजीको औपचारिक अध्ययन, शिक्षण अनुभव, धार्मिक योगदान र संस्थागत भूमिकालाई प्रमाणसहित प्रस्तुत गर्ने क्षेत्र।</p><ul><li><i class="ph ph-check-circle"></i> शैक्षिक योग्यता र प्रमाणपत्र</li><li><i class="ph ph-check-circle"></i> ज्योतिष तथा कर्मकाण्ड अनुभव</li><li><i class="ph ph-check-circle"></i> नेपाल तथा विदेशका सेवाग्राही</li></ul><a class="button button-gold" href="#">गुरुजीको परिचय</a></div>
+            <div class="testimonial-panel">
+              <article class="review-card"><div class="stars">★★★★★</div><p>“विवाह मिलानको विस्तृत व्याख्या सरल भाषामा बुझ्न पायौँ। परामर्श अत्यन्त उपयोगी रह्यो।”</p><strong>सुमन अधिकारी</strong><span>काठमाडौं · सत्यापित परामर्श</span></article>
+              <article class="review-card"><div class="stars">★★★★★</div><p>“विदेशबाट अनलाइन समय लिन सजिलो भयो र रिपोर्ट पनि समयमै प्राप्त भयो।”</p><strong>सरिता भण्डारी</strong><span>सिड्नी · सत्यापित परामर्श</span></article>
+              <article class="review-card"><div class="stars">★★★★★</div><p>“पूजा सामग्रीदेखि विधिसम्म स्पष्ट जानकारी पाएँ। सेवा व्यवस्थित र विश्वसनीय छ।”</p><strong>माधव प्रसाद</strong><span>झापा · सत्यापित ई-पूजा</span></article>
+              <article class="review-card"><div class="stars">★★★★★</div><p>“कुण्डली रिपोर्ट पढ्न सजिलो र परामर्शमा सबै प्रश्नको स्पष्ट उत्तर मिल्यो।”</p><strong>अनिता राई</strong><span>धरान · सत्यापित रिपोर्ट</span></article>
+            </div>
+          </div>
+        </div>
+
+        <div class="module-panel" id="panel-knowledge">
+          <div class="knowledge-grid">
+            <div class="muhurat-list"><h3>२०८३ शुभ मुहूर्त</h3>
+              <div class="muhurat-row"><div class="muhurat-date">श्रावण १२</div><div><strong>गृहप्रवेश मुहूर्त</strong><span>बिहान ०७:१८ देखि १०:४२ सम्म</span></div><i class="ph ph-house-line"></i></div>
+              <div class="muhurat-row"><div class="muhurat-date">भाद्र ०५</div><div><strong>विवाह शुभ साइत</strong><span>दिउँसो ११:३६ देखि १४:०८ सम्म</span></div><i class="ph ph-rings"></i></div>
+              <div class="muhurat-row"><div class="muhurat-date">भाद्र २१</div><div><strong>व्यापार शुभारम्भ</strong><span>बिहान ०८:१२ देखि ११:२५ सम्म</span></div><i class="ph ph-storefront"></i></div>
+            </div>
+            <div class="knowledge-list"><h3>ज्ञान केन्द्र</h3>
+              <a class="knowledge-link" href="#"><i class="ph ph-planet"></i><span><strong>नवग्रह प्रभाव र शान्ति विधि</strong><span>ग्रह, मन्त्र, दान र पूजा जानकारी</span></span></a>
+              <a class="knowledge-link" href="#"><i class="ph ph-moon-stars"></i><span><strong>नक्षत्रअनुसार स्वभाव</strong><span>२७ नक्षत्रको सरल व्याख्या</span></span></a>
+              <a class="knowledge-link" href="#"><i class="ph ph-hands-praying"></i><span><strong>संस्कार तथा कर्मकाण्ड</strong><span>विधि, सामग्री र शुभ समय</span></span></a>
+              <a class="knowledge-link" href="#"><i class="ph ph-bell-ringing"></i><span><strong>पर्व र मुहूर्त सूचना</strong><span>समयमै वेबसाइट तथा मोबाइल सूचना</span></span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container footer-wrap"><div class="footer-brand"><img src="/files/assets/shreehari-logo.webp" alt=""><span><strong>श्रीहरि पूजा भण्डार</strong><small>एवं ज्योतिष परामर्श केन्द्र नेपाल</small></span></div><div class="footer-links"><a href="#">हाम्रो बारेमा</a><a href="#">सेवाहरू</a><a href="#">पञ्चाङ्ग</a><a href="#">परामर्श</a><a href="#">सम्पर्क</a></div><small>© २०२६ सर्वाधिकार सुरक्षित</small></div></footer>
+  <a class="floating-whatsapp" href="#" aria-label="WhatsApp"><i class="ph ph-whatsapp-logo"></i></a>
+
+  <script>
+    const tabs=document.querySelectorAll('.module-tab');
+    const panels=document.querySelectorAll('.module-panel');
+    tabs.forEach(tab=>tab.addEventListener('click',()=>{
+      tabs.forEach(item=>item.classList.toggle('active',item===tab));
+      panels.forEach(panel=>panel.classList.toggle('active',panel.id===`panel-${tab.dataset.tab}`));
+      document.getElementById('features').scrollIntoView({behavior:'smooth',block:'start'});
+    }));
+    const zodiacButtons=document.querySelectorAll('.zodiac');
+    const result=document.getElementById('rashi-result');
+    zodiacButtons.forEach(button=>button.addEventListener('click',()=>{
+      zodiacButtons.forEach(item=>item.classList.toggle('active',item===button));
+      result.textContent=button.dataset.rashi;
+    }));
+  </script>
+</body>
+</html>

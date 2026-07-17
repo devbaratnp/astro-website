@@ -8,7 +8,8 @@ import {
 } from '@phosphor-icons/react';
 import { PHONE, services } from '../constants';
 import { getPanchang } from '../services/api';
-import { buildHomePanchangItems } from '../utils/homeAstrology';
+import { buildHomePanchangItems, getBsDateString } from '../utils/homeAstrology';
+import { ad2bs } from '../utils/bsDate';
 import '../homeAstrology.css';
 
 const homeTools = [
@@ -39,10 +40,12 @@ export function Home() {
     return () => { active = false; };
   }, [panchangRefresh]);
 
+  const today = new Date();
   const todayLabel = new Intl.DateTimeFormat('ne-NP', {
     dateStyle: 'full',
     timeZone: 'Asia/Kathmandu',
-  }).format(new Date());
+  }).format(today);
+  const bsToday = getBsDateString(ad2bs(today));
 
   return (
     <>
@@ -86,13 +89,14 @@ export function Home() {
 
           <div className="astro-hub-layout">
             <article className="astro-daily-card">
-              <div className="astro-daily-topline">
-                <div className="astro-daily-symbol"><Planet weight="duotone" /></div>
-                <div>
-                  <span>आजको पञ्चाङ्ग</span>
-                  <strong>{todayLabel}</strong>
+                <div className="astro-daily-topline">
+                  <div className="astro-daily-symbol"><Planet weight="duotone" /></div>
+                  <div>
+                    <span>आजको पञ्चाङ्ग</span>
+                    <strong>{todayLabel}</strong>
+                    <span className="astro-bs-date">{bsToday}</span>
+                  </div>
                 </div>
-              </div>
 
               <div className="astro-panchang-status" aria-live="polite">
                 {panchangStatus === 'loading' && <div className="astro-loading"><i></i><span>आजको पञ्चाङ्ग लोड हुँदैछ…</span></div>}

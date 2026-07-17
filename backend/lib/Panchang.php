@@ -1,6 +1,11 @@
 <?php
 
 class Panchang {
+    private static array $moonRashis = [
+        'मेष', 'वृष', 'मिथुन', 'कर्कट', 'सिंह', 'कन्या',
+        'तुला', 'वृश्चिक', 'धनु', 'मकर', 'कुम्भ', 'मीन',
+    ];
+
     public static function getForDate(string $date): array {
         $timestamp = strtotime($date);
         $dayOfYear = (int)date('z', $timestamp);
@@ -11,6 +16,9 @@ class Panchang {
         $nakshatras = ['अश्विनी', 'भरणी', 'कृत्तिका', 'रोहिणी', 'मृगशिरा', 'आर्द्रा', 'पुनर्वसु', 'पुष्य', 'अश्लेषा', 'मघा', 'पूर्वाफाल्गुनी', 'उत्तराफाल्गुनी', 'हस्त', 'चित्रा', 'स्वाती', 'विशाखा', 'अनुराधा', 'ज्येष्ठा', 'मूल', 'पूर्वाषाढा', 'उत्तराषाढा', 'श्रवण', 'धनिष्ठा', 'शतभिषा', 'पूर्वभाद्रपद', 'उत्तरभाद्रपद', 'रेवती'];
         $nakshatraIndex = ($dayOfYear * 27 / 365) % 27;
 
+        $moonRashiIndex = (int)($nakshatraIndex * 4 / 9);
+        if ($moonRashiIndex > 11) $moonRashiIndex = 11;
+
         $sunrise = @date_sunrise($timestamp, SUNFUNCS_RET_STRING, 27.7172, 85.3240, 90.5, 5.75);
         $sunset = @date_sunset($timestamp, SUNFUNCS_RET_STRING, 27.7172, 85.3240, 90.5, 5.75);
 
@@ -18,6 +26,7 @@ class Panchang {
             'date' => $date,
             'tithi' => $tithis[(int)$tithiIndex],
             'nakshatra' => $nakshatras[(int)$nakshatraIndex],
+            'moon_rashi' => self::$moonRashis[$moonRashiIndex],
             'sunrise' => $sunrise ?: '06:00',
             'sunset' => $sunset ?: '18:00',
             'day_of_week' => date('l', $timestamp),
