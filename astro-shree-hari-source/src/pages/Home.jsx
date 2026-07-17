@@ -93,8 +93,8 @@ export function Home() {
                   <div className="astro-daily-symbol"><Planet weight="duotone" /></div>
                   <div>
                     <span>आजको पञ्चाङ्ग</span>
-                    <strong>{todayLabel}</strong>
-                    <span className="astro-bs-date">{bsToday}</span>
+                    <strong className="astro-bs-date">{bsToday}</strong>
+                    <span className="astro-en-date">{todayLabel}</span>
                   </div>
                 </div>
 
