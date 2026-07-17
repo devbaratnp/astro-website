@@ -40,7 +40,7 @@ RewriteRule ^ index.html [L]
     Header set Referrer-Policy "strict-origin-when-cross-origin"
     Header set Permissions-Policy "geolocation=(), camera=(), microphone=()"
     Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-    Header set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-src https://meet.jit.si; base-uri 'self'; form-action 'self'"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://fonts.googleapis.com; frame-src https://meet.jit.si; base-uri 'self'; form-action 'self'"
 </IfModule>
 
 # Security
