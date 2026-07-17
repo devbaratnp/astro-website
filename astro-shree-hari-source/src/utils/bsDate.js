@@ -105,7 +105,7 @@ export function bs2ad(y, m, d) {
 
 export function ad2bs(dt) {
   const tgt = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
-  const df = Math.round((tgt - BASE_AD) / 864e5);
+  let df = Math.round((tgt - BASE_AD) / 864e5);
   let y = BS_START;
   if (df >= 0) {
     while (true) {
