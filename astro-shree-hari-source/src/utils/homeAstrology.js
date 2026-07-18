@@ -12,7 +12,7 @@ export const bsMonths = ['बैशाख','जेठ','असार','श्र
 
 export function getBsDateString(bs) {
   if (!bs) return FALLBACK;
-  return `${bs.y} ${bsMonths[bs.m - 1]} ${bs.d}, ${toN(bs.d)} ${toN(bs.m)} ${toN(bs.y)}`;
+  return `${bs.y} ${bsMonths[bs.m - 1]} ${bs.d}`;
 }
 
 function toN(num) {
@@ -26,9 +26,11 @@ function displayValue(value, isTime) {
 }
 
 export function buildHomePanchangItems(panchang) {
-  return fields.map(([key, label]) => ({
-    key,
-    label,
-    value: displayValue(panchang?.[key], key === 'sunrise' || key === 'sunset'),
-  }));
+  return fields
+    .map(([key, label]) => ({
+      key,
+      label,
+      value: displayValue(panchang?.[key], key === 'sunrise' || key === 'sunset'),
+    }))
+    .filter((item) => item.value !== FALLBACK);
 }

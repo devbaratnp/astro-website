@@ -24,6 +24,7 @@ export function Home() {
   const [panchangStatus, setPanchangStatus] = useState('loading');
   const [panchangRefresh, setPanchangRefresh] = useState(0);
   const [testimonials, setTestimonials] = useState([]);
+  const [clock, setClock] = useState('');
 
   useEffect(() => {
     let active = true;
@@ -41,6 +42,17 @@ export function Home() {
     getTestimonials().then(d => { if (active) setTestimonials(d.data); }).catch(() => {});
     return () => { active = false; };
   }, [panchangRefresh]);
+
+  useEffect(() => {
+    const fmt = new Intl.DateTimeFormat('ne-NP', {
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+      timeZone: 'Asia/Kathmandu', hour12: false,
+    });
+    const tick = () => setClock(fmt.format(new Date()));
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
 
   const today = new Date();
   const todayLabel = new Intl.DateTimeFormat('ne-NP', {
@@ -97,6 +109,7 @@ export function Home() {
                     <span>आजको पञ्चाङ्ग</span>
                     <strong className="astro-bs-date">{bsToday}</strong>
                     <span className="astro-en-date">{todayLabel}</span>
+                    <span className="astro-clock">{clock}</span>
                   </div>
                 </div>
 
