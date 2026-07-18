@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { CalendarBlank, WhatsappLogo, EnvelopeSimple, Clock, LockKey } from '@phosphor-icons/react';
 import { PHONE, EMAIL, services } from '../constants';
 import { createAppointment, getAvailableSlots } from '../services/api';
@@ -32,6 +32,7 @@ export function Appointment() {
   const [error, setError] = useState('');
   const [slots, setSlots] = useState([]);
   const [meetingUrl, setMeetingUrl] = useState('');
+  const [slotLoading, setSlotLoading] = useState(false);
   const todayBS = useRef(ad2bs(new Date()));
   const [bsYear, setBsYear] = useState(todayBS.current.y);
   const [bsMonth, setBsMonth] = useState(todayBS.current.m);
@@ -40,12 +41,26 @@ export function Appointment() {
   const [amPm, setAmPm] = useState('am');
   const [timeHour, setTimeHour] = useState(12);
   const [timeMinute, setTimeMinute] = useState(0);
+  const todayMin = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
   useEffect(() => {
     const md = getMaxDay(bsYear, bsMonth);
     setMaxDay(md);
     if (bsDay > md) setBsDay(md);
   }, [bsYear, bsMonth, bsDay]);
+
+  const handleDateChange = useCallback(async (value) => {
+    setSlotLoading(true);
+    setSlots([]);
+    try {
+      const x = await getAvailableSlots(value);
+      setSlots(x.data.available_slots);
+    } catch {
+      setError('मितिको लागि उपलब्ध समय प्राप्त गर्न सकिएन।');
+    } finally {
+      setSlotLoading(false);
+    }
+  }, []);
 
   const handleYearChange = useCallback((e) => {
     const v = +e.target.value;
@@ -214,7 +229,8 @@ export function Appointment() {
               {services.map((s, index) => <option key={s.title} value={['kundali','marriage','grahadasha','vastu','pooja','general'][index]}>{s.title}</option>)}
             </select></label>
             <label>इमेल<input name="email" type="email" placeholder="तपाईंको इमेल" /></label>
-            <label>मिति *<input name="preferred_date" type="date" min={new Date().toISOString().slice(0,10)} required onChange={async e=>{try{const x=await getAvailableSlots(e.target.value);setSlots(x.data.available_slots)}catch(_){setSlots([])}}}/></label>
+            <label>मिति *<input name="preferred_date" type="date" min={todayMin} required onChange={e => handleDateChange(e.target.value)} /></label>
+            {slotLoading && <span className="slot-loading">समय सूची लोड हुँदैछ…</span>}
             <label>समय *<select name="preferred_time" required defaultValue=""><option value="" disabled>समय छान्नुहोस्</option>{slots.map(x=><option key={x} value={x}>{x}</option>)}</select></label>
             <label>परामर्श माध्यम<select name="consultation_mode" defaultValue="whatsapp"><option value="whatsapp">WhatsApp</option><option value="video">Video consultation</option><option value="phone">Phone</option><option value="inperson">प्रत्यक्ष</option></select></label>
             <label className="full">तपाईंको प्रश्न / समस्या *<textarea name="message" required rows="4" placeholder="आफ्नो प्रश्न वा समस्या विस्तारमा लेख्नुहोस्..." /></label>
