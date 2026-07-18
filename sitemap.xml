@@ -3,6 +3,10 @@
   <url><loc>https://www.astroshreehari.com/</loc><priority>1.0</priority></url>
   <url><loc>https://www.astroshreehari.com/about</loc></url>
   <url><loc>https://www.astroshreehari.com/services</loc></url>
+  <url><loc>https://www.astroshreehari.com/blog</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.astroshreehari.com/events</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.astroshreehari.com/gallery</loc><priority>0.6</priority></url>
+  <url><loc>https://www.astroshreehari.com/muhurta</loc><priority>0.7</priority></url>
   <url><loc>https://www.astroshreehari.com/appointment</loc><priority>0.9</priority></url>
   <url><loc>https://www.astroshreehari.com/kundali</loc><priority>0.9</priority></url>
   <url><loc>https://www.astroshreehari.com/pooja</loc><priority>0.9</priority></url>

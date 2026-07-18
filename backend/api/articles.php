@@ -3,8 +3,17 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/cors.php';
 require_once __DIR__ . '/../includes/helpers.php';
 
+header('Content-Type: application/json; charset=utf-8');
+
 $db = Database::getConnection();
 $slug = $_GET['slug'] ?? '';
+$sitemap = isset($_GET['sitemap']);
+
+if ($sitemap) {
+    $stmt = $db->query("SELECT slug, updated_at, published_at FROM articles WHERE is_published = 1 AND published_at IS NOT NULL ORDER BY published_at DESC");
+    jsonSuccess($stmt->fetchAll());
+    exit;
+}
 
 if ($slug) {
     $stmt = $db->prepare("SELECT id, title_ne, title_en, slug, content_ne, content_en, excerpt_ne, excerpt_en, cover_image, tags, published_at FROM articles WHERE slug = :slug AND is_published = 1 AND published_at IS NOT NULL LIMIT 1");
