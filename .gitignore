@@ -10,4 +10,5 @@ astro-shree-hari-source/node_modules/
 astro-shree-hari-source/dist/
 backend/config/database.credentials.php
 backend/config/gcal-service-account.json
+backend/config/smtp.credentials.php
 release/
