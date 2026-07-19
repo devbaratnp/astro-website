@@ -1,16 +1,25 @@
 <?php
-if (empty($_GET['key']) || $_GET['key'] !== 'astrotest2026') {
-    http_response_code(403);
-    die('Forbidden');
+$isCli = php_sapi_name() === 'cli';
+
+if (!$isCli) {
+    if (empty($_GET['key']) || $_GET['key'] !== 'astrotest2026') {
+        http_response_code(403);
+        die('Forbidden');
+    }
+    header('Content-Type: text/plain; charset=utf-8');
 }
 
 require_once __DIR__ . '/config/app.php';
 require_once __DIR__ . '/lib/Mailer.php';
 
-header('Content-Type: text/plain; charset=utf-8');
+$to = $isCli ? ($argv[1] ?? 'mind59024@hmail.com') : ($_GET['to'] ?? 'mind59024@hmail.com');
+$type = $isCli ? ($argv[2] ?? 'both') : ($_GET['type'] ?? 'both');
 
-$to = $_GET['to'] ?? 'mind59024@hmail.com';
-$type = $_GET['type'] ?? 'both';
+echo "Testing Mailer...\n";
+echo "From: " . (defined('SMTP_FROM') ? SMTP_FROM : 'default') . "\n";
+echo "SMTP Host: " . (defined('SMTP_HOST') && SMTP_HOST ? SMTP_HOST : '(using mail())') . "\n";
+echo "To: {$to}\n";
+echo "Type: {$type}\n\n";
 
 $data = [
     'name' => 'Test User',
@@ -30,15 +39,15 @@ $data = [
 $mailer = new Mailer();
 
 if ($type === 'admin' || $type === 'both') {
-    echo "Sending admin notification to {$to}...\n";
+    echo "Sending admin notification... ";
     $ok = $mailer->send($to, '🔔 परीक्षण: नयाँ परामर्श अनुरोध', Mailer::adminNotification($data));
-    echo "  => " . ($ok ? 'SENT' : 'FAILED') . "\n";
+    echo $ok ? "SENT\n" : "FAILED\n";
 }
 
 if ($type === 'client' || $type === 'both') {
-    echo "Sending client confirmation to {$to}...\n";
+    echo "Sending client confirmation... ";
     $ok = $mailer->send($to, '🙏 परीक्षण: तपाईंको अनुरोध प्राप्त भयो', Mailer::clientConfirmation($data));
-    echo "  => " . ($ok ? 'SENT' : 'FAILED') . "\n";
+    echo $ok ? "SENT\n" : "FAILED\n";
 }
 
 echo "\nDone. Check {$to} inbox (and spam folder).\n";
