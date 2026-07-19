@@ -85,10 +85,8 @@ class GoogleCalendar {
             ],
         ];
 
-        if (!empty($details['email'])) {
-            $eventData['attendees'] = [
-                ['email' => $details['email']],
-            ];
+        if (!empty($details['attendees'])) {
+            $eventData['attendees'] = $details['attendees'];
         }
 
         $eventData['conferenceData'] = [

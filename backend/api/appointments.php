@@ -23,27 +23,38 @@ switch ($method) {
         if (!empty($input['consultation_mode']) && !in_array($input['consultation_mode'], ['phone','whatsapp','video','inperson'], true)) jsonError('Invalid consultation mode');
 
         $meetingUrl = null;
+        $jitsiUrl = null;
 
         if ($input['consultation_mode'] === 'video') {
             $jitsiUrl = 'https://meet.jit.si/AstroShreeHari-' . bin2hex(random_bytes(8));
             $meetingUrl = $jitsiUrl;
+        }
 
-            if ($gcal->isConfigured()) {
-                $date = $input['preferred_date'] ?? date('Y-m-d');
-                $startTime = $input['preferred_time'] ?? '10:00';
-                $duration = GCAL_SLOT_DURATION;
-                $startDt = new DateTime("{$date} {$startTime}", new DateTimeZone(TIMEZONE));
-                $endDt = (clone $startDt)->modify("+{$duration} minutes");
+        $date = $input['preferred_date'] ?? date('Y-m-d');
+        $startTime = $input['preferred_time'] ?? '10:00';
+        $duration = GCAL_SLOT_DURATION;
+        $startDt = new DateTime("{$date} {$startTime}", new DateTimeZone(TIMEZONE));
+        $endDt = (clone $startDt)->modify("+{$duration} minutes");
 
-                $gcal->createEvent([
-                    'title' => "परामर्श: {$input['name']} - {$input['service_type']}",
-                    'description' => "नाम: {$input['name']}\nफोन: {$input['phone']}\nइमेल: " . ($input['email'] ?? '') . "\nसेवा: {$input['service_type']}\nमाध्यम: {$input['consultation_mode']}\nभिडियो लिङ्क: {$jitsiUrl}\nप्रश्न: {$input['message']}",
-                    'date' => $date,
-                    'start_time' => $startTime,
-                    'end_time' => $endDt->format('H:i'),
-                    'email' => $input['email'] ?? '',
-                ]);
-            }
+        $description = "नाम: {$input['name']}\nफोन: {$input['phone']}\nइमेल: " . ($input['email'] ?? '') . "\nसेवा: {$input['service_type']}\nमाध्यम: {$input['consultation_mode']}\nप्रश्न: {$input['message']}";
+        if ($jitsiUrl) {
+            $description .= "\nभिडियो लिङ्क: {$jitsiUrl}";
+        }
+
+        $attendees = [['email' => ADMIN_EMAIL]];
+        if (!empty($input['email'])) {
+            $attendees[] = ['email' => $input['email']];
+        }
+
+        if ($gcal->isConfigured()) {
+            $gcal->createEvent([
+                'title' => "परामर्श: {$input['name']} - {$input['service_type']}",
+                'description' => $description,
+                'date' => $date,
+                'start_time' => $startTime,
+                'end_time' => $endDt->format('H:i'),
+                'attendees' => $attendees,
+            ]);
         }
 
         $stmt = $db->prepare("
