@@ -24,7 +24,7 @@ class Database {
             $password = getenv('DB_PASS') ?: ($databaseCredentials['pass'] ?? '');
             $charset = 'utf8mb4';
 
-            if ($username === '' || $password === '') {
+            if ($username === '') {
                 throw new RuntimeException('Database credentials are not configured.');
             }
 

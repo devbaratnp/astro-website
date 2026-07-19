@@ -1,12 +1,15 @@
 <?php
 
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/../config/cors.php';
 require_once __DIR__ . '/../includes/helpers.php';
 require_once __DIR__ . '/../middleware/validate.php';
+require_once __DIR__ . '/../lib/GoogleCalendar.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 $db = Database::getConnection();
+$gcal = new GoogleCalendar();
 
 switch ($method) {
     case 'POST':
@@ -19,7 +22,30 @@ switch ($method) {
         if (!in_array($input['service_type'], ['kundali','marriage','grahadasha','vastu','pooja','general'], true)) jsonError('Invalid service type');
         if (!empty($input['consultation_mode']) && !in_array($input['consultation_mode'], ['phone','whatsapp','video','inperson'], true)) jsonError('Invalid consultation mode');
 
-        $meetingUrl = ($input['consultation_mode'] ?? '') === 'video' ? 'https://meet.jit.si/AstroShreeHari-' . bin2hex(random_bytes(8)) : null;
+        $meetingUrl = null;
+
+        if ($input['consultation_mode'] === 'video') {
+            $jitsiUrl = 'https://meet.jit.si/AstroShreeHari-' . bin2hex(random_bytes(8));
+            $meetingUrl = $jitsiUrl;
+
+            if ($gcal->isConfigured()) {
+                $date = $input['preferred_date'] ?? date('Y-m-d');
+                $startTime = $input['preferred_time'] ?? '10:00';
+                $duration = GCAL_SLOT_DURATION;
+                $startDt = new DateTime("{$date} {$startTime}", new DateTimeZone(TIMEZONE));
+                $endDt = (clone $startDt)->modify("+{$duration} minutes");
+
+                $gcal->createEvent([
+                    'title' => "परामर्श: {$input['name']} - {$input['service_type']}",
+                    'description' => "नाम: {$input['name']}\nफोन: {$input['phone']}\nइमेल: " . ($input['email'] ?? '') . "\nसेवा: {$input['service_type']}\nमाध्यम: {$input['consultation_mode']}\nभिडियो लिङ्क: {$jitsiUrl}\nप्रश्न: {$input['message']}",
+                    'date' => $date,
+                    'start_time' => $startTime,
+                    'end_time' => $endDt->format('H:i'),
+                    'email' => $input['email'] ?? '',
+                ]);
+            }
+        }
+
         $stmt = $db->prepare("
             INSERT INTO appointments (name, phone, email, service_type, preferred_date, preferred_time, consultation_mode, meeting_url, birth_date, birth_time, birth_place, nwaran_name, father_name, mother_name, birth_order, birth_gender, message, status)
             VALUES (:name, :phone, :email, :service_type, :preferred_date, :preferred_time, :consultation_mode, :meeting_url, :birth_date, :birth_time, :birth_place, :nwaran_name, :father_name, :mother_name, :birth_order, :birth_gender, :message, 'pending')
@@ -52,6 +78,28 @@ switch ($method) {
 
     case 'GET':
         $date = $_GET['date'] ?? date('Y-m-d');
+
+        if ($gcal->isConfigured()) {
+            $available = $gcal->getAvailableSlots($date);
+
+            $stmt = $db->prepare("
+                SELECT preferred_time
+                FROM appointments
+                WHERE preferred_date = :date AND status != 'cancelled'
+            ");
+            $stmt->execute([':date' => $date]);
+            $bookedInDb = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+            $available = array_values(array_diff($available, $bookedInDb));
+
+            jsonSuccess([
+                'date' => $date,
+                'available_slots' => $available,
+                'booked_slots' => $bookedInDb,
+                'source' => 'google_calendar',
+            ]);
+        }
+
         $stmt = $db->prepare("
             SELECT preferred_time
             FROM appointments
@@ -63,7 +111,7 @@ switch ($method) {
         $allSlots = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
         $available = array_values(array_diff($allSlots, $booked));
 
-        jsonSuccess(['date' => $date, 'available_slots' => $available, 'booked_slots' => $booked]);
+        jsonSuccess(['date' => $date, 'available_slots' => $available, 'booked_slots' => $booked, 'source' => 'database']);
         break;
 
     default:

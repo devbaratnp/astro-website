@@ -1,0 +1,12 @@
+{
+  "README": "Copy this file to gcal-service-account.json in the same directory with your actual Google Service Account key.",
+  "instructions": {
+    "step1": "Go to https://console.cloud.google.com → Create a project (e.g. 'astro-shreehari')",
+    "step2": "Enable Google Calendar API for that project",
+    "step3": "Create a Service Account → download the JSON key",
+    "step4": "Rename the downloaded JSON file to 'gcal-service-account.json' and place it here",
+    "step5": "Open your Google Calendar → Settings → Share with specific people → add the service account email with 'Make changes to events' permission",
+    "step6": "Set GCAL_CALENDAR_ID in backend/config/app.php to your Gmail or Google Workspace email"
+  },
+  "placeholder": "Replace this entire file with the actual service account JSON from Google Cloud Console"
+}

@@ -9,4 +9,12 @@ define('WHATSAPP_NUMBER', '9779844639228');
 define('TIMEZONE', 'Asia/Kathmandu');
 define('JWT_SECRET', getenv('JWT_SECRET') ?: 'change-this-to-a-random-secret');
 
+// Google Calendar Integration
+define('GCAL_CALENDAR_ID', getenv('GCAL_CALENDAR_ID') ?: 'astroshreehari3m@gmail.com');
+define('GCAL_CREDENTIALS_PATH', getenv('GCAL_CREDENTIALS_PATH') ?: __DIR__ . '/gcal-service-account.json');
+define('GCAL_SLOT_DURATION', (int)getenv('GCAL_SLOT_DURATION') ?: 30);
+define('GCAL_BUFFER_MINUTES', (int)getenv('GCAL_BUFFER_MINUTES') ?: 15);
+define('GCAL_WORKING_HOURS_START', (int)getenv('GCAL_WORKING_HOURS_START') ?: 9);
+define('GCAL_WORKING_HOURS_END', (int)getenv('GCAL_WORKING_HOURS_END') ?: 20);
+
 date_default_timezone_set(TIMEZONE);

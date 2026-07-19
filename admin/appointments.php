@@ -72,6 +72,7 @@ $appointments = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll(
                         <div><strong>जन्म मिति:</strong> <?= $a['birth_date'] ?? '—' ?> <?= $a['birth_time'] ?? '' ?></div>
                         <div><strong>जन्म स्थान:</strong> <?= htmlspecialchars($a['birth_place'] ?: '—') ?></div>
                         <div><strong>सन्देश:</strong> <?= nl2br(htmlspecialchars($a['message'])) ?></div>
+                        <div><strong>भिडियो लिङ्क:</strong> <?= $a['meeting_url'] ? '<a href="' . htmlspecialchars($a['meeting_url']) . '" target="_blank">' . htmlspecialchars($a['meeting_url']) . '</a>' : '—' ?></div>
                         <div><strong>नोट:</strong> <textarea name="admin_notes" rows="2"><?= htmlspecialchars($a['admin_notes'] ?? '') ?></textarea></div>
                         <div>
                             <select name="status">
