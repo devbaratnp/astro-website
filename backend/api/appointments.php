@@ -6,6 +6,7 @@ require_once __DIR__ . '/../config/cors.php';
 require_once __DIR__ . '/../includes/helpers.php';
 require_once __DIR__ . '/../middleware/validate.php';
 require_once __DIR__ . '/../lib/GoogleCalendar.php';
+require_once __DIR__ . '/../lib/Mailer.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 $db = Database::getConnection();
@@ -83,6 +84,34 @@ switch ($method) {
         ]);
 
         $appointmentId = $db->lastInsertId();
+
+        try {
+            $mailer = new Mailer();
+            $emailData = [
+                'name' => $input['name'],
+                'phone' => $input['phone'],
+                'email' => $input['email'] ?? '',
+                'service_type' => $input['service_type'],
+                'preferred_date' => $input['preferred_date'] ?? '',
+                'preferred_time' => $input['preferred_time'] ?? '',
+                'consultation_mode' => $input['consultation_mode'] ?? 'whatsapp',
+                'message' => $input['message'],
+                'meeting_url' => $meetingUrl ?? '',
+                'birth_date' => $input['birth_date'] ?? '',
+                'birth_time' => $input['birth_time'] ?? '',
+                'birth_place' => $input['birth_place'] ?? '',
+            ];
+
+            $adminSubject = '🔔 नयाँ परामर्श अनुरोध: ' . $input['name'] . ' - ' . $input['service_type'];
+            $mailer->send(ADMIN_EMAIL, $adminSubject, Mailer::adminNotification($emailData));
+
+            if (!empty($input['email'])) {
+                $clientSubject = '🙏 तपाईंको परामर्श अनुरोध प्राप्त भयो - श्रीहरि ज्योतिष';
+                $mailer->send($input['email'], $clientSubject, Mailer::clientConfirmation($emailData));
+            }
+        } catch (\Throwable $e) {
+            error_log("Mailer error: " . $e->getMessage());
+        }
 
         jsonSuccess(['id' => $appointmentId, 'meeting_url' => $meetingUrl], 'तपाईंको अनुरोध सफलतापूर्वक प्राप्त भयो। हामी चाँडै सम्पर्क गर्नेछौं।');
         break;
