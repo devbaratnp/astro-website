@@ -12,7 +12,7 @@ if (!$isCli) {
 require_once __DIR__ . '/config/app.php';
 require_once __DIR__ . '/lib/Mailer.php';
 
-$to = $isCli ? ($argv[1] ?? 'mind59024@hmail.com') : ($_GET['to'] ?? 'mind59024@hmail.com');
+$to = $isCli ? ($argv[1] ?? 'mind59024@gmail.com') : ($_GET['to'] ?? 'mind59024@gmail.com');
 $type = $isCli ? ($argv[2] ?? 'both') : ($_GET['type'] ?? 'both');
 
 echo "Testing Mailer...\n";
