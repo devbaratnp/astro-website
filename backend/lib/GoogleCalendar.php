@@ -100,7 +100,7 @@ class GoogleCalendar {
 
         $result = $this->apiRequest(
             'POST',
-            "/calendars/" . urlencode($this->calendarId) . "/events?conferenceDataVersion=1&sendUpdates=all",
+            "/calendars/" . urlencode($this->calendarId) . "/events?conferenceDataVersion=1",
             $eventData
         );
 
@@ -108,7 +108,7 @@ class GoogleCalendar {
             unset($eventData['conferenceData']);
             $result = $this->apiRequest(
                 'POST',
-                "/calendars/" . urlencode($this->calendarId) . "/events?sendUpdates=all",
+                "/calendars/" . urlencode($this->calendarId) . "/events",
                 $eventData
             );
         }

@@ -42,11 +42,6 @@ switch ($method) {
             $description .= "\nभिडियो लिङ्क: {$jitsiUrl}";
         }
 
-        $attendees = [['email' => ADMIN_EMAIL]];
-        if (!empty($input['email'])) {
-            $attendees[] = ['email' => $input['email']];
-        }
-
         if ($gcal->isConfigured()) {
             $gcal->createEvent([
                 'title' => "परामर्श: {$input['name']} - {$input['service_type']}",
@@ -54,7 +49,6 @@ switch ($method) {
                 'date' => $date,
                 'start_time' => $startTime,
                 'end_time' => $endDt->format('H:i'),
-                'attendees' => $attendees,
             ]);
         }
 
