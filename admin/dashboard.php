@@ -13,6 +13,7 @@ $stats = [
     'active_services' => $db->query("SELECT COUNT(*) FROM pooja_services WHERE is_active = TRUE")->fetchColumn(),
     'total_articles' => $db->query("SELECT COUNT(*) FROM articles")->fetchColumn(),
     'total_appointments' => $db->query("SELECT COUNT(*) FROM appointments")->fetchColumn(),
+    'total_products' => $db->query("SELECT COUNT(*) FROM products")->fetchColumn(),
 ];
 ?>
 <h1>नमस्ते, <?= htmlspecialchars($_SESSION['admin_name'] ?? 'प्रशासक') ?> 🙏</h1>
@@ -89,7 +90,7 @@ $stats = [
     </div>
 </div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:24px">
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:24px;margin-top:24px">
     <div class="stat-card" style="text-align:center">
         <strong><?= $stats['total_appointments'] ?></strong>
         <span>जम्मा परामर्श</span>
@@ -97,6 +98,10 @@ $stats = [
     <div class="stat-card" style="text-align:center">
         <strong><?= $stats['active_services'] ?></strong>
         <span>सक्रिय पूजा सेवा</span>
+    </div>
+    <div class="stat-card" style="text-align:center">
+        <strong><?= $stats['total_products'] ?></strong>
+        <span>स्टोर उत्पादन</span>
     </div>
     <div class="stat-card" style="text-align:center">
         <strong><?= $stats['total_articles'] ?></strong>

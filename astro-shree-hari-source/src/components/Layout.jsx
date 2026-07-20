@@ -28,6 +28,7 @@ const links = [
   { to: '/events', label: 'कार्यक्रम' },
   { to: '/gallery', label: 'ग्यालेरी' },
   { to: '/pooja', label: 'ई-पूजा' },
+  { to: '/store', label: 'पूजा भण्डार' },
   { to: '/appointment', label: 'परामर्श प्रक्रिया' },
   { to: '/contact', label: 'सम्पर्क' },
 ];
@@ -81,6 +82,7 @@ export function Layout({ children }) {
             <Link to="/events">कार्यक्रम तथा यात्रा</Link>
             <Link to="/gallery">मिडिया ग्यालेरी</Link>
             <Link to="/muhurta">मुहूर्त परीक्षण</Link>
+            <Link to="/store">पूजा भण्डार</Link>
             <Link to="/appointment">परामर्श प्रक्रिया</Link>
             <Link to="/contact">सम्पर्क</Link>
           </div>

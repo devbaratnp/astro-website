@@ -1,59 +1,66 @@
 <?php
 
+require_once __DIR__ . '/phpmailer/Exception.php';
+require_once __DIR__ . '/phpmailer/PHPMailer.php';
+require_once __DIR__ . '/phpmailer/SMTP.php';
+
 class Mailer {
-    private string $fromEmail;
-    private string $fromName;
-    private string $smtpHost;
-    private int $smtpPort;
-    private string $smtpUser;
-    private string $smtpPass;
-    private bool $useSmtp;
+    public static function send(string $to, string $subject, string $htmlBody): bool {
+        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
 
-    public function __construct() {
-        $this->fromEmail = defined('SMTP_FROM') ? SMTP_FROM : 'noreply@astroshreehari.com';
-        $this->fromName = defined('SITE_NAME_EN') ? SITE_NAME_EN : 'Astro Shree Hari';
-        $this->smtpHost = defined('SMTP_HOST') ? SMTP_HOST : '';
-        $this->smtpPort = defined('SMTP_PORT') ? (int)SMTP_PORT : 587;
-        $this->smtpUser = defined('SMTP_USER') ? SMTP_USER : '';
-        $this->smtpPass = defined('SMTP_PASS') ? SMTP_PASS : '';
-        $this->useSmtp = !empty($this->smtpHost) && !empty($this->smtpUser);
-    }
+        try {
+            $mail->CharSet = 'UTF-8';
+            $mail->Encoding = 'base64';
 
-    public function send(string $to, string $subject, string $htmlBody): bool {
-        $boundary = 'boundary_' . bin2hex(random_bytes(16));
-        $headers = [
-            'MIME-Version: 1.0',
-            'Content-Type: multipart/alternative; boundary="' . $boundary . '"',
-            'From: ' . $this->encodeHeader($this->fromName) . ' <' . $this->fromEmail . '>',
-            'Reply-To: ' . (defined('ADMIN_EMAIL') ? ADMIN_EMAIL : $this->fromEmail),
-            'X-Mailer: AstroShreeHari/1.0',
-        ];
+            $host = defined('SMTP_HOST') ? SMTP_HOST : '';
+            $port = defined('SMTP_PORT') ? (int)SMTP_PORT : 587;
+            $user = defined('SMTP_USER') ? SMTP_USER : '';
+            $pass = defined('SMTP_PASS') ? SMTP_PASS : '';
+            $from = defined('SMTP_FROM') ? SMTP_FROM : 'noreply@astroshreehari.com';
+            $fromName = defined('SITE_NAME_EN') ? SITE_NAME_EN : 'Astro Shree Hari';
 
-        $plainText = strip_tags(str_replace(['<br>', '<br/>', '<br />', '</p>', '</div>', '</li>'], "\n", $htmlBody));
-        $plainText = preg_replace('/\n{3,}/', "\n\n", $plainText);
+            if (!empty($host) && !empty($user)) {
+                $mail->isSMTP();
+                $mail->Host = $host;
+                $mail->Port = $port;
+                $mail->SMTPAuth = true;
+                $mail->Username = $user;
+                $mail->Password = $pass;
+                $mail->SMTPSecure = $port === 465 ? PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS : PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+            }
 
-        $body = "--{$boundary}\r\n"
-              . "Content-Type: text/plain; charset=UTF-8\r\n"
-              . "Content-Transfer-Encoding: 8bit\r\n\r\n"
-              . $plainText . "\r\n\r\n"
-              . "--{$boundary}\r\n"
-              . "Content-Type: text/html; charset=UTF-8\r\n"
-              . "Content-Transfer-Encoding: 8bit\r\n\r\n"
-              . $htmlBody . "\r\n\r\n"
-              . "--{$boundary}--";
+            $mail->setFrom($from, $fromName);
+            $mail->addAddress($to);
+            $mail->addReplyTo(defined('ADMIN_EMAIL') ? ADMIN_EMAIL : $from, $fromName);
 
-        if ($this->useSmtp) {
-            return $this->sendSmtp($to, $subject, $headers, $body);
+            $mail->Subject = $subject;
+            $mail->isHTML(true);
+            $mail->Body = $htmlBody;
+            $mail->AltBody = strip_tags(str_replace(['<br>', '<br/>', '<br />', '</p>', '</div>', '</li>'], "\n", $htmlBody));
+
+            $mail->send();
+            return true;
+
+        } catch (\Throwable $e) {
+            error_log("Mailer failed: " . $e->getMessage());
+            return false;
         }
-
-        return mail($to, $this->encodeHeader($subject), $body, implode("\r\n", $headers), "-f {$this->fromEmail}");
     }
 
     public static function clientConfirmation(array $d): string {
-        extract(self::labels($d));
-        $vr = $meetingUrl
-            ? '<tr><td class="l" style="width:110px">भिडियो लिङ्क</td><td class="v"><a href="' . $meetingUrl . '" style="color:#671817">' . $meetingUrl . '</a></td></tr>'
-            : '';
+        $name = htmlspecialchars($d['name'] ?? '', ENT_QUOTES, 'UTF-8');
+        $date = htmlspecialchars($d['preferred_date'] ?? '', ENT_QUOTES, 'UTF-8');
+        $time = htmlspecialchars($d['preferred_time'] ?? '', ENT_QUOTES, 'UTF-8');
+        $mode = htmlspecialchars($d['consultation_mode'] ?? '', ENT_QUOTES, 'UTF-8');
+        $meetingUrl = htmlspecialchars($d['meeting_url'] ?? '', ENT_QUOTES, 'UTF-8');
+        $serviceType = htmlspecialchars($d['service_type'] ?? '', ENT_QUOTES, 'UTF-8');
+
+        $sl = ['kundali'=>'जन्मकुण्डली विश्लेषण','marriage'=>'विवाह तथा गुण मिलान','grahadasha'=>'ग्रहदशा परामर्श','vastu'=>'वास्तु परामर्श','pooja'=>'वैदिक कर्मकाण्ड','general'=>'सामान्य परामर्श'];
+        $ml = ['phone'=>'फोन','whatsapp'=>'WhatsApp','video'=>'भिडियो परामर्श','inperson'=>'प्रत्यक्ष'];
+        $serviceLabel = $sl[$serviceType] ?? $serviceType;
+        $modeLabel = $ml[$mode] ?? $mode;
+
+        $vr = $meetingUrl ? '<tr><td class="l" style="width:110px">भिडियो लिङ्क</td><td class="v"><a href="' . $meetingUrl . '" style="color:#671817">' . $meetingUrl . '</a></td></tr>' : '';
 
         return self::doc(
             self::header('परामर्श अनुरोध पुष्टि') . '
@@ -67,10 +74,25 @@ class Mailer {
     }
 
     public static function adminNotification(array $d): string {
-        extract(self::labels($d));
-        $vr = $meetingUrl
-            ? '<tr><td class="l">भिडियो लिङ्क</td><td class="v"><a href="' . $meetingUrl . '" style="color:#671817">' . $meetingUrl . '</a></td></tr>'
-            : '';
+        $name = htmlspecialchars($d['name'] ?? '', ENT_QUOTES, 'UTF-8');
+        $phone = htmlspecialchars($d['phone'] ?? '', ENT_QUOTES, 'UTF-8');
+        $email = htmlspecialchars($d['email'] ?? '', ENT_QUOTES, 'UTF-8');
+        $date = htmlspecialchars($d['preferred_date'] ?? '', ENT_QUOTES, 'UTF-8');
+        $time = htmlspecialchars($d['preferred_time'] ?? '', ENT_QUOTES, 'UTF-8');
+        $mode = htmlspecialchars($d['consultation_mode'] ?? '', ENT_QUOTES, 'UTF-8');
+        $serviceType = htmlspecialchars($d['service_type'] ?? '', ENT_QUOTES, 'UTF-8');
+        $message = htmlspecialchars($d['message'] ?? '', ENT_QUOTES, 'UTF-8');
+        $meetingUrl = htmlspecialchars($d['meeting_url'] ?? '', ENT_QUOTES, 'UTF-8');
+        $birthDate = htmlspecialchars($d['birth_date'] ?? '', ENT_QUOTES, 'UTF-8');
+        $birthTime = htmlspecialchars($d['birth_time'] ?? '', ENT_QUOTES, 'UTF-8');
+        $birthPlace = htmlspecialchars($d['birth_place'] ?? '', ENT_QUOTES, 'UTF-8');
+
+        $sl = ['kundali'=>'जन्मकुण्डली विश्लेषण','marriage'=>'विवाह तथा गुण मिलान','grahadasha'=>'ग्रहदशा परामर्श','vastu'=>'वास्तु परामर्श','pooja'=>'वैदिक कर्मकाण्ड','general'=>'सामान्य परामर्श'];
+        $ml = ['phone'=>'फोन','whatsapp'=>'WhatsApp','video'=>'भिडियो परामर्श','inperson'=>'प्रत्यक्ष'];
+        $serviceLabel = $sl[$serviceType] ?? $serviceType;
+        $modeLabel = $ml[$mode] ?? $mode;
+
+        $vr = $meetingUrl ? '<tr><td class="l">भिडियो लिङ्क</td><td class="v"><a href="' . $meetingUrl . '" style="color:#671817">' . $meetingUrl . '</a></td></tr>' : '';
 
         $bb = ($birthDate || $birthPlace) ? '
 <h3 class="sh">जन्म विवरण</h3>
@@ -87,26 +109,6 @@ class Mailer {
 <div class="ok"><strong>✅ Google Calendar</strong> मा इभेन्ट सिर्जना गरिएको छ। <a href="https://calendar.google.com" style="color:#0b8d4e">Calendar खोल्नुहोस् →</a></div>
 </td></tr>' . self::footer()
         );
-    }
-
-    private static function labels(array $d): array {
-        $sl = ['kundali'=>'जन्मकुण्डली विश्लेषण','marriage'=>'विवाह तथा गुण मिलान','grahadasha'=>'ग्रहदशा परामर्श','vastu'=>'वास्तु परामर्श','pooja'=>'वैदिक कर्मकाण्ड','general'=>'सामान्य परामर्श'];
-        $ml = ['phone'=>'फोन','whatsapp'=>'WhatsApp','video'=>'भिडियो परामर्श','inperson'=>'प्रत्यक्ष'];
-        return [
-            'name' => htmlspecialchars($d['name'] ?? '', ENT_QUOTES, 'UTF-8'),
-            'phone' => htmlspecialchars($d['phone'] ?? '', ENT_QUOTES, 'UTF-8'),
-            'email' => htmlspecialchars($d['email'] ?? '', ENT_QUOTES, 'UTF-8'),
-            'date' => htmlspecialchars($d['preferred_date'] ?? '', ENT_QUOTES, 'UTF-8'),
-            'time' => htmlspecialchars($d['preferred_time'] ?? '', ENT_QUOTES, 'UTF-8'),
-            'mode' => htmlspecialchars($d['consultation_mode'] ?? '', ENT_QUOTES, 'UTF-8'),
-            'message' => htmlspecialchars($d['message'] ?? '', ENT_QUOTES, 'UTF-8'),
-            'meetingUrl' => htmlspecialchars($d['meeting_url'] ?? '', ENT_QUOTES, 'UTF-8'),
-            'birthDate' => htmlspecialchars($d['birth_date'] ?? '', ENT_QUOTES, 'UTF-8'),
-            'birthTime' => htmlspecialchars($d['birth_time'] ?? '', ENT_QUOTES, 'UTF-8'),
-            'birthPlace' => htmlspecialchars($d['birth_place'] ?? '', ENT_QUOTES, 'UTF-8'),
-            'serviceLabel' => $sl[$d['service_type'] ?? ''] ?? ($d['service_type'] ?? ''),
-            'modeLabel' => $ml[$d['consultation_mode'] ?? ''] ?? ($d['consultation_mode'] ?? ''),
-        ];
     }
 
     private static function header(string $title): string {
@@ -153,39 +155,5 @@ class Mailer {
 <table>' . $body . '</table>
 </body>
 </html>';
-    }
-
-    private function sendSmtp(string $to, string $subject, array $headers, string $body): bool {
-        $errno = 0; $errstr = '';
-        $socket = @fsockopen($this->smtpHost, $this->smtpPort, $errno, $errstr, 15);
-        if (!$socket) {
-            error_log("Mailer: SMTP connection failed ({$errno}) {$errstr}");
-            return mail($to, $this->encodeHeader($subject), $body, implode("\r\n", $headers), "-f {$this->fromEmail}");
-        }
-
-        $r = function($s) { $o = ''; while ($l = @fgets($s, 512)) { $o .= $l; if (isset($l[3]) && $l[3] === ' ') break; } return $o; };
-        $w = function($s, $d) { @fwrite($s, $d . "\r\n"); };
-
-        $r($socket); $w($socket, "EHLO astroshreehari.com"); $r($socket);
-        if ($this->smtpPort === 587) {
-            $w($socket, "STARTTLS"); $r($socket);
-            @stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
-            $w($socket, "EHLO astroshreehari.com"); $r($socket);
-        }
-        $w($socket, "AUTH LOGIN"); $r($socket);
-        $w($socket, base64_encode($this->smtpUser)); $r($socket);
-        $w($socket, base64_encode($this->smtpPass)); $r($socket);
-        $w($socket, "MAIL FROM:<{$this->fromEmail}>"); $r($socket);
-        $w($socket, "RCPT TO:<{$to}>"); $r($socket);
-        $w($socket, "DATA"); $r($socket);
-        $w($socket, implode("\r\n", $headers) . "\r\nTo: {$to}\r\nSubject: {$subject}\r\n\r\n{$body}\r\n.");
-        $r($socket);
-        $w($socket, "QUIT");
-        fclose($socket);
-        return true;
-    }
-
-    private function encodeHeader(string $value): string {
-        return '=?UTF-8?B?' . base64_encode($value) . '?=';
     }
 }

@@ -15,17 +15,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
 }
 
 $statusFilter = $_GET['status'] ?? 'pending';
-$query = $statusFilter === 'all'
-    ? $db->query("SELECT * FROM appointments ORDER BY created_at DESC")
-    : $db->prepare("SELECT * FROM appointments WHERE status = :status ORDER BY created_at DESC");
+
+$query = "SELECT a.*, p.title_ne AS product_title FROM appointments a LEFT JOIN products p ON a.product_id = p.id ORDER BY a.created_at DESC";
+$where = '';
+$params = [];
 
 if ($statusFilter !== 'all') {
-    $query->execute([':status' => $statusFilter]);
+    $where = " WHERE a.status = :status";
+    $params[':status'] = $statusFilter;
 }
-$appointments = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll();
+
+$stmt = $db->prepare("SELECT a.*, p.title_ne AS product_title, p.title_en AS product_title_en, p.price AS product_price FROM appointments a LEFT JOIN products p ON a.product_id = p.id$where ORDER BY a.created_at DESC");
+$stmt->execute($params);
+$appointments = $stmt->fetchAll();
 ?>
 
-<h1>परामर्श व्यवस्थापन</h1>
+<div class="page-header">
+    <h1>परामर्श व्यवस्थापन</h1>
+</div>
 
 <div class="filter-tabs">
     <a href="?status=pending" class="<?= $statusFilter === 'pending' ? 'active' : '' ?>">पेन्डिङ</a>
@@ -35,15 +42,17 @@ $appointments = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll(
     <a href="?status=all" class="<?= $statusFilter === 'all' ? 'active' : '' ?>">सबै</a>
 </div>
 
+<div class="admin-table-wrapper">
 <table class="admin-table">
     <thead>
         <tr>
-            <th>#</th>
             <th>नाम</th>
             <th>फोन</th>
             <th>सेवा</th>
             <th>मिति</th>
+            <th>समय</th>
             <th>माध्यम</th>
+            <th>स्टोर</th>
             <th>स्थिति</th>
             <th>कार्य</th>
         </tr>
@@ -51,28 +60,33 @@ $appointments = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll(
     <tbody>
         <?php foreach ($appointments as $a): ?>
         <tr>
-            <td><?= $a['id'] ?></td>
-            <td><?= htmlspecialchars($a['name']) ?></td>
+            <td><strong><?= htmlspecialchars($a['name']) ?></strong></td>
             <td><?= htmlspecialchars($a['phone']) ?></td>
-            <td><?= htmlspecialchars($a['service_type']) ?></td>
-            <td><?= $a['preferred_date'] ?? '—' ?> <?= $a['preferred_time'] ?? '' ?></td>
+            <td><?= $a['service_type'] ?></td>
+            <td><?= $a['preferred_date'] ?? '—' ?></td>
+            <td><?= $a['preferred_time'] ? date('h:i A', strtotime($a['preferred_time'])) : '—' ?></td>
             <td><?= $a['consultation_mode'] ?></td>
+            <td><?= $a['product_title'] ? htmlspecialchars($a['product_title']) : '—' ?></td>
             <td><span class="badge badge-<?= $a['status'] ?>"><?= $a['status'] ?></span></td>
             <td>
                 <button class="btn-small" onclick="toggleDetails(<?= $a['id'] ?>)">विवरण</button>
             </td>
         </tr>
         <tr id="details-<?= $a['id'] ?>" class="details-row" style="display:none">
-            <td colspan="8">
+            <td colspan="9">
                 <form method="POST" class="inline-form">
                     <?= csrfField() ?>
                     <input type="hidden" name="id" value="<?= $a['id'] ?>">
                     <div class="detail-grid">
                         <div><strong>इमेल:</strong> <?= htmlspecialchars($a['email'] ?: '—') ?></div>
-                        <div><strong>जन्म मिति:</strong> <?= $a['birth_date'] ?? '—' ?> <?= $a['birth_time'] ?? '' ?></div>
+                        <div><strong>फोन:</strong> <?= htmlspecialchars($a['phone']) ?></div>
+                        <div><strong>जन्म मिति:</strong> <?= $a['birth_date'] ?? '—' ?> <?= $a['birth_time'] ? date('h:i A', strtotime($a['birth_time'])) : '' ?></div>
                         <div><strong>जन्म स्थान:</strong> <?= htmlspecialchars($a['birth_place'] ?: '—') ?></div>
                         <div><strong>सन्देश:</strong> <?= nl2br(htmlspecialchars($a['message'])) ?></div>
                         <div><strong>भिडियो लिङ्क:</strong> <?= $a['meeting_url'] ? '<a href="' . htmlspecialchars($a['meeting_url']) . '" target="_blank">' . htmlspecialchars($a['meeting_url']) . '</a>' : '—' ?></div>
+                        <?php if ($a['product_title']): ?>
+                        <div><strong>स्टोर उत्पादन:</strong> <?= htmlspecialchars($a['product_title']) ?><?= $a['product_price'] ? ' (रु ' . number_format($a['product_price']) . ')' : '' ?></div>
+                        <?php endif; ?>
                         <div><strong>नोट:</strong> <textarea name="admin_notes" rows="2"><?= htmlspecialchars($a['admin_notes'] ?? '') ?></textarea></div>
                         <div>
                             <select name="status">
@@ -90,10 +104,11 @@ $appointments = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll(
         <?php endforeach; ?>
     </tbody>
 </table>
+</div>
 
 <script>
 function toggleDetails(id) {
-    const row = document.getElementById('details-' + id);
+    var row = document.getElementById('details-' + id);
     row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
 }
 </script>

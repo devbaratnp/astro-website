@@ -15,6 +15,7 @@ import { Article } from './pages/Article';
 import { Events } from './pages/Events';
 import { Gallery } from './pages/Gallery';
 import { Muhurta } from './pages/Muhurta';
+import { Store } from './pages/Store';
 import './styles.css';
 
 export function App() {
@@ -36,6 +37,7 @@ export function App() {
         <Route path="/events" element={<Events />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/muhurta" element={<Muhurta />} />
+        <Route path="/store" element={<Store />} />
       </Routes>
     </Layout>
   );

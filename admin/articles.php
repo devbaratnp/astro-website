@@ -112,6 +112,9 @@ $articles = $db->query("SELECT id, title_ne, title_en, slug, is_published, excer
           <td style="font-size:.85rem;color:var(--muted)"><?= $a['published_at'] ?? $a['created_at'] ?></td>
           <td>
             <div style="display:flex;gap:6px">
+              <?php if ($a['is_published'] && $a['slug']): ?>
+              <a href="<?= BASE_URL ?>/article/<?= urlencode($a['slug']) ?>" target="_blank" class="btn-small btn-gold">हेर्नुहोस्</a>
+              <?php endif; ?>
               <a href="?edit=<?= $a['id'] ?>" class="btn-small">सम्पादन</a>
               <a href="?delete=<?= $a['id'] ?>&<?= csrfQuery() ?>" class="btn-small btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
             </div>

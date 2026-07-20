@@ -65,3 +65,4 @@ export function getArticle(slug) { return request(`articles.php?slug=${slug}`); 
 export function getEvents(type = '') { return request(`events.php${type ? '?type=' + type : ''}`); }
 export function getGallery(type = '') { return request(`gallery.php${type ? '?type=' + type : ''}`); }
 export function getMuhurta(type, date) { return request(`muhurta.php?type=${encodeURIComponent(type)}&date=${date}`); }
+export function getProducts() { return request('products.php'); }

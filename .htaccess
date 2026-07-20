@@ -2,7 +2,9 @@ RewriteEngine On
 RewriteBase /
 DirectoryIndex index.html
 
-# Redirect to canonical: https://www.astroshreehari.com
+# Redirect to canonical: https://www.astroshreehari.com (skip for local/dev)
+RewriteCond %{HTTP_HOST} !^localhost(:[0-9]+)?$ [NC]
+RewriteCond %{HTTP_HOST} !^127\.0\.0\.1(:[0-9]+)?$ [NC]
 RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} !^www\. [NC]
 RewriteRule ^ https://www.astroshreehari.com%{REQUEST_URI} [L,R=301]
@@ -17,8 +19,9 @@ RewriteRule ^contact\.php$ /contact [R=301,L,NE]
 # Serve React SPA for root URL.
 RewriteRule ^$ index.html [L]
 
-# React admin application (PHP remains API-only).
-RewriteRule ^admin(?:/.*)?$ index.html [L]
+# React admin application (PHP files served directly, SPA for React routes)
+RewriteCond %{REQUEST_URI} !\.php$
+RewriteRule ^admin index.html [L]
 
 # Allow webhook.php (must be before SPA rules)
 RewriteRule ^webhook\.php$ - [L]
