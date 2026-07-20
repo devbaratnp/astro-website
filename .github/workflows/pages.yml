@@ -43,10 +43,11 @@ jobs:
         run: npm run build
         working-directory: astro-shree-hari-source
 
-      - name: Copy Vite build output to root
+      - name: Prepare Pages artifact
         run: |
-          cp -r astro-shree-hari-source/dist/* .
-          cp astro-shree-hari-source/dist/index.html ./404.html
+          mkdir -p pages-artifact
+          cp -r astro-shree-hari-source/dist/* pages-artifact/
+          cp astro-shree-hari-source/dist/index.html pages-artifact/404.html
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -54,7 +55,7 @@ jobs:
       - name: Upload website
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: "pages-artifact"
 
       - name: Deploy website
         id: deployment
