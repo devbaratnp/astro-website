@@ -1,4 +1,4 @@
-const API_BASE = '/backend/api';
+import { API_BASE } from '../config';
 
 async function request(endpoint, options = {}) {
   const url = `${API_BASE}/${endpoint}`;
@@ -8,7 +8,7 @@ async function request(endpoint, options = {}) {
   });
   const data = await res.json().catch(() => ({ success: false, message: `Server error (${res.status})` }));
   if (!data.success) throw new Error(data.message);
-  return data;
+  return data.data;
 }
 
 export function getAvailableSlots(date) {

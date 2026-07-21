@@ -5,6 +5,7 @@ require_once __DIR__ . '/../backend/config/database.php';
 $db = Database::getConnection();
 
 if (isset($_GET['mark_read'])) {
+    validateCsrfGet();
     $stmt = $db->prepare("UPDATE contact_messages SET is_read = TRUE WHERE id = :id");
     $stmt->execute([':id' => $_GET['mark_read']]);
     header('Location: messages.php');
@@ -12,6 +13,7 @@ if (isset($_GET['mark_read'])) {
 }
 
 if (isset($_GET['delete'])) {
+    validateCsrfGet();
     $stmt = $db->prepare("DELETE FROM contact_messages WHERE id = :id");
     $stmt->execute([':id' => $_GET['delete']]);
     echo '<div class="alert alert-success">सन्देश मेटाइयो</div>';
@@ -55,9 +57,9 @@ $unreadCount = $db->query("SELECT COUNT(*) FROM contact_messages WHERE is_read =
           <div style="display:flex;gap:6px">
             <button class="btn-small" onclick="toggleMsg(<?= $m['id'] ?>)">विवरण</button>
             <?php if (!$m['is_read']): ?>
-              <a href="?mark_read=<?= $m['id'] ?>" class="btn-small btn-primary">पढियो</a>
+              <a href="?mark_read=<?= $m['id'] ?>&<?= csrfQuery() ?>" class="btn-small btn-primary">पढियो</a>
             <?php endif; ?>
-            <a href="?delete=<?= $m['id'] ?>" class="btn-small btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+            <a href="?delete=<?= $m['id'] ?>&<?= csrfQuery() ?>" class="btn-small btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
           </div>
         </td>
       </tr>

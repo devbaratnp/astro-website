@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CalendarBlank, MapPin, Clock, User, Phone, ArrowRight } from '@phosphor-icons/react';
+import { getEvents } from '../services/api';
 
 export function Events() {
   const [events, setEvents] = useState([]);
@@ -10,11 +11,11 @@ export function Events() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      fetch('/backend/api/events.php?type=event').then(r => r.json()),
-      fetch('/backend/api/events.php?type=tour').then(r => r.json()),
+      getEvents('event'),
+      getEvents('tour'),
     ]).then(([ed, td]) => {
-      if (ed.success) setEvents(ed.data);
-      if (td.success) setTours(td.data);
+      setEvents(ed);
+      setTours(td);
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 

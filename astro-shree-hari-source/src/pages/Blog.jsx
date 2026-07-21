@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Article, CalendarBlank, ArrowRight } from '@phosphor-icons/react';
+import { getArticles } from '../services/api';
 
 export function Blog() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/backend/api/articles.php')
-      .then(r => r.json())
-      .then(d => { if (d.success) setArticles(d.data.articles); })
+    getArticles()
+      .then(d => setArticles(d.articles))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);

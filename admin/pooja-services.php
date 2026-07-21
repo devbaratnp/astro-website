@@ -4,15 +4,21 @@ require_once __DIR__ . '/../backend/config/database.php';
 
 $db = Database::getConnection();
 
+$validCategories = ['shanti', 'graha', 'sanskar', 'festival', 'other'];
+
 // Create/Update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_service'])) {
     $id = $_POST['id'] ?? null;
+    $category = $_POST['category'];
+    if (!in_array($category, $validCategories, true)) {
+        echo '<div class="alert alert-danger">अमान्य कोटि</div>';
+    } else {
     $data = [
         ':title_ne' => sanitize($_POST['title_ne']),
         ':title_en' => sanitize($_POST['title_en'] ?? ''),
         ':description_ne' => sanitize($_POST['description_ne'] ?? ''),
         ':description_en' => sanitize($_POST['description_en'] ?? ''),
-        ':category' => $_POST['category'],
+        ':category' => $category,
         ':base_price' => $_POST['base_price'] ?: null,
         ':duration_minutes' => $_POST['duration_minutes'] ?: null,
         ':materials_available' => !empty($_POST['materials_available']) ? 1 : 0,
@@ -27,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_service'])) {
         $stmt = $db->prepare("INSERT INTO pooja_services (title_ne, title_en, description_ne, description_en, category, base_price, duration_minutes, materials_available) VALUES (:title_ne, :title_en, :description_ne, :description_en, :category, :base_price, :duration_minutes, :materials_available)");
         $stmt->execute($data);
         echo '<div class="alert alert-success">नयाँ सेवा थपियो</div>';
+    }
     }
 }
 

@@ -4,14 +4,21 @@ require_once __DIR__ . '/../backend/config/database.php';
 
 $db = Database::getConnection();
 
+$validStatuses = ['pending', 'confirmed', 'completed', 'cancelled'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
-    $stmt = $db->prepare("UPDATE appointments SET status = :status, admin_notes = :notes WHERE id = :id");
-    $stmt->execute([
-        ':status' => $_POST['status'],
-        ':notes' => $_POST['admin_notes'] ?? '',
-        ':id' => $_POST['id']
-    ]);
-    echo '<div class="alert alert-success">अपडेट गरियो</div>';
+    $status = $_POST['status'];
+    if (!in_array($status, $validStatuses, true)) {
+        echo '<div class="alert alert-danger">अमान्य स्थिति</div>';
+    } else {
+        $stmt = $db->prepare("UPDATE appointments SET status = :status, admin_notes = :notes WHERE id = :id");
+        $stmt->execute([
+            ':status' => $status,
+            ':notes' => $_POST['admin_notes'] ?? '',
+            ':id' => $_POST['id']
+        ]);
+        echo '<div class="alert alert-success">अपडेट गरियो</div>';
+    }
 }
 
 $statusFilter = $_GET['status'] ?? 'pending';

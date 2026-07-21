@@ -3,9 +3,10 @@ import {
   ChartBar, CalendarCheck, HandsPraying, CreditCard,
   Envelope, BookOpen, SignOut, List, Upload, X, Plus, House
 } from '@phosphor-icons/react';
+import { API_BASE, BASE_PATH } from '../config';
 import '../admin.css';
 
-const API = '/backend/api';
+const API = API_BASE;
 
 const sections = [
   ['dashboard', 'Dashboard', ChartBar],
@@ -196,7 +197,7 @@ export function Admin() {
             />
           </label>
           <button>Log in</button>
-          <a href="/">← Back to website</a>
+          <a href={`${BASE_PATH || '/'}`}>← Back to website</a>
         </form>
       </div>
     );
@@ -239,7 +240,7 @@ export function Admin() {
             <Icon style={{ marginRight: 8, verticalAlign: -2 }} />
             {current?.[1] || 'Dashboard'}
           </h2>
-          <a href="/" style={{ color: 'var(--muted)', fontSize: 12 }}>
+          <a href={`${BASE_PATH || '/'}`} style={{ color: 'var(--muted)', fontSize: 12 }}>
             <House style={{ verticalAlign: -1 }} /> View site
           </a>
         </div>

@@ -1,4 +1,5 @@
 import { Component } from "react";
+import { API_BASE } from "../config";
 
 export default class ErrorBoundary extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ export default class ErrorBoundary extends Component {
   componentDidCatch(error, info) {
     console.error("React Error:", error, info);
     try {
-      fetch("/backend/api/log-frontend-error.php", {
+      fetch(`${API_BASE}/log-frontend-error.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

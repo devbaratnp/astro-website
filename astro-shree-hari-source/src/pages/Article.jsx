@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, CalendarBlank, ShareNetwork } from '@phosphor-icons/react';
+import { getArticle } from '../services/api';
 
 function setMeta(name, content) {
   let el = document.querySelector(`meta[name="${name}"], meta[property="${name}"]`);
@@ -19,9 +20,8 @@ export function Article() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/backend/api/articles.php?slug=${slug}`)
-      .then(r => r.json())
-      .then(d => { if (d.success) setArticle(d.data); else setArticle(null); })
+    getArticle(slug)
+      .then(d => setArticle(d))
       .catch(() => setArticle(null))
       .finally(() => setLoading(false));
   }, [slug]);

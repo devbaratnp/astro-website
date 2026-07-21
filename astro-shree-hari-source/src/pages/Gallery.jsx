@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Image, Video, Play, CalendarBlank } from '@phosphor-icons/react';
+import { getGallery } from '../services/api';
 
 export function Gallery() {
   const [items, setItems] = useState([]);
@@ -9,10 +10,8 @@ export function Gallery() {
 
   useEffect(() => {
     setLoading(true);
-    const params = type !== 'all' ? `?type=${type}` : '';
-    fetch(`/backend/api/gallery.php${params}`)
-      .then(r => r.json())
-      .then(d => { if (d.success) setItems(d.data); })
+    getGallery(type !== 'all' ? type : '')
+      .then(d => setItems(d))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [type]);

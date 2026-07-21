@@ -4,13 +4,21 @@ require_once __DIR__ . '/../backend/config/database.php';
 
 $db = Database::getConnection();
 
+$validStatuses = ['pending', 'confirmed', 'completed', 'cancelled'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
-    $stmt = $db->prepare("UPDATE pooja_bookings SET status = :status WHERE id = :id");
-    $stmt->execute([
-        ':status' => $_POST['status'],
-        ':id' => $_POST['id']
-    ]);
-    echo '<div class="alert alert-success">अपडेट गरियो</div>';
+    $status = $_POST['status'];
+    if (!in_array($status, $validStatuses, true)) {
+        echo '<div class="alert alert-danger">अमान्य स्थिति</div>';
+    } else {
+        $stmt = $db->prepare("UPDATE pooja_bookings SET status = :status, admin_notes = :notes WHERE id = :id");
+        $stmt->execute([
+            ':status' => $status,
+            ':notes' => sanitize($_POST['admin_notes'] ?? ''),
+            ':id' => $_POST['id']
+        ]);
+        echo '<div class="alert alert-success">अपडेट गरियो</div>';
+    }
 }
 
 $statusFilter = $_GET['status'] ?? 'pending';
@@ -58,9 +66,10 @@ $bookings = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll();
             <td><?= $b['is_live_stream'] ? 'लाइभ' : '—' ?></td>
             <td><span class="badge badge-<?= $b['status'] ?>"><?= $b['status'] ?></span></td>
             <td>
-                <form method="POST" style="display:flex;gap:6px">
+                <form method="POST" style="display:flex;flex-wrap:wrap;gap:6px">
                     <?= csrfField() ?>
                     <input type="hidden" name="id" value="<?= $b['id'] ?>">
+                    <input name="admin_notes" placeholder="नोट" value="<?= htmlspecialchars($b['admin_notes'] ?? '') ?>" style="width:80px;padding:4px 6px;font-size:.8rem">
                     <select name="status" onchange="this.form.submit()">
                         <option value="pending" <?= $b['status'] === 'pending' ? 'selected' : '' ?>>पेन्डिङ</option>
                         <option value="confirmed" <?= $b['status'] === 'confirmed' ? 'selected' : '' ?>>पुष्टि</option>

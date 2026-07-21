@@ -25,12 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_article'])) {
         ':excerpt_ne' => sanitize($_POST['excerpt_ne'] ?? ''),
         ':excerpt_en' => sanitize($_POST['excerpt_en'] ?? ''),
         ':cover_image' => sanitize($_POST['cover_image'] ?? ''),
-        ':is_published' => !empty($_POST['is_published']) ? 1 : 0,
     ];
 
     if ($id) {
         $data[':id'] = $id;
-        $stmt = $db->prepare("UPDATE articles SET title_ne=:title_ne, title_en=:title_en, slug=:slug, content_ne=:content_ne, content_en=:content_en, excerpt_ne=:excerpt_ne, excerpt_en=:excerpt_en, cover_image=:cover_image, is_published=:is_published WHERE id=:id");
+        $stmt = $db->prepare("UPDATE articles SET title_ne=:title_ne, title_en=:title_en, slug=:slug, content_ne=:content_ne, content_en=:content_en, excerpt_ne=:excerpt_ne, excerpt_en=:excerpt_en, cover_image=:cover_image, is_published=1, published_at=COALESCE(published_at, NOW()) WHERE id=:id");
         $stmt->execute($data);
         echo '<div class="alert alert-success">लेख अपडेट गरियो</div>';
     } else {
@@ -41,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_article'])) {
             $slug .= '-' . time();
             $data[':slug'] = $slug;
         }
-        $stmt = $db->prepare("INSERT INTO articles (title_ne, title_en, slug, content_ne, content_en, excerpt_ne, excerpt_en, cover_image, is_published, published_at) VALUES (:title_ne, :title_en, :slug, :content_ne, :content_en, :excerpt_ne, :excerpt_en, :cover_image, :is_published, CASE WHEN :is_published = 1 THEN NOW() ELSE NULL END)");
+        $stmt = $db->prepare("INSERT INTO articles (title_ne, title_en, slug, content_ne, content_en, excerpt_ne, excerpt_en, cover_image, is_published, published_at) VALUES (:title_ne, :title_en, :slug, :content_ne, :content_en, :excerpt_ne, :excerpt_en, :cover_image, 1, NOW())");
         $stmt->execute($data);
         echo '<div class="alert alert-success">नयाँ लेख प्रकाशित गरियो</div>';
     }
@@ -82,12 +81,6 @@ $articles = $db->query("SELECT id, title_ne, title_en, slug, is_published, excer
         <div class="field full"><label>सारांश (अङ्ग्रेजी)</label><textarea name="excerpt_en" rows="2"><?= htmlspecialchars($editArticle['excerpt_en'] ?? '') ?></textarea></div>
         <div class="field full"><label>सामग्री (नेपाली) *</label><textarea name="content_ne" required rows="8" style="font-family:monospace"><?= htmlspecialchars($editArticle['content_ne'] ?? '') ?></textarea></div>
         <div class="field full"><label>सामग्री (अङ्ग्रेजी)</label><textarea name="content_en" rows="8" style="font-family:monospace"><?= htmlspecialchars($editArticle['content_en'] ?? '') ?></textarea></div>
-        <div class="field" style="display:flex;align-items:center;gap:12px">
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-            <input type="checkbox" name="is_published" value="1" <?= !empty($editArticle['is_published']) ? 'checked' : '' ?>>
-            प्रकाशित गर्नुहोस्
-          </label>
-        </div>
       </div>
       <div style="display:flex;gap:12px;margin-top:16px">
         <button type="submit" name="save_article" class="btn btn-primary"><?= $editArticle ? 'अपडेट गर्नुहोस्' : 'लेख सुरक्षित गर्नुहोस्' ?></button>
@@ -108,11 +101,11 @@ $articles = $db->query("SELECT id, title_ne, title_en, slug, is_published, excer
         <tr>
           <td><strong><?= htmlspecialchars($a['title_ne']) ?></strong><?= $a['title_en'] ? '<br><small style="color:var(--muted)">' . htmlspecialchars($a['title_en']) . '</small>' : '' ?></td>
           <td><code style="font-size:.8rem"><?= htmlspecialchars($a['slug']) ?></code></td>
-          <td><span class="badge badge-<?= $a['is_published'] ? 'confirmed' : 'pending' ?>"><?= $a['is_published'] ? 'प्रकाशित' : 'मस्यौदा' ?></span></td>
+          <td><span class="badge badge-confirmed">प्रकाशित</span></td>
           <td style="font-size:.85rem;color:var(--muted)"><?= $a['published_at'] ?? $a['created_at'] ?></td>
           <td>
             <div style="display:flex;gap:6px">
-              <?php if ($a['is_published'] && $a['slug']): ?>
+              <?php if ($a['slug']): ?>
               <a href="<?= BASE_URL ?>/article/<?= urlencode($a['slug']) ?>" target="_blank" class="btn-small btn-gold">हेर्नुहोस्</a>
               <?php endif; ?>
               <a href="?edit=<?= $a['id'] ?>" class="btn-small">सम्पादन</a>

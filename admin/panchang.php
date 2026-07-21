@@ -6,11 +6,12 @@ require_once __DIR__ . '/../backend/lib/Panchang.php';
 $db = Database::getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_panchang'])) {
-    $stmt = $db->prepare("INSERT INTO panchang (date, tithi, nakshatra, sunrise, sunset, rahu_kaal, auspicious_times, special_events_ne, special_events_en) VALUES (:date, :tithi, :nakshatra, :sunrise, :sunset, :rahu_kaal, :auspicious_times, :special_events_ne, :special_events_en) ON DUPLICATE KEY UPDATE tithi=:tithi2, nakshatra=:nakshatra2, sunrise=:sunrise2, sunset=:sunset2, rahu_kaal=:rahu_kaal2, auspicious_times=:auspicious_times2, special_events_ne=:special_events_ne2, special_events_en=:special_events_en2");
+    $stmt = $db->prepare("INSERT INTO panchang (date, tithi, nakshatra, moon_rashi, sunrise, sunset, rahu_kaal, auspicious_times, special_events_ne, special_events_en) VALUES (:date, :tithi, :nakshatra, :moon_rashi, :sunrise, :sunset, :rahu_kaal, :auspicious_times, :special_events_ne, :special_events_en) ON DUPLICATE KEY UPDATE tithi=:tithi2, nakshatra=:nakshatra2, moon_rashi=:moon_rashi2, sunrise=:sunrise2, sunset=:sunset2, rahu_kaal=:rahu_kaal2, auspicious_times=:auspicious_times2, special_events_ne=:special_events_ne2, special_events_en=:special_events_en2");
     $stmt->execute([
         ':date' => $_POST['date'],
         ':tithi' => sanitize($_POST['tithi']),
         ':nakshatra' => sanitize($_POST['nakshatra']),
+        ':moon_rashi' => sanitize($_POST['moon_rashi'] ?? ''),
         ':sunrise' => $_POST['sunrise'] ?: null,
         ':sunset' => $_POST['sunset'] ?: null,
         ':rahu_kaal' => $_POST['rahu_kaal'] ?: null,
@@ -19,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_panchang'])) {
         ':special_events_en' => sanitize($_POST['special_events_en'] ?? ''),
         ':tithi2' => sanitize($_POST['tithi']),
         ':nakshatra2' => sanitize($_POST['nakshatra']),
+        ':moon_rashi2' => sanitize($_POST['moon_rashi'] ?? ''),
         ':sunrise2' => $_POST['sunrise'] ?: null,
         ':sunset2' => $_POST['sunset'] ?: null,
         ':rahu_kaal2' => $_POST['rahu_kaal'] ?: null,
@@ -51,11 +53,12 @@ $recent = $db->query("SELECT date, tithi, nakshatra FROM panchang ORDER BY date 
     <form method="POST">
       <?= csrfField() ?>
       <div class="form-grid">
-        <div class="field"><label>मिति</label><input name="date" type="date" value="<?= $selectedDate ?>" onchange="this.form.submit()" style="cursor:pointer;background:var(--cream)"></div>
+        <div class="field"><label>मिति</label><input name="date" type="date" value="<?= $selectedDate ?>" onchange="location.href='?date='+this.value" style="cursor:pointer;background:var(--cream)"></div>
         <div class="field"><label>तिथि</label><input name="tithi" value="<?= htmlspecialchars($panchang['tithi'] ?? $calculated['tithi']) ?>"></div>
         <div class="field"><label>नक्षत्र</label><input name="nakshatra" value="<?= htmlspecialchars($panchang['nakshatra'] ?? $calculated['nakshatra']) ?>"></div>
         <div class="field"><label>सूर्योदय</label><input name="sunrise" type="time" value="<?= htmlspecialchars($panchang['sunrise'] ?? $calculated['sunrise']) ?>"></div>
         <div class="field"><label>सूर्यास्त</label><input name="sunset" type="time" value="<?= htmlspecialchars($panchang['sunset'] ?? $calculated['sunset']) ?>"></div>
+        <div class="field"><label>चन्द्र राशि</label><input name="moon_rashi" value="<?= htmlspecialchars($panchang['moon_rashi'] ?? $calculated['moon_rashi'] ?? '') ?>"></div>
         <div class="field"><label>राहुकाल</label><input name="rahu_kaal" type="time" value="<?= htmlspecialchars($panchang['rahu_kaal'] ?? '') ?>"></div>
         <div class="field full"><label>शुभ समय (प्रति लाइन एक)</label>
           <textarea name="auspicious_times" rows="3"><?php

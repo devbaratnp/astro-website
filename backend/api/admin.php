@@ -12,7 +12,7 @@ $input = in_array($_SERVER['REQUEST_METHOD'], ['POST','PUT','PATCH','DELETE'], t
 
 $definitions = [
     'services' => ['table'=>'pooja_services','fields'=>['title_ne','title_en','description_ne','description_en','category','base_price','duration_minutes','materials_available','is_active'],'required'=>['title_ne','title_en','category']],
-    'articles' => ['table'=>'articles','fields'=>['title_ne','title_en','slug','content_ne','content_en','excerpt_ne','excerpt_en','cover_image','is_published'],'required'=>['title_ne','slug','content_ne']],
+    'articles' => ['table'=>'articles','fields'=>['title_ne','title_en','slug','content_ne','content_en','excerpt_ne','excerpt_en','cover_image'],'required'=>['title_ne','slug','content_ne']],
     'rewards' => ['table'=>'rewards','fields'=>['user_name','user_phone','reward_type','title_ne','title_en','description_ne','description_en','is_redeemed','expires_at'],'required'=>['user_name','user_phone','reward_type','title_ne']],
     'panchang' => ['table'=>'panchang','fields'=>['date','tithi','nakshatra','sunrise','sunset','rahu_kaal','auspicious_times','special_events_ne','special_events_en'],'required'=>['date']],
     'testimonials' => ['table'=>'testimonials','fields'=>['name','title','content','rating','photo','location','sort_order','is_active'],'required'=>['name','content']],
@@ -29,7 +29,8 @@ if (in_array($_SERVER['REQUEST_METHOD'], ['POST','PUT'], true)) {
     $values = [];
     foreach ($definition['fields'] as $field) if (array_key_exists($field, $input)) $values[$field] = $input[$field] === '' ? null : $input[$field];
     if ($resource === 'rewards' && $_SERVER['REQUEST_METHOD'] === 'POST') $values['awarded_by'] = $_SESSION['admin_id'];
-    if ($resource === 'articles' && !empty($values['is_published'])) $values['published_at'] = date('Y-m-d H:i:s');
+    if ($resource === 'articles') $values['is_published'] = 1;
+    if ($resource === 'articles') $values['published_at'] = date('Y-m-d H:i:s');
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $columns = array_keys($values); $params = array_map(fn($f) => ":$f", $columns);
         $sql = 'INSERT INTO ' . $definition['table'] . ' (`' . implode('`,`', $columns) . '`) VALUES (' . implode(',', $params) . ')';

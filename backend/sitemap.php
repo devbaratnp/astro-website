@@ -33,7 +33,7 @@ foreach ($staticPages as $path => $attrs) {
 
 try {
     $db = Database::getConnection();
-    $stmt = $db->query("SELECT slug, published_at FROM articles WHERE is_published = 1 AND published_at IS NOT NULL ORDER BY published_at DESC");
+    $stmt = $db->query("SELECT slug, published_at FROM articles ORDER BY published_at DESC");
     while ($row = $stmt->fetch()) {
         echo '<url><loc>', $base, '/article/', htmlspecialchars($row['slug']), '</loc>';
         echo '<lastmod>', substr($row['published_at'], 0, 10), '</lastmod>';

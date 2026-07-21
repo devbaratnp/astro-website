@@ -4,7 +4,9 @@ require_once __DIR__ . '/../backend/config/database.php';
 
 $db = Database::getConnection();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_action'])) {
+$validActions = ['approved', 'rejected'];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_action']) && in_array($_POST['payment_action'], $validActions, true)) {
     $stmt = $db->prepare("UPDATE payments SET status = :status, admin_notes = :notes WHERE id = :id");
     $stmt->execute([
         ':status' => $_POST['payment_action'],
