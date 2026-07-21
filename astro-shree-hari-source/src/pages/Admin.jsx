@@ -100,6 +100,7 @@ export function Admin() {
   const [refresh, setRefresh] = useState(0);
   const [editing, setEditing] = useState(null);
   const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     api('auth.php')
@@ -196,7 +197,6 @@ export function Admin() {
 
   const current = sections.find(s => s[0] === section);
   const Icon = current?.[2] || ChartBar;
-  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
     <div className={`admin-shell${sidebarOpen ? '' : ' sidebar-collapsed'}`}>
