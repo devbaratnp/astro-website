@@ -46,14 +46,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>प्रशासक लगइन — श्रीहरि ज्योतिष</title>
     <link rel="icon" href="<?= BASE_URL ?>/assets/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/admin.css">
 </head>
 <body class="login-page">
     <div class="login-box">
         <div class="login-logo">
-            <svg width="64" height="64" viewBox="0 0 64 64" style="border-radius:50%;border:2px solid var(--gold)">
-                <circle cx="32" cy="32" r="30" fill="#57151b"/>
-                <text x="32" y="40" text-anchor="middle" fill="#d8a443" font-size="28" font-family="serif">ॐ</text>
+            <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="30" fill="#54121b"/>
+                <text x="32" y="40" text-anchor="middle" fill="#e2bd72" font-size="28" font-family="serif">ॐ</text>
             </svg>
         </div>
         <h1>प्रशासक लगइन</h1>
@@ -65,15 +68,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <form method="POST">
             <?= csrfField() ?>
-            <div class="field">
-                <label>प्रयोगकर्ता नाम</label>
-                <input name="username" required autocomplete="username" placeholder="admin"
+            <div class="form-field">
+                <label class="form-label">प्रयोगकर्ता नाम</label>
+                <input class="form-input" name="username" required autocomplete="username" placeholder="admin"
                        value="<?= htmlspecialchars($rememberedUser) ?>">
             </div>
-            <div class="field">
-                <label>पासवर्ड</label>
+            <div class="form-field">
+                <label class="form-label">पासवर्ड</label>
                 <div class="password-wrap">
-                    <input type="password" name="password" required autocomplete="current-password"
+                    <input class="form-input" type="password" name="password" required autocomplete="current-password"
                            placeholder="••••••••" id="loginPassword">
                     <button type="button" class="password-toggle" id="pwToggle"
                             aria-label="पासवर्ड देखानुहोस् / लुकाउनुहोस्">
@@ -96,6 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <button class="btn btn-primary" type="submit">लगइन</button>
         </form>
+
+        <a href="<?= BASE_URL ?>" class="back-link">← Back to website</a>
     </div>
 
 <script>

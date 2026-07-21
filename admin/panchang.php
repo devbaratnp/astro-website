@@ -4,6 +4,7 @@ require_once __DIR__ . '/../backend/config/database.php';
 require_once __DIR__ . '/../backend/lib/Panchang.php';
 
 $db = Database::getConnection();
+$alertHtml = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_panchang'])) {
     $stmt = $db->prepare("INSERT INTO panchang (date, tithi, nakshatra, moon_rashi, sunrise, sunset, rahu_kaal, auspicious_times, special_events_ne, special_events_en) VALUES (:date, :tithi, :nakshatra, :moon_rashi, :sunrise, :sunset, :rahu_kaal, :auspicious_times, :special_events_ne, :special_events_en) ON DUPLICATE KEY UPDATE tithi=:tithi2, nakshatra=:nakshatra2, moon_rashi=:moon_rashi2, sunrise=:sunrise2, sunset=:sunset2, rahu_kaal=:rahu_kaal2, auspicious_times=:auspicious_times2, special_events_ne=:special_events_ne2, special_events_en=:special_events_en2");
@@ -28,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_panchang'])) {
         ':special_events_ne2' => sanitize($_POST['special_events_ne'] ?? ''),
         ':special_events_en2' => sanitize($_POST['special_events_en'] ?? ''),
     ]);
-    echo '<div class="alert alert-success">पञ्चाङ्ग सुरक्षित गरियो</div>';
+    $alertHtml = '<div class="alert-success">पञ्चाङ्ग सुरक्षित गरियो</div>';
 }
 
 $selectedDate = $_GET['date'] ?? date('Y-m-d');
@@ -36,64 +37,70 @@ $stmt = $db->prepare("SELECT * FROM panchang WHERE date = :date");
 $stmt->execute([':date' => $selectedDate]);
 $panchang = $stmt->fetch();
 
-// Auto-calculate from library if no manual entry
 $calculated = Panchang::getForDate($selectedDate);
-
 $recent = $db->query("SELECT date, tithi, nakshatra FROM panchang ORDER BY date DESC LIMIT 20")->fetchAll();
 ?>
-<h1>पञ्चाङ्ग</h1>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
-  <div class="form-card">
-    <h3>पञ्चाङ्ग सम्पादन गर्नुहोस्</h3>
-    <p style="color:var(--muted);font-size:.85rem;margin:0 0 16px">
-      स्वचालित गणना: <strong><?= $calculated['tithi'] ?></strong>, <?= $calculated['nakshatra'] ?>,
-      सूर्योदय <?= $calculated['sunrise'] ?>/<?= $calculated['sunset'] ?>
-    </p>
-    <form method="POST">
-      <?= csrfField() ?>
-      <div class="form-grid">
-        <div class="field"><label>मिति</label><input name="date" type="date" value="<?= $selectedDate ?>" onchange="location.href='?date='+this.value" style="cursor:pointer;background:var(--cream)"></div>
-        <div class="field"><label>तिथि</label><input name="tithi" value="<?= htmlspecialchars($panchang['tithi'] ?? $calculated['tithi']) ?>"></div>
-        <div class="field"><label>नक्षत्र</label><input name="nakshatra" value="<?= htmlspecialchars($panchang['nakshatra'] ?? $calculated['nakshatra']) ?>"></div>
-        <div class="field"><label>सूर्योदय</label><input name="sunrise" type="time" value="<?= htmlspecialchars($panchang['sunrise'] ?? $calculated['sunrise']) ?>"></div>
-        <div class="field"><label>सूर्यास्त</label><input name="sunset" type="time" value="<?= htmlspecialchars($panchang['sunset'] ?? $calculated['sunset']) ?>"></div>
-        <div class="field"><label>चन्द्र राशि</label><input name="moon_rashi" value="<?= htmlspecialchars($panchang['moon_rashi'] ?? $calculated['moon_rashi'] ?? '') ?>"></div>
-        <div class="field"><label>राहुकाल</label><input name="rahu_kaal" type="time" value="<?= htmlspecialchars($panchang['rahu_kaal'] ?? '') ?>"></div>
-        <div class="field full"><label>शुभ समय (प्रति लाइन एक)</label>
-          <textarea name="auspicious_times" rows="3"><?php
-            $times = $panchang ? json_decode($panchang['auspicious_times'] ?? '[]', true) : [];
-            echo htmlspecialchars(implode("\n", $times));
-          ?></textarea>
-        </div>
-        <div class="field"><label>विशेष (नेपाली)</label><input name="special_events_ne" value="<?= htmlspecialchars($panchang['special_events_ne'] ?? '') ?>"></div>
-        <div class="field"><label>विशेष (अङ्ग्रेजी)</label><input name="special_events_en" value="<?= htmlspecialchars($panchang['special_events_en'] ?? '') ?>"></div>
-      </div>
-      <button type="submit" name="save_panchang" class="btn btn-primary" style="margin-top:16px">पञ्चाङ्ग सुरक्षित गर्नुहोस्</button>
-    </form>
-  </div>
+<?= $alertHtml ?>
 
-  <div>
-    <div class="admin-table-wrapper">
-      <table class="admin-table">
-        <thead>
-          <tr><th>मिति</th><th>तिथि</th><th>नक्षत्र</th></tr>
-        </thead>
-        <tbody>
-          <?php foreach ($recent as $r): ?>
-          <tr>
-            <td><a href="?date=<?= $r['date'] ?>" style="color:var(--deep-saffron);font-weight:600"><?= $r['date'] ?></a></td>
-            <td><?= htmlspecialchars($r['tithi']) ?></td>
-            <td><?= htmlspecialchars($r['nakshatra']) ?></td>
-          </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </div>
-    <p style="color:var(--muted);font-size:.85rem;margin-top:12px">
-      • पञ्चाङ्ग स्वचालित रूपमा गणना हुन्छ<br>
-      • आवश्यक परेमा माथिको फारमबाट म्यानुअल ओभरराइड गर्न सकिन्छ
-    </p>
-  </div>
+<div class="page-header">
+    <h1>पञ्चाङ्ग</h1>
 </div>
+
+<div class="two-col-layout">
+    <div class="form-card">
+        <h3>पञ्चाङ्ग सम्पादन गर्नुहोस्</h3>
+        <p class="form-note">
+            स्वचालित गणना: <strong><?= $calculated['tithi'] ?></strong>, <?= $calculated['nakshatra'] ?>,
+            सूर्योदय <?= $calculated['sunrise'] ?>/<?= $calculated['sunset'] ?>
+        </p>
+        <form method="POST">
+            <?= csrfField() ?>
+            <div class="form-grid">
+                <div class="field"><label>मिति</label><input name="date" type="date" class="form-input" value="<?= $selectedDate ?>" onchange="location.href='?date='+this.value"></div>
+                <div class="field"><label>तिथि</label><input name="tithi" class="form-input" value="<?= htmlspecialchars($panchang['tithi'] ?? $calculated['tithi']) ?>"></div>
+                <div class="field"><label>नक्षत्र</label><input name="nakshatra" class="form-input" value="<?= htmlspecialchars($panchang['nakshatra'] ?? $calculated['nakshatra']) ?>"></div>
+                <div class="field"><label>सूर्योदय</label><input name="sunrise" type="time" class="form-input" value="<?= htmlspecialchars($panchang['sunrise'] ?? $calculated['sunrise']) ?>"></div>
+                <div class="field"><label>सूर्यास्त</label><input name="sunset" type="time" class="form-input" value="<?= htmlspecialchars($panchang['sunset'] ?? $calculated['sunset']) ?>"></div>
+                <div class="field"><label>चन्द्र राशि</label><input name="moon_rashi" class="form-input" value="<?= htmlspecialchars($panchang['moon_rashi'] ?? $calculated['moon_rashi'] ?? '') ?>"></div>
+                <div class="field"><label>राहुकाल</label><input name="rahu_kaal" type="time" class="form-input" value="<?= htmlspecialchars($panchang['rahu_kaal'] ?? '') ?>"></div>
+                <div class="field full"><label>शुभ समय (प्रति लाइन एक)</label>
+                    <textarea name="auspicious_times" rows="3" class="form-input"><?php
+                        $times = $panchang ? json_decode($panchang['auspicious_times'] ?? '[]', true) : [];
+                        echo htmlspecialchars(implode("\n", $times));
+                    ?></textarea>
+                </div>
+                <div class="field"><label>विशेष (नेपाली)</label><input name="special_events_ne" class="form-input" value="<?= htmlspecialchars($panchang['special_events_ne'] ?? '') ?>"></div>
+                <div class="field"><label>विशेष (अङ्ग्रेजी)</label><input name="special_events_en" class="form-input" value="<?= htmlspecialchars($panchang['special_events_en'] ?? '') ?>"></div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" name="save_panchang" class="btn btn-primary">पञ्चाङ्ग सुरक्षित गर्नुहोस्</button>
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <div class="data-table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr><th>मिति</th><th>तिथि</th><th>नक्षत्र</th></tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($recent as $r): ?>
+                    <tr>
+                        <td><a href="?date=<?= $r['date'] ?>" style="color:var(--deep-saffron);font-weight:600"><?= $r['date'] ?></a></td>
+                        <td><?= htmlspecialchars($r['tithi']) ?></td>
+                        <td><?= htmlspecialchars($r['nakshatra']) ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <p class="form-note" style="margin-top:12px">
+            • पञ्चाङ्ग स्वचालित रूपमा गणना हुन्छ<br>
+            • आवश्यक परेमा माथिको फारमबाट म्यानुअल ओभरराइड गर्न सकिन्छ
+        </p>
+    </div>
+</div>
+
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

@@ -16,36 +16,21 @@ $stats = [
     'total_products' => $db->query("SELECT COUNT(*) FROM products")->fetchColumn(),
 ];
 ?>
-<h1>नमस्ते, <?= htmlspecialchars($_SESSION['admin_name'] ?? 'प्रशासक') ?> 🙏</h1>
 
-<div class="stats-grid">
-    <div class="stat-card">
-        <strong><?= $stats['pending_appointments'] ?></strong>
-        <span>नयाँ परामर्श</span>
-    </div>
-    <div class="stat-card">
-        <strong><?= $stats['today_appointments'] ?></strong>
-        <span>आजको परामर्श</span>
-    </div>
-    <div class="stat-card">
-        <strong><?= $stats['pending_pooja'] ?></strong>
-        <span>पूजा अर्डर</span>
-    </div>
-    <div class="stat-card">
-        <strong><?= $stats['pending_payments'] ?></strong>
-        <span>भुक्तानी पेन्डिङ</span>
-    </div>
-    <div class="stat-card">
-        <strong><?= $stats['unread_messages'] ?></strong>
-        <span>नपढिएको सन्देश</span>
-    </div>
-    <div class="stat-card">
-        <strong><?= $stats['active_services'] ?></strong>
-        <span>सक्रिय सेवा</span>
-    </div>
+<div class="page-header">
+    <h1>नमस्ते, <?= htmlspecialchars($_SESSION['admin_name'] ?? 'प्रशासक') ?> 🙏</h1>
 </div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+<div class="stats-grid">
+    <div class="stat-card stat-red"><strong><?= $stats['pending_appointments'] ?></strong><span>नयाँ परामर्श</span></div>
+    <div class="stat-card stat-gold"><strong><?= $stats['today_appointments'] ?></strong><span>आजको परामर्श</span></div>
+    <div class="stat-card stat-amber"><strong><?= $stats['pending_pooja'] ?></strong><span>पूजा अर्डर</span></div>
+    <div class="stat-card stat-red"><strong><?= $stats['pending_payments'] ?></strong><span>भुक्तानी पेन्डिङ</span></div>
+    <div class="stat-card stat-amber"><strong><?= $stats['unread_messages'] ?></strong><span>नपढिएको सन्देश</span></div>
+    <div class="stat-card stat-green"><strong><?= $stats['active_services'] ?></strong><span>सक्रिय सेवा</span></div>
+</div>
+
+<div class="dashboard-grid">
     <div class="recent-section">
         <h2>भर्खरका परामर्श</h2>
         <?php
@@ -64,7 +49,7 @@ $stats = [
             endwhile;
         else:
         ?>
-        <p style="color:var(--muted);text-align:center;padding:24px">कुनै परामर्श छैन</p>
+        <div class="empty-state">कुनै परामर्श छैन</div>
         <?php endif; ?>
     </div>
 
@@ -85,28 +70,16 @@ $stats = [
             endwhile;
         else:
         ?>
-        <p style="color:var(--muted);text-align:center;padding:24px">कुनै सन्देश छैन</p>
+        <div class="empty-state">कुनै सन्देश छैन</div>
         <?php endif; ?>
     </div>
 </div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:24px;margin-top:24px">
-    <div class="stat-card" style="text-align:center">
-        <strong><?= $stats['total_appointments'] ?></strong>
-        <span>जम्मा परामर्श</span>
-    </div>
-    <div class="stat-card" style="text-align:center">
-        <strong><?= $stats['active_services'] ?></strong>
-        <span>सक्रिय पूजा सेवा</span>
-    </div>
-    <div class="stat-card" style="text-align:center">
-        <strong><?= $stats['total_products'] ?></strong>
-        <span>स्टोर उत्पादन</span>
-    </div>
-    <div class="stat-card" style="text-align:center">
-        <strong><?= $stats['total_articles'] ?></strong>
-        <span>प्रकाशित लेख</span>
-    </div>
+<div class="stats-grid" style="margin-top:24px">
+    <div class="stat-card"><strong><?= $stats['total_appointments'] ?></strong><span>जम्मा परामर्श</span></div>
+    <div class="stat-card"><strong><?= $stats['active_services'] ?></strong><span>सक्रिय पूजा सेवा</span></div>
+    <div class="stat-card"><strong><?= $stats['total_products'] ?></strong><span>स्टोर उत्पादन</span></div>
+    <div class="stat-card"><strong><?= $stats['total_articles'] ?></strong><span>प्रकाशित लेख</span></div>
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

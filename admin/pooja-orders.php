@@ -3,13 +3,13 @@ require_once __DIR__ . '/includes/header.php';
 require_once __DIR__ . '/../backend/config/database.php';
 
 $db = Database::getConnection();
-
 $validStatuses = ['pending', 'confirmed', 'completed', 'cancelled'];
+$alertHtml = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $status = $_POST['status'];
     if (!in_array($status, $validStatuses, true)) {
-        echo '<div class="alert alert-danger">अमान्य स्थिति</div>';
+        $alertHtml = '<div class="alert-error">अमान्य स्थिति</div>';
     } else {
         $stmt = $db->prepare("UPDATE pooja_bookings SET status = :status, admin_notes = :notes WHERE id = :id");
         $stmt->execute([
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
             ':notes' => sanitize($_POST['admin_notes'] ?? ''),
             ':id' => $_POST['id']
         ]);
-        echo '<div class="alert alert-success">अपडेट गरियो</div>';
+        $alertHtml = '<div class="alert-success">अपडेट गरियो</div>';
     }
 }
 
@@ -32,7 +32,11 @@ if ($statusFilter !== 'all') {
 $bookings = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll();
 ?>
 
-<h1>पूजा अर्डर व्यवस्थापन</h1>
+<?= $alertHtml ?>
+
+<div class="page-header">
+    <h1>पूजा अर्डर व्यवस्थापन</h1>
+</div>
 
 <div class="filter-tabs">
     <a href="?status=pending" class="<?= $statusFilter === 'pending' ? 'active' : '' ?>">पेन्डिङ</a>
@@ -42,46 +46,51 @@ $bookings = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll();
     <a href="?status=all" class="<?= $statusFilter === 'all' ? 'active' : '' ?>">सबै</a>
 </div>
 
-<table class="admin-table">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>नाम</th>
-            <th>फोन</th>
-            <th>सेवा</th>
-            <th>मिति</th>
-            <th>स्ट्रिम</th>
-            <th>स्थिति</th>
-            <th>कार्य</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($bookings as $b): ?>
-        <tr>
-            <td><?= $b['id'] ?></td>
-            <td><?= htmlspecialchars($b['name']) ?></td>
-            <td><?= htmlspecialchars($b['phone']) ?></td>
-            <td><?= htmlspecialchars($b['service_name'] ?? '—') ?></td>
-            <td><?= $b['preferred_date'] ?> <?= $b['preferred_time'] ?? '' ?></td>
-            <td><?= $b['is_live_stream'] ? 'लाइभ' : '—' ?></td>
-            <td><span class="badge badge-<?= $b['status'] ?>"><?= $b['status'] ?></span></td>
-            <td>
-                <form method="POST" style="display:flex;flex-wrap:wrap;gap:6px">
-                    <?= csrfField() ?>
-                    <input type="hidden" name="id" value="<?= $b['id'] ?>">
-                    <input name="admin_notes" placeholder="नोट" value="<?= htmlspecialchars($b['admin_notes'] ?? '') ?>" style="width:80px;padding:4px 6px;font-size:.8rem">
-                    <select name="status" onchange="this.form.submit()">
-                        <option value="pending" <?= $b['status'] === 'pending' ? 'selected' : '' ?>>पेन्डिङ</option>
-                        <option value="confirmed" <?= $b['status'] === 'confirmed' ? 'selected' : '' ?>>पुष्टि</option>
-                        <option value="completed" <?= $b['status'] === 'completed' ? 'selected' : '' ?>>सम्पन्न</option>
-                        <option value="cancelled" <?= $b['status'] === 'cancelled' ? 'selected' : '' ?>>रद्द</option>
-                    </select>
-                    <button type="submit" name="update_status" class="btn-small">अपडेट</button>
-                </form>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+<div class="data-table-wrapper">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>नाम</th>
+                <th>फोन</th>
+                <th>सेवा</th>
+                <th>मिति</th>
+                <th>स्ट्रिम</th>
+                <th>स्थिति</th>
+                <th>कार्य</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($bookings as $b): ?>
+            <tr>
+                <td><?= $b['id'] ?></td>
+                <td class="td-name"><?= htmlspecialchars($b['name']) ?></td>
+                <td><?= htmlspecialchars($b['phone']) ?></td>
+                <td><?= htmlspecialchars($b['service_name'] ?? '—') ?></td>
+                <td><?= $b['preferred_date'] ?> <?= $b['preferred_time'] ?? '' ?></td>
+                <td><?= $b['is_live_stream'] ? 'लाइभ' : '—' ?></td>
+                <td><span class="badge badge-<?= $b['status'] ?>"><?= $b['status'] ?></span></td>
+                <td>
+                    <form method="POST" class="action-form">
+                        <?= csrfField() ?>
+                        <input type="hidden" name="id" value="<?= $b['id'] ?>">
+                        <input name="admin_notes" placeholder="नोट" value="<?= htmlspecialchars($b['admin_notes'] ?? '') ?>" class="form-input" style="width:80px;font-size:.8rem">
+                        <select name="status" class="form-input" style="width:auto;font-size:.8rem" onchange="this.form.submit()">
+                            <option value="pending" <?= $b['status'] === 'pending' ? 'selected' : '' ?>>पेन्डिङ</option>
+                            <option value="confirmed" <?= $b['status'] === 'confirmed' ? 'selected' : '' ?>>पुष्टि</option>
+                            <option value="completed" <?= $b['status'] === 'completed' ? 'selected' : '' ?>>सम्पन्न</option>
+                            <option value="cancelled" <?= $b['status'] === 'cancelled' ? 'selected' : '' ?>>रद्द</option>
+                        </select>
+                        <button type="submit" name="update_status" class="btn-sm">अपडेट</button>
+                    </form>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            <?php if (empty($bookings)): ?>
+            <tr><td colspan="8" class="empty-state">कुनै पूजा अर्डर छैन</td></tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
