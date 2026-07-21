@@ -4,10 +4,10 @@ import {
   CalendarBlank, WhatsappLogo, ShieldCheck, Monitor,
   ChartPolar, BookOpenText, UsersThree, GraduationCap,
   CheckCircle, Quotes, ArrowRight, LockKey, CalendarDots,
-  Campfire, Compass, Planet, Heart
+  Campfire, Compass, Planet, Heart, Article
 } from '@phosphor-icons/react';
 import { PHONE, services } from '../constants';
-import { getPanchang, getTestimonials } from '../services/api';
+import { getPanchang, getTestimonials, getArticles } from '../services/api';
 import { buildHomePanchangItems, getBsDateString } from '../utils/homeAstrology';
 import { ad2bs } from '../utils/bsDate';
 import '../homeAstrology.css';
@@ -24,6 +24,7 @@ export function Home() {
   const [panchangStatus, setPanchangStatus] = useState('loading');
   const [panchangRefresh, setPanchangRefresh] = useState(0);
   const [testimonials, setTestimonials] = useState([]);
+  const [articles, setArticles] = useState([]);
   const [clock, setClock] = useState('');
 
   useEffect(() => {
@@ -40,6 +41,7 @@ export function Home() {
         setPanchangStatus('error');
       });
     getTestimonials().then(d => { if (active) setTestimonials(d); }).catch(() => {});
+    getArticles().then(d => { if (active) setArticles(d.articles.slice(0, 3)); }).catch(() => {});
     return () => { active = false; };
   }, [panchangRefresh]);
 
@@ -213,6 +215,32 @@ export function Home() {
           </div>
         </div>
       </section>
+
+      {articles.length > 0 && <section className="section blog-section">
+        <div className="container">
+          <div className="section-heading">
+            <span>लेख तथा रचनाहरू</span>
+            <h2>हाम्रा हालैका लेखहरू</h2>
+            <p>ज्योतिष, वास्तु, कर्मकाण्ड र आध्यात्मिक जीवनका विविध आयाम</p>
+          </div>
+          <div className="blog-grid">
+            {articles.map(a => (
+              <Link to={`/article/${a.slug}`} className="blog-card" key={a.id}>
+                {a.cover_image && <div className="blog-cover"><img src={a.cover_image} alt={a.title_ne} loading="lazy" /></div>}
+                <div className="blog-body">
+                  <h3>{a.title_ne}</h3>
+                  {a.excerpt_ne && <p>{a.excerpt_ne}</p>}
+                  {!a.excerpt_ne && a.content_ne && <p>{a.content_ne.replace(/<[^>]*>/g, '').slice(0, 150)}…</p>}
+                  <strong className="blog-read">पूरा पढ्नुहोस् <ArrowRight /></strong>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '32px' }}>
+            <Link className="button button-maroon" to="/blog">सबै लेख हेर्नुहोस् <ArrowRight /></Link>
+          </div>
+        </div>
+      </section>}
 
       {testimonials.length > 0 && <section className="section testimonial-section">
         <div className="container">

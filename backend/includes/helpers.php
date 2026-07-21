@@ -56,6 +56,14 @@ function csrfQuery(): string {
     return '_csrf=' . generateCsrfToken();
 }
 
+function generateSlug(string $str): string {
+    $str = mb_strtolower(trim($str));
+    $str = preg_replace('/[^\w\s\-]/u', '', $str);
+    $str = preg_replace('/\s+/', '-', $str);
+    $str = preg_replace('/-+/', '-', $str);
+    return trim($str, '-') ?: 'post-' . time();
+}
+
 function validateCsrfGet(): void {
     $token = $_GET['_csrf'] ?? '';
     if (session_status() === PHP_SESSION_NONE) {

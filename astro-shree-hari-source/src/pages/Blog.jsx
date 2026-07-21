@@ -30,6 +30,7 @@ export function Blog() {
               <div className="blog-body">
                 <h2>{a.title_ne}</h2>
                 {a.excerpt_ne && <p>{a.excerpt_ne}</p>}
+                {!a.excerpt_ne && a.content_ne && <p>{a.content_ne.replace(/<[^>]*>/g, '').slice(0, 150)}…</p>}
                 <span className="blog-meta"><CalendarBlank /> {a.published_at?.slice(0, 10)}</span>
                 <strong className="blog-read">पूरा पढ्नुहोस् <ArrowRight /></strong>
               </div>

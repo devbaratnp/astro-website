@@ -13,13 +13,11 @@ const sections = [
   ['appointments', 'Appointments', CalendarCheck],
   ['pooja', 'Pooja orders', HandsPraying],
   ['payments', 'Payments', CreditCard],
-  ['messages', 'Messages', Envelope],
   ['services', 'Pooja services', List],
   ['articles', 'Articles', BookOpen],
   ['events', 'Events & Tours', CalendarCheck],
   ['gallery', 'Gallery', BookOpen],
   ['testimonials', 'Testimonials', ChartBar],
-  ['rewards', 'Rewards', ChartBar],
   ['panchang', 'Panchang', CalendarCheck],
 ];
 
@@ -36,13 +34,6 @@ const editors = {
     ['slug', 'URL slug'],
     ['excerpt_ne', 'Excerpt'],
     ['content_ne', 'Content'],
-  ],
-  rewards: [
-    ['user_name', 'User name'],
-    ['user_phone', 'Phone'],
-    ['reward_type', 'Type'],
-    ['title_ne', 'Title'],
-    ['expires_at', 'Expires'],
   ],
   panchang: [
     ['date', 'Date'],
@@ -205,11 +196,15 @@ export function Admin() {
 
   const current = sections.find(s => s[0] === section);
   const Icon = current?.[2] || ChartBar;
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="admin-shell">
+    <div className={`admin-shell${sidebarOpen ? '' : ' sidebar-collapsed'}`}>
       <aside>
         <div className="admin-brand">
+          <button className="sidebar-toggle" onClick={() => setSidebarOpen(o => !o)} aria-label="Toggle sidebar">
+            <List weight="bold" />
+          </button>
           <span>
             Shreehari Admin
             <small>Management system</small>
@@ -221,21 +216,27 @@ export function Admin() {
               key={key}
               className={section === key ? 'active' : ''}
               onClick={() => setSection(key)}
+              title={sidebarOpen ? '' : label}
             >
               <Icon />
-              {label}
+              <span className="nav-label">{label}</span>
             </button>
           ))}
         </nav>
         <div className="admin-user">
           <button onClick={logout}>
-            <SignOut /> Logout
+            <SignOut /> <span className="nav-label">Logout</span>
           </button>
         </div>
       </aside>
 
       <main>
         <div className="admin-topbar">
+          {!sidebarOpen && (
+            <button className="sidebar-toggle mobile-toggle" onClick={() => setSidebarOpen(true)} aria-label="Open sidebar">
+              <List weight="bold" />
+            </button>
+          )}
           <h2>
             <Icon style={{ marginRight: 8, verticalAlign: -2 }} />
             {current?.[1] || 'Dashboard'}
@@ -305,6 +306,8 @@ function ListSection({ section, data, editing, setEditing, onSave, onMutate }) {
           value={editing}
           section={section}
           imageFields={imageFields[section]}
+          slugFrom={section === 'articles' ? 'title_ne' : undefined}
+          selectFields={{ events: { type: [['event', 'Event'], ['tour', 'Tour']] } }}
           onSubmit={onSave}
           onCancel={() => setEditing(null)}
         />
@@ -401,18 +404,38 @@ function FileUpload({ value, onChange, accept = 'image/*' }) {
 }
 
 /* ── Editor Form ── */
-function Editor({ fields, value, section, imageFields, onSubmit, onCancel }) {
+function Editor({ fields, value, section, imageFields, slugFrom, selectFields, onSubmit, onCancel }) {
   const [uploads, setUploads] = useState({});
+  const slugRef = useRef(null);
+
+  function handleTitleChange(e) {
+    if (!slugRef.current || !slugFrom) return;
+    const title = e.target.value;
+    slugRef.current.value = title
+      .toLowerCase()
+      .replace(/[^\w\s\-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '') || 'post-' + Date.now();
+  }
 
   function handleChange(name, val) {
     setUploads(p => ({ ...p, [name]: val }));
   }
 
+  function slugLabel(name) {
+    return slugFrom && name === slugFrom;
+  }
+
+  const sectionSelects = selectFields?.[section] || {};
+
   return (
     <form className="admin-editor" onSubmit={onSubmit}>
       <h3>{value?.id ? 'Edit record' : 'Add record'}</h3>
       <div>
-        {fields.map(([name, label]) => (
+        {fields.map(([name, label]) => {
+          const opts = sectionSelects[name];
+          return (
           <label
             key={name}
             className={imageFields?.includes(name) ? 'image-field' : ''}
@@ -423,15 +446,31 @@ function Editor({ fields, value, section, imageFields, onSubmit, onCancel }) {
                 value={value?.[name] || ''}
                 onChange={v => handleChange(name, v)}
               />
+            ) : name === 'slug' ? (
+              <input
+                ref={slugRef}
+                name="slug"
+                defaultValue={value?.slug ?? ''}
+                placeholder="auto-generated"
+              />
+            ) : opts ? (
+              <select name={name} defaultValue={value?.[name] ?? ''}>
+                <option value="">— Select —</option>
+                {opts.map(([val, lbl]) => (
+                  <option key={val} value={val}>{lbl}</option>
+                ))}
+              </select>
             ) : (
               <input
                 name={name}
                 defaultValue={value?.[name] ?? ''}
                 required={!imageFields?.includes(name)}
+                onChange={slugLabel(name) ? handleTitleChange : undefined}
               />
             )}
           </label>
-        ))}
+          );
+        })}
       </div>
       {Object.entries(uploads).map(([k, v]) => (
         <input key={k} type="hidden" name={k} value={v} />
@@ -502,30 +541,7 @@ function DataTable({ rows, section, onEdit, onMutate }) {
                     ))}
                   </select>
                 )}
-                {section === 'messages' && (
-                  <button
-                    onClick={() =>
-                      onMutate('PATCH', {
-                        id: r.id,
-                        is_read: r.is_read ? 0 : 1,
-                      })
-                    }
-                  >
-                    {r.is_read ? 'Unread' : 'Read'}
-                  </button>
-                )}
-                {section === 'rewards' && (
-                  <button
-                    onClick={() =>
-                      onMutate('PATCH', {
-                        id: r.id,
-                        is_redeemed: r.is_redeemed ? 0 : 1,
-                      })
-                    }
-                  >
-                    {r.is_redeemed ? 'Reactivate' : 'Redeem'}
-                  </button>
-                )}
+
                 {editors[section] && (
                   <>
                     <button onClick={() => onEdit(r)}>Edit</button>

@@ -1,8 +1,8 @@
 RewriteEngine On
-RewriteBase /
+RewriteBase /www/astrohari/
 DirectoryIndex index.html
 
-# Redirect to canonical: https://www.astroshreehari.com (skip for local/dev)
+# Redirect to canonical (skip for local/dev)
 RewriteCond %{HTTP_HOST} !^localhost(:[0-9]+)?$ [NC]
 RewriteCond %{HTTP_HOST} !^127\.0\.0\.1(:[0-9]+)?$ [NC]
 RewriteCond %{HTTPS} off [OR]
@@ -10,11 +10,11 @@ RewriteCond %{HTTP_HOST} !^www\. [NC]
 RewriteRule ^ https://www.astroshreehari.com%{REQUEST_URI} [L,R=301]
 
 # Keep old public PHP URLs from bypassing the React application.
-RewriteRule ^index\.php$ / [R=301,L,NE]
-RewriteRule ^about\.php$ /about [R=301,L,NE]
-RewriteRule ^services\.php$ /services [R=301,L,NE]
-RewriteRule ^appointment\.php$ /appointment [R=301,L,NE]
-RewriteRule ^contact\.php$ /contact [R=301,L,NE]
+RewriteRule ^index\.php$ /www/astrohari/ [R=301,L,NE]
+RewriteRule ^about\.php$ /www/astrohari/about [R=301,L,NE]
+RewriteRule ^services\.php$ /www/astrohari/services [R=301,L,NE]
+RewriteRule ^appointment\.php$ /www/astrohari/appointment [R=301,L,NE]
+RewriteRule ^contact\.php$ /www/astrohari/contact [R=301,L,NE]
 
 # Serve React SPA for root URL.
 RewriteRule ^$ index.html [L]
@@ -43,7 +43,7 @@ RewriteRule ^ index.html [L]
     Header set Referrer-Policy "strict-origin-when-cross-origin"
     Header set Permissions-Policy "geolocation=(), camera=(), microphone=()"
     Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-    Header set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://fonts.googleapis.com; frame-src https://meet.jit.si; base-uri 'self'; form-action 'self'"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://fonts.googleapis.com; frame-src https://meet.jit.si https://www.google.com; base-uri 'self'; form-action 'self'"
 </IfModule>
 
 # Security
