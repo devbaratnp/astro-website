@@ -1,5 +1,5 @@
 RewriteEngine On
-RewriteBase /www/astrohari/
+RewriteBase /
 DirectoryIndex index.html
 
 # Redirect to canonical (skip for local/dev)
@@ -10,11 +10,11 @@ RewriteCond %{HTTP_HOST} !^www\. [NC]
 RewriteRule ^ https://www.astroshreehari.com%{REQUEST_URI} [L,R=301]
 
 # Keep old public PHP URLs from bypassing the React application.
-RewriteRule ^index\.php$ /www/astrohari/ [R=301,L,NE]
-RewriteRule ^about\.php$ /www/astrohari/about [R=301,L,NE]
-RewriteRule ^services\.php$ /www/astrohari/services [R=301,L,NE]
-RewriteRule ^appointment\.php$ /www/astrohari/appointment [R=301,L,NE]
-RewriteRule ^contact\.php$ /www/astrohari/contact [R=301,L,NE]
+RewriteRule ^index\.php$ / [R=301,L,NE]
+RewriteRule ^about\.php$ /about [R=301,L,NE]
+RewriteRule ^services\.php$ /services [R=301,L,NE]
+RewriteRule ^appointment\.php$ /appointment [R=301,L,NE]
+RewriteRule ^contact\.php$ /contact [R=301,L,NE]
 
 # Serve React SPA for root URL.
 RewriteRule ^$ index.html [L]
