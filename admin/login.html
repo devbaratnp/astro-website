@@ -3,29 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>प्रशासक लगइन — श्रीहरि ज्योतिष</title>
+  <title>Admin Login — Shreehari Jyotish</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="login-page">
   <div class="login-box">
-    <div class="login-symbol">ॐ</div>
-    <h1>Admin login</h1>
-    <p class="login-subtitle">Shreehari management system</p>
-    <div id="loginError" class="admin-error" style="display:none"></div>
-    <form id="loginForm">
-      <label>
-        Username
-        <input type="text" id="username" required autocomplete="username">
-      </label>
-      <label>
-        Password
-        <input type="password" id="password" required autocomplete="current-password">
-      </label>
-      <button type="submit" class="btn-primary">Log in</button>
+    <div class="login-logo" aria-hidden="true">ॐ</div>
+    <h1>Admin Login</h1>
+    <p class="login-subtitle">Shreehari Management System</p>
+
+    <div id="loginError" class="alert alert-danger" style="display:none"></div>
+
+    <form id="loginForm" novalidate>
+      <div class="form-field">
+        <label class="form-label" for="username">Username</label>
+        <input type="text" id="username" class="form-input" required autocomplete="username" placeholder="Enter your username">
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="password">Password</label>
+        <div class="password-wrap">
+          <input type="password" id="password" class="form-input" required autocomplete="current-password" placeholder="Enter your password">
+          <button type="button" class="password-toggle" id="passwordToggle" aria-label="Toggle password visibility" tabindex="-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Log in</button>
     </form>
+
     <a href="/" class="back-link">← Back to website</a>
   </div>
+
   <script src="js/app.js"></script>
-  <script>document.addEventListener('DOMContentLoaded', initLogin);</script>
+  <script>
+    document.addEventListener('DOMContentLoaded', initLogin);
+
+    // Password toggle
+    document.getElementById('passwordToggle').addEventListener('click', function() {
+      var input = document.getElementById('password');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    });
+  </script>
 </body>
 </html>
