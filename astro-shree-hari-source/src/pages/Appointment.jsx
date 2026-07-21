@@ -54,7 +54,7 @@ export function Appointment() {
     setSlots([]);
     try {
       const x = await getAvailableSlots(value);
-      setSlots(x.data.available_slots);
+      setSlots(x.available_slots);
     } catch {
       setError('मितिको लागि उपलब्ध समय प्राप्त गर्न सकिएन।');
     } finally {
@@ -98,7 +98,7 @@ export function Appointment() {
         birth_order: data.get('birth_order'),
         birth_gender: data.get('birth_gender'),
       });
-      setMeetingUrl(response.data.meeting_url || '');
+      setMeetingUrl(response.meeting_url || '');
     } catch (error) {
       setError(error.message || 'अनुरोध सुरक्षित गर्न सकिएन। कृपया फेरि प्रयास गर्नुहोस्।');
       setSubmitting(false);

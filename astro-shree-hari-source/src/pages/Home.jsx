@@ -32,14 +32,14 @@ export function Home() {
     getPanchang()
       .then((response) => {
         if (!active) return;
-        setPanchangItems(buildHomePanchangItems(response.data.panchang));
+        setPanchangItems(buildHomePanchangItems(response.panchang));
         setPanchangStatus('ready');
       })
       .catch(() => {
         if (!active) return;
         setPanchangStatus('error');
       });
-    getTestimonials().then(d => { if (active) setTestimonials(d.data); }).catch(() => {});
+    getTestimonials().then(d => { if (active) setTestimonials(d); }).catch(() => {});
     return () => { active = false; };
   }, [panchangRefresh]);
 
