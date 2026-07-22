@@ -1,4 +1,57 @@
-import {useEffect,useState} from 'react';import {getPanchang,getHoroscope} from '../services/api';
-function MoonPosBadge({pos}){const colors={1:'#0b8d4e',2:'#1a7a5a',3:'#2d6b6b',4:'#b34a3a',5:'#5a7ab5',6:'#8b4513',7:'#b8860b',8:'#6b3a3a',9:'#d4a02b',10:'#4a7a4a',11:'#c4912a',12:'#8b2252'};const labels={1:'१',2:'२',3:'३',4:'४',5:'५',6:'६',7:'७',8:'८',9:'९',10:'१०',11:'११',12:'१२'};return<span className="moon-pos-badge" style={{background:colors[pos]||'#888'}} title={`चन्द्रमा स्थान ${pos}`}>{labels[pos]||pos}</span>}
-export function Panchang(){const[date,setDate]=useState(new Date().toISOString().slice(0,10)),[p,setP]=useState(null),[h,setH]=useState([]),[moonRashi,setMoonRashi]=useState('');useEffect(()=>{getPanchang(date).then(x=>{setP(x.panchang)});getHoroscope(date).then(x=>{setH(x.items);setMoonRashi(x.current_transit_moon)})},[date]);return<section className="section page-section"><div className="container"><div className="section-heading"><span>दैनिक अपडेट</span><h2>पञ्चाङ्ग र राशिफल</h2><input type="date" value={date} onChange={e=>setDate(e.target.value)}/></div>{p&&<div className="result-grid"><article><b>तिथि</b><strong>{p.tithi}</strong></article><article><b>नक्षत्र</b><strong>{p.nakshatra}</strong></article><article><b>चन्द्र राशि</b><strong>{p.moon_rashi||'—'}</strong></article><article><b>सूर्योदय</b><strong>{p.sunrise}</strong></article><article><b>सूर्यास्त</b><strong>{p.sunset}</strong></article></div>}<h2 className="subheading">आजको राशिफल {moonRashi&&<span className="moon-rashi-label">चन्द्रमा: {moonRashi} राशिमा</span>}</h2><div className="horoscope-grid">{h.map(x=><article key={x.zodiac_id} className={`horoscope-card moon-pos-${x.moon_position}`}><div className="horoscope-header"><h3>{x.zodiac_ne}</h3><MoonPosBadge pos={x.moon_position}/></div><p className="ruler-planet">स्वामी: {x.ruler_planet}</p><p className="moon-interp">{x.moon_interpretation}</p><div className="horoscope-meta"><span><b>भाग्यशाली रङ्ग:</b> {x.lucky_colors.join(', ')}</span><span><b>शुभ दिन:</b> {x.lucky_days.join(', ')||'—'}</span>{x.unlucky_days?.length>0&&<span className="unlucky"><b>अशुभ दिन:</b> {x.unlucky_days.join(', ')}</span>}</div><details className="remedy-details"><summary>उपाय र सुझाव</summary><p className="remedy-text">{x.remedy_tips}</p></details></article>)}</div><NotificationButton/></div></section>}
-function NotificationButton(){async function enable(){if(!('serviceWorker'in navigator)||!('PushManager'in window))return alert('यो browser ले push notification support गर्दैन।');const permission=await Notification.requestPermission();if(permission==='granted')alert('Notification permission enabled. Server VAPID key configured भएपछि alerts आउँछन्।')}return <button className="button button-gold notify-button" onClick={enable}>विशेष मुहूर्त सूचना सक्षम गर्नुहोस्</button>}
+import { useEffect, useState } from 'react';
+import { getPanchang, getHoroscope } from '../services/api';
+import { buildForecastEntries, buildPanchangRows } from '../utils/panchangDisplay';
+
+const ne = {
+  panchang: '\u092a\u091e\u094d\u091a\u093e\u0919\u094d\u0917',
+  day: '\u0926\u093f\u0928 \u092b\u0932',
+  night: '\u0930\u093e\u0924\u094d\u0930\u0940 \u092b\u0932',
+  today: '\u0906\u091c\u0915\u094b \u092a\u091e\u094d\u091a\u093e\u0919\u094d\u0917',
+  dailyUpdate: '\u0926\u0948\u0928\u093f\u0915 \u0905\u092a\u0921\u0947\u091f',
+  tithi: '\u0924\u093f\u0925\u093f',
+  nakshatra: '\u0928\u0915\u094d\u0937\u0924\u094d\u0930',
+  sunrise: '\u0938\u0942\u0930\u094d\u092f\u094b\u0926\u092f',
+  sunset: '\u0938\u0942\u0930\u094d\u092f\u093e\u0938\u094d\u0924',
+  previousDay: '\u0905\u0918\u093f\u0932\u094d\u0932\u094b \u0926\u093f\u0928',
+  nextDay: '\u0905\u0930\u094d\u0915\u094b \u0926\u093f\u0928',
+  todayLabel: '\u0906\u091c\u0915\u094b \u0926\u093f\u0928',
+  loading: '\u0932\u094b\u0921 \u0939\u0941\u0901\u0926\u0948\u091b\u2026',
+  unavailable: '\u092a\u091e\u094d\u091a\u093e\u0919\u094d\u0917 \u0935\u093f\u0935\u0930\u0923 \u0905\u0939\u093f\u0932\u0947 \u0909\u092a\u0932\u092c\u094d\u0927 \u091b\u0948\u0928\u0964 \u0915\u0943\u092a\u092f\u093e \u092b\u0947\u0930\u093f \u092a\u094d\u0930\u092f\u093e\u0938 \u0917\u0930\u094d\u0928\u0941\u0939\u094b\u0938\u094d\u0964',
+  notice: '\u0935\u093f\u0935\u0930\u0923 \u092a\u094d\u0930\u0936\u093e\u0938\u0928\u093f\u0915 \u0930 \u0917\u0923\u0928\u093e\u0924\u094d\u092e\u0915 \u0921\u093e\u091f\u093e\u092e\u093e \u0906\u0927\u093e\u0930\u093f\u0924 \u091b\u0964',
+  horoscope: '\u0906\u091c\u0915\u094b \u0930\u093e\u0936\u093f\u092b\u0932',
+  noForecast: '\u0935\u093f\u0935\u0930\u0923 \u0909\u092a\u0932\u092c\u094d\u0927 \u091b\u0948\u0928\u0964',
+};
+const tabs = [ne.panchang, ne.day, ne.night];
+const toDisplayDate = (value) => new Intl.DateTimeFormat('ne-NP', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${value}T12:00:00`));
+
+export function Panchang() {
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [panchang, setPanchang] = useState(null);
+  const [horoscope, setHoroscope] = useState([]);
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    setError('');
+    Promise.all([getPanchang(date), getHoroscope(date)])
+      .then(([p, h]) => { setPanchang(p.panchang); setHoroscope(h.items || []); })
+      .catch(() => setError(ne.unavailable));
+  }, [date]);
+
+  const changeDate = (days) => {
+    const next = new Date(`${date}T12:00:00`);
+    next.setDate(next.getDate() + days);
+    setDate(next.toISOString().slice(0, 10));
+  };
+  const rows = buildPanchangRows(panchang);
+  const forecastEntries = buildForecastEntries(horoscope, activeTab === ne.night ? 'night' : 'day');
+
+  return <section className="section page-section panchang-page"><div className="container panchang-shell">
+    <div className="panchang-date-nav"><button aria-label={ne.previousDay} onClick={() => changeDate(-1)}>&lsaquo;</button><label>{ne.today}<input type="date" value={date} onChange={(event) => setDate(event.target.value)} /></label><button aria-label={ne.nextDay} onClick={() => changeDate(1)}>&rsaquo;</button></div>
+    <header className="panchang-hero"><aside className="panchang-calendar"><strong>{new Date(`${date}T12:00:00`).getDate()}</strong><b>{toDisplayDate(date)}</b><span>{ne.todayLabel}</span><i aria-hidden="true" /></aside><div><span className="panchang-kicker">{ne.dailyUpdate}</span><h1>{panchang?.special_events_ne || ne.today}</h1><div className="panchang-summary"><div>{ne.tithi}<strong>{panchang?.tithi || ne.loading}</strong></div><div>{ne.nakshatra}<strong>{panchang?.nakshatra || '-'}</strong></div><div>{ne.sunrise}<strong>{panchang?.sunrise || '-'}</strong></div><div>{ne.sunset}<strong>{panchang?.sunset || '-'}</strong></div></div></div></header>
+    <div className="panchang-tabs" role="tablist">{tabs.map((tab) => <button key={tab} role="tab" aria-selected={activeTab === tab} className={activeTab === tab ? 'active' : ''} onClick={() => setActiveTab(tab)}>{tab}</button>)}</div>
+    {error ? <p className="form-error">{error}</p> : <section className="panchang-detail-card"><h2>{activeTab}</h2><hr />{activeTab === ne.panchang ? <div className="panchang-facts">{rows.map(([label, value]) => <div key={label}><b>{label}</b><span>{value}</span></div>)}</div> : <div className="panchang-forecast-grid">{forecastEntries.length ? forecastEntries.map((entry) => <article className="panchang-forecast-card" key={entry.title}><h3>{entry.title}</h3><p>{entry.body}</p>{entry.note && <small>{entry.note}</small>}</article>) : <p className="panchang-placeholder">{ne.noForecast}</p>}</div>}</section>}
+    <p className="panchang-notice">{ne.notice}</p>
+    <h2 className="subheading">{ne.horoscope}</h2><div className="horoscope-grid">{horoscope.map((item) => <article key={item.zodiac_id} className="horoscope-card"><h3>{item.zodiac_ne}</h3><p>{item.moon_interpretation}</p></article>)}</div>
+  </div></section>;
+}
