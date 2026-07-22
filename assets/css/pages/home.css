@@ -1,0 +1,373 @@
+/* Home Hero & Portrait */
+.hero {
+  min-height: 690px;
+  padding: 76px 0 42px;
+  background-color: #fffaf2;
+  background-image: radial-gradient(circle at 76% 38%, rgba(224, 173, 85, .16), transparent 34%), linear-gradient(110deg, #fffaf2 5%, #fffdf8 60%, #fdf2df 100%);
+  overflow: hidden;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  align-items: center;
+  gap: 35px;
+}
+
+.eyebrow, .section-kicker {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  color: #9b332a;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #fffaf2;
+}
+
+.hero h1 {
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+  font-size: 62px;
+  line-height: 1.25;
+  color: #571514;
+  margin: 24px 0 18px;
+}
+
+.hero h1 em { font-style: normal; }
+.hero-name-en {
+  margin: -5px 0 12px;
+  color: #8b3029 !important;
+  font-size: 15px !important;
+  font-weight: 700;
+  letter-spacing: .03em;
+}
+
+.hero-copy > p {
+  font-size: 18px;
+  max-width: 620px;
+  color: #54423c;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  margin: 32px 0;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #6e5c55;
+  font-size: 13px;
+}
+
+.avatars { display: flex; }
+.avatars i {
+  width: 34px;
+  height: 34px;
+  margin-left: -8px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #71211f;
+  color: #ffe3a5;
+  border: 2px solid #fff;
+  font-style: normal;
+  font-size: 10px;
+}
+
+.avatars i:first-child { margin-left: 0; }
+
+.portrait-wrap {
+  position: relative;
+  min-height: 560px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.portrait-wrap:before {
+  content: 'ॐ';
+  position: absolute;
+  top: 42px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 145px;
+  color: rgba(210, 151, 54, .09);
+  font-family: serif;
+}
+
+.portrait-ring {
+  position: absolute;
+  width: 470px;
+  height: 470px;
+  border-radius: 50%;
+  border: 1px solid rgba(210, 151, 54, .28);
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 0 38px rgba(226, 184, 109, .06), 0 0 0 75px rgba(226, 184, 109, .035);
+}
+
+.portrait-wrap img {
+  position: relative;
+  width: 430px;
+  height: 510px;
+  object-fit: cover;
+  object-position: 50% 23%;
+  border-radius: 50% 50% 10px 10px;
+  filter: saturate(.9);
+  box-shadow: var(--shadow);
+}
+
+.name-plaque {
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 370px;
+  text-align: center;
+  padding: 12px 25px;
+  background: #fff8e9;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  box-shadow: 0 8px 24px rgba(88, 29, 12, .12);
+}
+
+.name-plaque strong {
+  display: block;
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+  font-size: 20px;
+  color: #5d1714;
+}
+
+.name-plaque span { font-size: 11px; color: #775e4d; }
+
+/* Trust Bar */
+.trust-bar {
+  position: relative;
+  margin-top: -18px;
+  z-index: 4;
+  background: #fffaf2;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 26px 34px;
+  box-shadow: var(--shadow);
+}
+
+.trust-bar > div {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 0 28px;
+  border-right: 1px solid #ecd8af;
+}
+
+.trust-bar > div:last-child { border: 0; }
+.trust-bar svg { font-size: 44px; color: #c88f2d; }
+.trust-bar span { font-size: 12px; color: var(--muted); }
+.trust-bar strong { display: block; color: var(--ink); font-size: 16px; }
+
+/* Astro Hub Section */
+.astro-hub-section {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 8% 20%, rgba(207, 150, 47, .14), transparent 30%), linear-gradient(145deg, #fff9ed, #fffdf8 48%, #f8ead0);
+}
+
+.astro-hub-section:before {
+  content: 'ॐ';
+  position: absolute;
+  right: -25px;
+  top: -70px;
+  color: rgba(113, 29, 25, .035);
+  font-family: serif;
+  font-size: 330px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.astro-hub-heading {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 38px;
+}
+
+.astro-hub-heading > div { max-width: 740px; }
+.astro-hub-heading h2 {
+  margin: 12px 0 8px;
+  color: #521716;
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+  font-size: 42px;
+  line-height: 1.35;
+}
+
+.astro-hub-heading p { margin: 0; color: var(--muted); font-size: 15px; }
+.astro-hub-heading > .button { flex: 0 0 auto; }
+
+.astro-hub-layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: .92fr 1.08fr;
+  gap: 22px;
+  align-items: stretch;
+}
+
+.astro-daily-card {
+  display: flex;
+  min-height: 470px;
+  flex-direction: column;
+  padding: 34px;
+  border: 1px solid rgba(241, 196, 111, .32);
+  border-radius: 18px;
+  background: radial-gradient(circle at 85% 16%, rgba(240, 196, 110, .18), transparent 33%), linear-gradient(150deg, #711d1a, #4b0f0e 75%);
+  box-shadow: 0 24px 60px rgba(81, 20, 16, .2);
+  color: #fff5e3;
+}
+
+.astro-daily-topline {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(246, 207, 135, .2);
+}
+
+.astro-daily-symbol {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(246, 207, 135, .4);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .06);
+  color: var(--gold-light);
+  font-size: 31px;
+}
+
+.astro-daily-topline span, .astro-daily-topline strong { display: block; }
+.astro-daily-topline span { color: #e9bd69; font-size: 12px; font-weight: 700; letter-spacing: .04em; }
+.astro-daily-topline strong { margin-top: 2px; color: #fff5dc; font-size: 17px; }
+.astro-bs-date { display: block !important; margin-top: 2px; color: #fff5dc !important; font-size: 20px !important; font-weight: 700 !important; font-family: 'Tiro Devanagari Sanskrit', serif; line-height: 1.3; }
+.astro-en-date { display: block !important; margin-top: 2px; color: #d9bf8a !important; font-size: 12px !important; font-weight: 400 !important; }
+.astro-clock { display: block !important; margin-top: 2px; color: #e9bd69 !important; font-size: 14px !important; font-weight: 500 !important; font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+
+.astro-panchang-status { display: flex; flex: 1; align-items: center; }
+.astro-panchang-grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 24px 0;
+  overflow: hidden;
+  border: 1px solid rgba(246, 207, 135, .18);
+  border-radius: 12px;
+  background: rgba(246, 207, 135, .18);
+}
+
+.astro-panchang-item { min-width: 0; padding: 15px 17px; background: rgba(61, 9, 9, .48); }
+.astro-panchang-item span, .astro-panchang-item strong { display: block; }
+.astro-panchang-item span { margin-bottom: 3px; color: #dcbf98; font-size: 11px; }
+.astro-panchang-item strong { overflow-wrap: anywhere; color: #fff4d4; font-family: 'Tiro Devanagari Sanskrit', serif; font-size: 17px; }
+
+.astro-daily-link {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 14px;
+  border: 1px solid rgba(246, 207, 135, .35);
+  border-radius: 8px;
+  color: #ffe2a4;
+  font-size: 13px;
+  font-weight: 700;
+  transition: background .2s, border-color .2s;
+}
+
+.astro-daily-link:hover { border-color: #f1c56b; background: rgba(255, 255, 255, .07); }
+.astro-daily-card > small { margin-top: 14px; color: #d9c4b1; font-size: 10px; line-height: 1.6; }
+
+.astro-tool-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.astro-tool-card {
+  display: flex;
+  min-width: 0;
+  gap: 17px;
+  padding: 26px 23px;
+  border: 1px solid #e3c58e;
+  border-radius: 14px;
+  background: rgba(255, 253, 248, .9);
+  box-shadow: 0 14px 36px rgba(91, 43, 20, .08);
+  transition: transform .22s, box-shadow .22s, border-color .22s;
+}
+
+.astro-tool-card:hover {
+  transform: translateY(-4px);
+  border-color: #c58b2c;
+  box-shadow: 0 20px 42px rgba(91, 43, 20, .14);
+}
+
+.astro-tool-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 12px;
+  background: #f5e4c4;
+  color: #8c2922;
+  font-size: 28px;
+}
+
+.astro-tool-card h3 {
+  margin: 0 0 7px;
+  color: #591816;
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+  font-size: 19px;
+  line-height: 1.35;
+}
+
+.astro-tool-card p { margin: 0 0 14px; color: #6d5b52; font-size: 12px; line-height: 1.7; }
+.astro-tool-card strong { display: inline-flex; align-items: center; gap: 5px; color: #8c2922; font-size: 11px; }
+
+/* Responsive adjustments */
+@media (max-width: 1020px) {
+  .astro-hub-layout { grid-template-columns: 1fr; }
+  .astro-daily-card { min-height: 420px; }
+  .astro-tool-card { min-height: 180px; }
+}
+
+@media (max-width: 820px) {
+  .hero { padding-top: 45px; }
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-copy { text-align: center; }
+  .hero-copy > p { margin-left: auto; margin-right: auto; }
+  .hero-actions, .rating { justify-content: center; }
+  .hero h1 { font-size: 43px; }
+  .portrait-wrap { min-height: 500px; }
+  .trust-bar { margin-top: 20px; grid-template-columns: 1fr; padding: 12px 25px; }
+  .trust-bar > div { border-right: 0; border-bottom: 1px solid #ecd8af; padding: 18px; }
+  .astro-hub-heading { align-items: flex-start; flex-direction: column; gap: 22px; }
+  .astro-hub-heading h2 { font-size: 36px; }
+}
+
+@media (max-width: 520px) {
+  .hero h1 { font-size: 34px; }
+  .hero-copy > p { font-size: 15px; }
+  .hero-actions { flex-direction: column; }
+  .portrait-wrap { min-height: 420px; }
+  .portrait-wrap img { width: 300px; height: 390px; }
+  .portrait-ring { width: 320px; height: 320px; }
+  .name-plaque { width: 290px; }
+  .astro-hub-heading h2 { font-size: 30px; }
+  .astro-daily-card { min-height: 0; padding: 24px 19px; border-radius: 14px; }
+  .astro-tool-grid { grid-template-columns: 1fr; }
+  .astro-tool-card { min-height: 0; padding: 22px 19px; }
+}

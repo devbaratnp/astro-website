@@ -1,0 +1,210 @@
+/* Booking Forms, Contact Form, Payment Form, Kundali Form */
+.contact-section { background: #fbf0dc; }
+.contact-grid {
+  display: grid;
+  grid-template-columns: .38fr .62fr;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.contact-card {
+  padding: 45px 36px;
+  color: white;
+  background: linear-gradient(145deg, #4a0f0e, #701c19);
+}
+
+.contact-card h2 { color: #ffe2a2; }
+.contact-card p { color: #eed9ca; }
+.contact-card > a, .contact-card > div {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 26px 0;
+}
+
+.contact-card svg { font-size: 29px; color: var(--gold-light); }
+.contact-card span { font-size: 12px; }
+.contact-card strong { display: block; font-size: 13px; overflow-wrap: anywhere; }
+
+.booking-form { padding: 40px; background: #fffaf2; }
+.form-title { text-align: center; margin-bottom: 25px; }
+.form-title span { color: #b37b22; }
+.form-title h3 { font-family: 'Tiro Devanagari Sanskrit', serif; font-size: 25px; margin: 5px; }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-grid label { font-size: 12px; font-weight: 600; }
+.form-grid input, .form-grid select, .form-grid textarea {
+  width: 100%;
+  margin-top: 6px;
+  border: 1px solid #e5d5bd;
+  border-radius: 5px;
+  padding: 12px;
+  background: white;
+  outline: none;
+}
+
+.form-grid input:focus, .form-grid select:focus, .form-grid textarea:focus {
+  border-color: #bb842d;
+  box-shadow: 0 0 0 3px rgba(187, 132, 45, .1);
+}
+
+.form-grid .full { grid-column: 1 / -1; }
+.full-button { width: 100%; margin-top: 18px; }
+.booking-form > small {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: #827169;
+  margin-top: 12px;
+}
+
+.success { text-align: center; color: #087a44; font-weight: 600; margin-top: 14px; }
+.form-error { color: #a21f25; background: #fff0f0; padding: 10px; border-radius: 6px; margin-top: 14px; }
+
+.section-divider {
+  grid-column: 1 / -1;
+  border-top: 2px solid var(--line);
+  margin: 6px 0 4px;
+  padding: 12px 0 4px;
+}
+
+.section-divider span {
+  color: var(--maroon);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+}
+
+.bs-date-row { display: flex; gap: 8px; width: 100%; }
+.bs-date-row .bs-date-field { flex: 1; display: flex; flex-direction: column; }
+.bs-date-row .bs-date-field small { font-size: 11px; color: var(--muted); margin-bottom: 2px; }
+
+.bs-date-row .bs-date-field select, .bs-order-row .bs-date-field select, .bs-time-row .bs-date-field select {
+  width: 100%;
+  padding: 8px 6px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font-size: 14px;
+  background: white;
+  font-family: inherit;
+  color: var(--ink);
+}
+
+.bs-time-row { display: flex; gap: 6px; align-items: flex-end; flex-wrap: wrap; width: 100%; }
+.am-pm-btn {
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--muted);
+  transition: .2s;
+  flex: 1;
+  min-width: 100px;
+}
+
+.am-pm-btn.active {
+  border-color: var(--maroon);
+  background: var(--maroon);
+  color: white;
+}
+
+.bs-order-row { display: flex; gap: 12px; width: 100%; }
+.bs-order-row .bs-date-field { flex: 1; display: flex; flex-direction: column; }
+.bs-order-row .bs-date-field small { font-size: 11px; color: var(--muted); margin-bottom: 2px; }
+
+.payment-layout {
+  display: grid;
+  grid-template-columns: .8fr 1.2fr;
+  gap: 25px;
+}
+
+.payment-qr {
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 35px;
+  text-align: center;
+  border-radius: 12px;
+}
+
+.qr-placeholder {
+  width: 230px;
+  aspect-ratio: 1;
+  margin: 25px auto;
+  display: grid;
+  place-items: center;
+  border: 8px solid #222;
+  background: repeating-conic-gradient(#222 0 25%, #fff 0 50%) 50% / 30px 30px;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--maroon);
+}
+
+/* Feature Page & Kundali Result */
+.feature-page { max-width: 900px; }
+.feature-form { margin-top: 35px; }
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.result-grid article {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 22px;
+}
+
+.result-grid b, .result-grid strong { display: block; }
+.result-grid strong { font-size: 20px; color: var(--maroon); margin-top: 8px; }
+
+.lagna-chart {
+  grid-column: 1 / -1;
+  width: min(420px, 100%);
+  aspect-ratio: 1;
+  margin: 15px auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 2px solid var(--gold);
+}
+
+.lagna-chart span {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  font-weight: 600;
+}
+
+/* Contact Map */
+.contact-map {
+  margin-bottom: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+@media (max-width: 820px) {
+  .contact-grid, .payment-layout { grid-template-columns: 1fr; }
+  .result-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 520px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .form-grid .full { grid-column: 1; }
+  .booking-form, .contact-card { padding: 30px 22px; }
+  .result-grid { grid-template-columns: 1fr; }
+}

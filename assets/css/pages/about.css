@@ -1,0 +1,234 @@
+/* About Section on Home & Dedicated About Page */
+.about-section { background: #fff8eb; }
+.about-grid {
+  display: grid;
+  grid-template-columns: .9fr 1.1fr;
+  gap: 70px;
+  align-items: center;
+}
+
+.about-photo { position: relative; }
+.about-photo img {
+  width: 100%;
+  height: 600px;
+  object-fit: cover;
+  object-position: 50% 20%;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.experience {
+  position: absolute;
+  right: -25px;
+  bottom: 35px;
+  background: #681817;
+  color: white;
+  padding: 18px 25px;
+  border: 5px solid #fff0d1;
+  border-radius: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.experience strong { font-size: 34px; color: var(--gold-light); }
+.experience span { font-size: 12px; }
+
+.about-copy p { color: #65534d; }
+.about-copy ul { list-style: none; padding: 0; margin: 25px 0; }
+.about-copy li { display: flex; align-items: center; gap: 10px; margin: 12px 0; }
+.about-copy li svg { color: #c98f2d; }
+
+.text-link {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: #7b201d;
+  font-weight: 700;
+}
+
+.org-logo-panel {
+  display: grid;
+  place-items: center;
+  min-height: 570px;
+  padding: 42px;
+  background: radial-gradient(circle, #fffdf6 0 48%, #f7e5c6 100%);
+  border: 1px solid #e4c587;
+  border-radius: 16px;
+}
+
+.org-logo-panel img {
+  width: min(100%, 470px);
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+  border-radius: 50%;
+  filter: drop-shadow(0 16px 24px rgba(80, 18, 15, .14));
+  box-shadow: none;
+}
+
+.organization-badge {
+  position: absolute;
+  right: -22px;
+  bottom: 35px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 260px;
+  padding: 16px 22px;
+  background: #681817;
+  color: #fff;
+  border: 5px solid #fff0d1;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.organization-badge strong {
+  color: var(--gold-light);
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+  font-size: 25px;
+}
+
+.organization-badge span { font-size: 12px; line-height: 1.45; }
+
+/* Dedicated About Page Styles */
+.about-page { background: #fffdf8; }
+.about-intro { background: linear-gradient(125deg, #fffaf1, #fffdf9 65%, #f8e8ca); }
+.about-intro .about-grid { padding-top: 10px; }
+
+.about-copy h1, .biography-story h2, .award-panel h2, .official-contact h2, .english-bio h2 {
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+  color: #521716;
+}
+
+.about-copy h1 { font-size: 46px; line-height: 1.35; margin: 14px 0 18px; }
+.about-lead { font-size: 18px; }
+.about-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+
+.biography-section { background: #fff; }
+.biography-layout {
+  display: grid;
+  grid-template-columns: 1.4fr .6fr;
+  gap: 65px;
+  align-items: start;
+}
+
+.biography-story h2 { font-size: 38px; line-height: 1.4; margin: 10px 0 30px; }
+.biography-story h3 { color: #681817; font-size: 20px; margin: 28px 0 8px; }
+.biography-story > p { color: #65534d; }
+
+.education-list { margin-top: 25px; }
+.education-item {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid #ead8b5;
+}
+
+.education-item > span {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #681817;
+  color: #ffe0a0;
+  font-weight: 700;
+}
+
+.education-item strong { color: #551715; }
+.education-item p { margin: 4px 0 0; color: #6b5a53; font-size: 14px; }
+
+.profile-facts {
+  position: sticky;
+  top: 110px;
+  background: #fff5e4;
+  border: 1px solid #e1bd78;
+  border-radius: 14px;
+  padding: 34px;
+  box-shadow: var(--shadow);
+}
+
+.profile-facts > svg { font-size: 58px; color: #bd8121; }
+.profile-facts h3 { font-family: 'Tiro Devanagari Sanskrit', serif; color: #5c1816; font-size: 24px; }
+.profile-facts ul { list-style: none; padding: 0; margin: 0; }
+.profile-facts li { display: flex; align-items: flex-start; gap: 9px; margin: 15px 0; font-size: 14px; }
+.profile-facts li svg { flex: 0 0 auto; color: #b97c20; margin-top: 4px; }
+
+.contribution-section { background: #fff8eb; }
+.contribution-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.contribution-card {
+  background: #fffdf8;
+  border: 1px solid #e3c88f;
+  border-radius: 12px;
+  padding: 32px 28px;
+}
+
+.contribution-card > svg { font-size: 52px; color: #bf8426; }
+.contribution-card h3 { font-family: 'Tiro Devanagari Sanskrit', serif; color: #591816; font-size: 20px; }
+.contribution-card p { font-size: 14px; color: #6b5a53; }
+
+.about-credentials { padding: 60px 0; }
+.awards-contact-section { background: #fff; }
+.awards-contact-grid {
+  display: grid;
+  grid-template-columns: .9fr 1.1fr;
+  gap: 30px;
+}
+
+.award-panel {
+  border-radius: 14px;
+  padding: 45px;
+  background: linear-gradient(145deg, #4a0f0e, #751d1a);
+  color: #f8e8d5;
+}
+
+.award-panel > svg { font-size: 58px; color: var(--gold-light); }
+.award-panel > span { display: block; color: #e6b95f; font-weight: 700; margin-top: 15px; }
+.award-panel h2 { color: #ffe6ad; font-size: 33px; }
+
+.official-contact { padding: 25px 35px; }
+.official-contact h2 { font-size: 34px; margin: 10px 0 24px; }
+.official-contact > div { display: grid; grid-template-columns: 34px 1fr; gap: 12px; margin: 20px 0; }
+.official-contact > div > svg { font-size: 25px; color: #b4771c; margin-top: 4px; }
+.official-contact p { margin: 0; color: #67554d; }
+.official-contact strong { display: block; color: #551715; }
+.official-contact a { overflow-wrap: anywhere; }
+
+.english-bio {
+  padding: 75px 0;
+  background: #f7ead4;
+  border-top: 1px solid #e2c692;
+}
+
+.english-bio-inner { max-width: 900px; }
+.english-bio-inner > span { color: #9c3229; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: 12px; }
+.english-bio h2 { font-size: 35px; margin: 8px 0; }
+.english-tagline { font-family: serif; font-size: 20px; font-style: italic; color: #7b342e; }
+.english-bio p { color: #62524b; }
+
+@media (max-width: 820px) {
+  .about-grid, .biography-layout, .awards-contact-grid { grid-template-columns: 1fr; }
+  .profile-facts { position: static; }
+  .contribution-grid { grid-template-columns: 1fr; }
+  .about-copy h1 { font-size: 39px; }
+  .biography-story h2 { font-size: 32px; }
+  .official-contact { padding: 25px 5px; }
+}
+
+@media (max-width: 520px) {
+  .about-actions { flex-direction: column; }
+  .about-copy h1 { font-size: 32px; }
+  .award-panel { padding: 32px 24px; }
+  .english-bio h2 { font-size: 29px; }
+  .education-item { grid-template-columns: 36px 1fr; }
+  .official-contact > div { grid-template-columns: 29px 1fr; }
+  .org-logo-panel { min-height: auto; padding: 26px 20px 70px; }
+  .organization-badge { right: 10px; bottom: 12px; }
+}

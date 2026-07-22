@@ -1,0 +1,33 @@
+<?php
+
+if (!defined('ASTRO_PUBLIC')) {
+    define('ASTRO_PUBLIC', true);
+}
+
+define('PHONE', '9779844639228');
+define('PHONE_DISPLAY', '+977 9844639228');
+define('EMAIL', 'Astroshreeharee@gmail.com');
+define('SITE_URL', 'https://www.astroshreehari.com');
+
+require_once __DIR__ . '/../backend/includes/helpers.php';
+require_once __DIR__ . '/../backend/config/database.php';
+
+function getDbConnection(): ?PDO {
+    try {
+        return Database::getConnection();
+    } catch (Throwable $e) {
+        error_log('Database connection error in public frontend: ' . $e->getMessage());
+        return null;
+    }
+}
+
+function getServicesList(): array {
+    return [
+        ['key' => 'kundali', 'icon' => 'ChartPolar', 'title' => 'जन्मकुण्डली विश्लेषण', 'text' => 'व्यक्तित्व, करियर, स्वास्थ्य र जीवनका महत्वपूर्ण पक्षहरूको शास्त्रीय विश्लेषण।'],
+        ['key' => 'marriage', 'icon' => 'Heart', 'title' => 'विवाह तथा गुण मिलान', 'text' => 'वैवाहिक अनुकूलता, गुण मिलान र दाम्पत्य जीवनका लागि स्पष्ट मार्गदर्शन।'],
+        ['key' => 'vastu', 'icon' => 'Compass', 'title' => 'वास्तु परामर्श', 'text' => 'घर, कार्यालय र व्यवसायिक स्थानमा सकारात्मक ऊर्जा र समृद्धिका उपाय।'],
+        ['key' => 'grahadasha', 'icon' => 'Planet', 'title' => 'ग्रह शान्ति', 'text' => 'नवग्रह शान्ति, दोष निवारण तथा शास्त्रसम्मत वैदिक उपाय।'],
+        ['key' => 'pooja', 'icon' => 'Campfire', 'title' => 'वैदिक कर्मकाण्ड', 'text' => 'पूजा, होम, व्रत, संस्कार र जीवनका सम्पूर्ण वैदिक कर्मकाण्ड सेवा।'],
+        ['key' => 'general', 'icon' => 'CalendarDots', 'title' => 'शुभ मुहूर्त', 'text' => 'विवाह, गृहप्रवेश, व्यवसाय, यात्रा र अन्य कार्यका लागि शुभ समय निर्धारण।'],
+    ];
+}
