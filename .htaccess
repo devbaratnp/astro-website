@@ -19,9 +19,9 @@ RewriteRule ^contact\.php$ /contact [R=301,L,NE]
 # Serve React SPA for root URL.
 RewriteRule ^$ index.html [L]
 
-# React admin application (PHP files served directly, SPA for React routes)
-RewriteCond %{REQUEST_URI} !\.php$
-RewriteRule ^admin index.html [L]
+# Serve the PHP admin portal. Its existing PHP and HTML files must not be
+# intercepted by the public React single-page application.
+RewriteRule ^admin/?$ admin/index.php [L]
 
 # Allow webhook.php (must be before SPA rules)
 RewriteRule ^webhook\.php$ - [L]
