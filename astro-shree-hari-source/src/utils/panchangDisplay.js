@@ -1,8 +1,14 @@
 export function buildPanchangRows(panchang = {}) {
   return [
-    ['तिथि', panchang.tithi], ['सूर्योदय', panchang.sunrise], ['सूर्यास्त', panchang.sunset], ['नक्षत्र', panchang.nakshatra], ['करण', panchang.karana], ['योग', panchang.yoga],
+    ['\u0924\u093f\u0925\u093f', panchang.tithi],
+    ['\u0938\u0942\u0930\u094d\u092f\u094b\u0926\u092f', panchang.sunrise],
+    ['\u0938\u0942\u0930\u094d\u092f\u093e\u0938\u094d\u0924', panchang.sunset],
+    ['\u0928\u0915\u094d\u0937\u0924\u094d\u0930', panchang.nakshatra],
+    ['\u0915\u0930\u0923', panchang.karana],
+    ['\u092f\u094b\u0917', panchang.yoga],
   ].filter(([, value]) => value);
 }
+
 export function buildForecastEntries(items = [], period) {
   return items
     .map((item) => ({
