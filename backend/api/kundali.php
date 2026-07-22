@@ -4,6 +4,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/cors.php';
 require_once __DIR__ . '/../includes/helpers.php';
 require_once __DIR__ . '/../lib/Astrology.php';
+require_once __DIR__ . '/../lib/KundaliInquirySaver.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -26,6 +27,7 @@ $astrology = new Astrology(
 $details = $astrology->getBasicDetails();
 
 // Save inquiry
+/*
 $db = Database::getConnection();
 $stmt = $db->prepare("
     INSERT INTO appointments (name, phone, service_type, birth_date, birth_time, birth_place, message, status)
@@ -40,6 +42,8 @@ $stmt->execute([
     ':message' => 'स्वचालित कुण्डली हेरेपछि परामर्श अनुरोध',
 ]);
 
+*/
+KundaliInquirySaver::save(Database::getConnection(), $input);
 jsonSuccess([
     'kundali' => $details,
     'message' => 'तपाईंको आधारभूत कुण्डली विवरण तयार छ। विस्तृत परामर्शका लागि कृपया सम्पर्क गर्नुहोस्।'
