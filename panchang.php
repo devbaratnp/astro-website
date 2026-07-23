@@ -5,51 +5,10 @@ require_once __DIR__ . '/backend/lib/Panchang.php';
 $date = $_GET['date'] ?? date('Y-m-d');
 
 $panchang = null;
-
 try {
-    $db = Database::getConnection();
-    $stmt = $db->prepare("SELECT * FROM panchang WHERE date = :date LIMIT 1");
-    $stmt->execute([':date' => $date]);
-    $cached = $stmt->fetch();
-
-    if ($cached) {
-        $panchang = $cached;
-        if (isset($panchang['special_events_ne']) && is_string($panchang['special_events_ne'])) {
-            $panchang['special_events'] = json_decode($panchang['special_events_ne'], true) ?? [];
-        }
-    } else {
-        $calculated = Panchang::getForDate($date);
-        $stmt = $db->prepare("
-            INSERT INTO panchang (date, tithi, nakshatra, moon_rashi, yoga, karana, sunrise, sunset, rahu_kaal, auspicious_times, special_events_ne, special_events_en)
-            VALUES (:date, :tithi, :nakshatra, :moon_rashi, :yoga, :karana, :sunrise, :sunset, :rahu_kaal, :auspicious_times, :events_ne, :events_en)
-            ON DUPLICATE KEY UPDATE
-                tithi = VALUES(tithi), nakshatra = VALUES(nakshatra), moon_rashi = VALUES(moon_rashi),
-                yoga = VALUES(yoga), karana = VALUES(karana), sunrise = VALUES(sunrise), sunset = VALUES(sunset),
-                rahu_kaal = VALUES(rahu_kaal), auspicious_times = VALUES(auspicious_times),
-                special_events_ne = VALUES(special_events_ne), special_events_en = VALUES(special_events_en)
-        ");
-        $events = $calculated['special_events'] ?? [];
-        $eventsNe = array_map(fn($e) => $e['ne'] ?? '', $events);
-        $eventsEn = array_map(fn($e) => $e['en'] ?? '', $events);
-
-        $stmt->execute([
-            ':date' => $date,
-            ':tithi' => $calculated['tithi'],
-            ':nakshatra' => $calculated['nakshatra'],
-            ':moon_rashi' => $calculated['moon_rashi'],
-            ':yoga' => $calculated['yoga'] ?? null,
-            ':karana' => $calculated['karana'] ?? null,
-            ':sunrise' => $calculated['sunrise'],
-            ':sunset' => $calculated['sunset'],
-            ':rahu_kaal' => $calculated['rahu_kaal'] ?? null,
-            ':auspicious_times' => isset($calculated['auspicious_times']) ? json_encode($calculated['auspicious_times']) : null,
-            ':events_ne' => json_encode($calculated['special_events'] ?? []),
-            ':events_en' => json_encode($eventsEn),
-        ]);
-        $panchang = $calculated;
-    }
+    $panchang = Panchang::getForDate($date);
 } catch (Throwable $e) {
-    error_log('panchang page error: ' . $e->getMessage());
+    error_log('panchang calculation error: ' . $e->getMessage());
 }
 
 $items = [];
@@ -132,13 +91,7 @@ renderPublicHeader('आजको पञ्चाङ्ग र राशिफल
       </aside>
       <div>
         <span class="panchang-kicker">दैनिक अपडेट</span>
-        <h1><?php
-$eventTitle = $panchang['special_events_ne'] ?? '';
-if ($eventTitle === '' || $eventTitle === '[]' || $eventTitle === '{}') {
-    $eventTitle = 'आजको पञ्चाङ्ग';
-}
-echo htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8');
-?></h1>
+        <h1>आजको पञ्चाङ्ग</h1>
         <div class="panchang-summary">
           <div>तिथि<strong id="summary-tithi"><?php echo htmlspecialchars($panchang['tithi'] ?? 'लोड हुँदैछ…', ENT_QUOTES, 'UTF-8'); ?></strong></div>
           <div>नक्षत्र<strong id="summary-nakshatra"><?php echo htmlspecialchars($panchang['nakshatra'] ?? '-', ENT_QUOTES, 'UTF-8'); ?></strong></div>
@@ -148,13 +101,13 @@ echo htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8');
       </div>
     </header>
 
-    <div class="panchang-events"<?php echo (!isset($panchang['special_events']) || !is_array($panchang['special_events']) || count($panchang['special_events']) === 0) ? ' style="display:none"' : ''; ?>>
-      <?php if (isset($panchang['special_events']) && is_array($panchang['special_events'])): ?>
-        <?php foreach ($panchang['special_events'] as $ev): ?>
-          <span class="panchang-event-tag"><?php echo htmlspecialchars($ev['ne'] ?? $ev['en'] ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
-        <?php endforeach; ?>
-      <?php endif; ?>
+    <?php $events = $panchang['special_events'] ?? []; if (count($events) > 0): ?>
+    <div class="panchang-events">
+      <?php foreach ($events as $ev): ?>
+        <span class="panchang-event-tag"><?php echo htmlspecialchars($ev['ne'] ?? $ev['en'] ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
+      <?php endforeach; ?>
     </div>
+    <?php endif; ?>
 
     <div class="panchang-tabs" role="tablist">
       <?php foreach ($tabs as $tab): ?>

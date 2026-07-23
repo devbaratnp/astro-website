@@ -282,8 +282,8 @@ class Panchang {
 
     private static function adToBs(int $year, int $month, int $day): array {
         $bsData = self::getBsData();
-        $baseAd = strtotime('1918-04-13');
-        $targetAd = strtotime("$year-$month-$day");
+        $baseAd = gmmktime(0, 0, 0, 4, 13, 1918);
+        $targetAd = gmmktime(0, 0, 0, $month, $day, $year);
         $diffDays = (int)(($targetAd - $baseAd) / 86400);
 
         $bsYear = 1975;
@@ -419,15 +419,15 @@ class Panchang {
     }
 
     public static function getForDate(string $date, float $lat = 27.7172, float $lon = 85.3240): array {
-        $timestamp = strtotime($date);
-        $adDt = new \DateTime($date);
+        $tz = new \DateTimeZone('UTC');
+        $adDt = new \DateTime($date, $tz);
         $y = (int)$adDt->format('Y');
         $m = (int)$adDt->format('m');
         $d = (int)$adDt->format('d');
 
         $bs = self::adToBs($y, $m, $d);
 
-        $jd = ($adDt->getTimestamp() / 86400) + 2440587.5 - ((float)$adDt->format('Z') / 86400);
+        $jd = ($adDt->getTimestamp() / 86400) + 2440587.5;
         $ah = $jd - self::KALI_JD;
 
         $tzOffsetHr = round($lon / 15 * 2) / 2;
@@ -437,7 +437,7 @@ class Panchang {
 
         $dtSr = clone $adDt;
         $dtSr->setTime(0, 0, 0);
-        $jdSr = ($dtSr->getTimestamp() / 86400) + 2440587.5 - ((float)$dtSr->format('Z') / 86400) + $riseHr / 24;
+        $jdSr = ($dtSr->getTimestamp() / 86400) + 2440587.5 + $riseHr / 24;
         $ahSr = $jdSr - self::KALI_JD;
 
         $nextDt = clone $adDt;
