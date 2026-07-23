@@ -125,7 +125,13 @@ renderPublicHeader('आजको पञ्चाङ्ग र राशिफल
       </aside>
       <div>
         <span class="panchang-kicker">दैनिक अपडेट</span>
-        <h1><?php echo htmlspecialchars(($panchang['special_events_ne'] ?? 'आजको पञ्चाङ्ग') ?: 'आजको पञ्चाङ्ग', ENT_QUOTES, 'UTF-8'); ?></h1>
+        <h1><?php
+$eventTitle = $panchang['special_events_ne'] ?? '';
+if ($eventTitle === '' || $eventTitle === '[]' || $eventTitle === '{}') {
+    $eventTitle = 'आजको पञ्चाङ्ग';
+}
+echo htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8');
+?></h1>
         <div class="panchang-summary">
           <div>तिथि<strong id="summary-tithi"><?php echo htmlspecialchars($panchang['tithi'] ?? 'लोड हुँदैछ…', ENT_QUOTES, 'UTF-8'); ?></strong></div>
           <div>नक्षत्र<strong id="summary-nakshatra"><?php echo htmlspecialchars($panchang['nakshatra'] ?? '-', ENT_QUOTES, 'UTF-8'); ?></strong></div>

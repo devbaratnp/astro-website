@@ -3,6 +3,7 @@
 require_once __DIR__ . '/public-config.php';
 require_once __DIR__ . '/public-icons.php';
 require_once __DIR__ . '/public-seo.php';
+require_once __DIR__ . '/public-footer.php';
 
 /**
  * Render standard public page header
