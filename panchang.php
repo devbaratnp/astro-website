@@ -14,6 +14,9 @@ try {
 
     if ($cached) {
         $panchang = $cached;
+        if (isset($panchang['special_events_ne']) && is_string($panchang['special_events_ne'])) {
+            $panchang['special_events'] = json_decode($panchang['special_events_ne'], true) ?? [];
+        }
     } else {
         $calculated = Panchang::getForDate($date);
         $stmt = $db->prepare("
@@ -25,6 +28,10 @@ try {
                 rahu_kaal = VALUES(rahu_kaal), auspicious_times = VALUES(auspicious_times),
                 special_events_ne = VALUES(special_events_ne), special_events_en = VALUES(special_events_en)
         ");
+        $events = $calculated['special_events'] ?? [];
+        $eventsNe = array_map(fn($e) => $e['ne'] ?? '', $events);
+        $eventsEn = array_map(fn($e) => $e['en'] ?? '', $events);
+
         $stmt->execute([
             ':date' => $date,
             ':tithi' => $calculated['tithi'],
@@ -37,7 +44,7 @@ try {
             ':rahu_kaal' => $calculated['rahu_kaal'] ?? null,
             ':auspicious_times' => isset($calculated['auspicious_times']) ? json_encode($calculated['auspicious_times']) : null,
             ':events_ne' => json_encode($calculated['special_events'] ?? []),
-            ':events_en' => json_encode($calculated['special_events_en'] ?? []),
+            ':events_en' => json_encode($eventsEn),
         ]);
         $panchang = $calculated;
     }
@@ -121,7 +128,7 @@ renderPublicHeader('आजको पञ्चाङ्ग र राशिफल
         <strong><?php echo $dayNum; ?></strong>
         <b><?php echo htmlspecialchars($dateStr, ENT_QUOTES, 'UTF-8'); ?></b>
         <span>आजको पञ्चाङ्ग</span>
-        <i aria-hidden="true"></i>
+        <i class="panchang-moon" aria-hidden="true"></i>
       </aside>
       <div>
         <span class="panchang-kicker">दैनिक अपडेट</span>
@@ -140,6 +147,14 @@ echo htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8');
         </div>
       </div>
     </header>
+
+    <div class="panchang-events"<?php echo (!isset($panchang['special_events']) || !is_array($panchang['special_events']) || count($panchang['special_events']) === 0) ? ' style="display:none"' : ''; ?>>
+      <?php if (isset($panchang['special_events']) && is_array($panchang['special_events'])): ?>
+        <?php foreach ($panchang['special_events'] as $ev): ?>
+          <span class="panchang-event-tag"><?php echo htmlspecialchars($ev['ne'] ?? $ev['en'] ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
+        <?php endforeach; ?>
+      <?php endif; ?>
+    </div>
 
     <div class="panchang-tabs" role="tablist">
       <?php foreach ($tabs as $tab): ?>

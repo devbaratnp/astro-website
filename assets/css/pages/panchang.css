@@ -1,203 +1,446 @@
-/* Panchang & Horoscope Page */
-.panchang-page { padding-top: 50px; }
+/* ─── Panchang & Horoscope Page ─── */
+.panchang-page {
+  padding-top: 30px;
+  background:
+    radial-gradient(ellipse 90% 45% at 50% 0%, rgba(216,164,67,.06), transparent),
+    radial-gradient(ellipse 60% 30% at 0% 60%, rgba(103,24,23,.03), transparent),
+    var(--ivory);
+  min-height: 100vh;
+}
 .panchang-shell { max-width: 840px; }
 
+/* ─── Date Navigation ─── */
 .panchang-date-nav {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 34px;
+  gap: 14px;
+  margin-bottom: 28px;
 }
-
 .panchang-date-nav button, .panchang-date-nav a.nav-btn {
-  width: 42px;
-  height: 42px;
-  border: 0;
+  width: 40px; height: 40px;
+  border: 1px solid #e4d0b5;
   border-radius: 50%;
   background: #fff;
   color: var(--maroon);
-  font-size: 25px;
+  font-size: 22px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(103, 24, 23, .12);
   display: grid;
   place-items: center;
+  transition: .2s;
 }
-
+.panchang-date-nav button:hover {
+  background: var(--maroon);
+  color: #fff;
+  border-color: var(--maroon);
+  transform: scale(1.05);
+}
 .panchang-date-nav label {
   display: flex;
   align-items: center;
   gap: 8px;
   color: var(--maroon);
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Tiro Devanagari Sanskrit', serif;
 }
-
 .panchang-date-nav input {
   border: 1px solid var(--line);
   border-radius: 22px;
-  padding: 8px 12px;
-  background: #fffdf8;
-  color: var(--maroon);
+  padding: 7px 14px;
+  background: #fff;
+  color: var(--ink);
+  font-weight: 500;
+  transition: .2s;
+  cursor: pointer;
+}
+.panchang-date-nav input:focus {
+  outline: none;
+  border-color: var(--maroon);
+  box-shadow: 0 0 0 3px rgba(103,24,23,.08);
 }
 
+/* ─── Hero ─── */
 .panchang-hero {
   display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 28px;
+  grid-template-columns: 140px 1fr;
+  gap: 30px;
   align-items: center;
-  border-bottom: 1px solid #ead9b8;
-  padding-bottom: 30px;
+  padding: 30px 34px 28px;
+  background: linear-gradient(135deg, #fff9ee, #fffef9);
+  border: 1px solid #e8dcc8;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(103,24,23,.06);
+  position: relative;
+  overflow: hidden;
+}
+.panchang-hero::before {
+  content: 'ॐ';
+  position: absolute;
+  right: -18px;
+  bottom: -30px;
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+  font-size: 130px;
+  line-height: 1;
+  color: rgba(216,164,67,.07);
+  pointer-events: none;
 }
 
-.panchang-calendar { text-align: center; }
+/* ─── Calendar / Moon widget ─── */
+.panchang-calendar { text-align: center; position: relative; }
 .panchang-calendar strong {
   display: block;
-  font-size: 58px;
+  font-size: 54px;
   line-height: .9;
   color: var(--maroon);
+  font-family: 'Tiro Devanagari Sanskrit', serif;
 }
-
-.panchang-calendar b, .panchang-calendar span { display: block; margin-top: 7px; }
-.panchang-calendar b { font-size: 14px; }
-.panchang-calendar span { font-size: 12px; color: var(--muted); }
-.panchang-calendar i {
+.panchang-calendar b {
   display: block;
-  width: 66px;
-  height: 66px;
-  margin: 14px auto 0;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.panchang-calendar span {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.panchang-moon {
+  display: block;
+  width: 68px;
+  height: 68px;
+  margin: 12px auto 0;
   border-radius: 50%;
-  background: radial-gradient(circle at 70% 30%, #f7f3e9 0 28%, #aaa9a2 29% 53%, #5d5c59 54%);
+  background: radial-gradient(circle at 68% 32%, #f5edd7 0 30%, #c9bc9e 31% 52%, #8a7e6a 53%);
+  box-shadow: inset -4px -2px 12px rgba(0,0,0,.06), 0 4px 20px rgba(160,140,100,.12);
+  position: relative;
+}
+.panchang-moon::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(200,185,150,.25);
+  top: 18px;
+  right: 20px;
+  box-shadow: 8px 28px 0 2px rgba(200,185,150,.15);
 }
 
-.panchang-kicker { color: var(--maroon); font-weight: 700; font-size: 13px; }
+/* ─── Hero text ─── */
+.panchang-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+.panchang-kicker::before {
+  content: '';
+  width: 20px;
+  height: 1.5px;
+  background: var(--gold);
+  border-radius: 2px;
+}
 .panchang-hero h1 {
   font-family: 'Tiro Devanagari Sanskrit', serif;
-  font-size: 31px;
-  line-height: 1.35;
+  font-size: 30px;
+  line-height: 1.3;
   color: var(--maroon);
-  margin: 4px 0 14px;
+  margin: 3px 0 16px;
 }
 
+/* ─── Hero mini-summary ─── */
 .panchang-summary {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  font-size: 13px;
+  gap: 8px 20px;
+  font-size: 12px;
   color: var(--muted);
 }
+.panchang-summary > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.panchang-summary strong {
+  display: inline-block;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+}
 
-.panchang-summary strong { display: block; color: var(--ink); font-size: 14px; }
-
+/* ─── Tabs ─── */
 .panchang-tabs {
   display: flex;
-  gap: 10px;
-  border-bottom: 1px solid #e3d4bb;
-  padding: 22px 0 14px;
+  gap: 0;
+  padding: 24px 0 0;
+  position: relative;
 }
-
+.panchang-tabs::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #e8ddd0;
+  border-radius: 2px;
+}
 .panchang-tabs button, .panchang-tabs a {
+  position: relative;
   border: 0;
-  border-radius: 24px;
-  padding: 10px 20px;
+  padding: 10px 24px;
   background: transparent;
   color: var(--muted);
-  font-family: inherit;
-  font-weight: 700;
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
+  transition: .2s;
+  z-index: 1;
 }
-
-.panchang-tabs button.active, .panchang-tabs a.active {
+.panchang-tabs button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 60%;
+  height: 2.5px;
   background: var(--maroon);
-  color: #fff;
+  border-radius: 3px;
+  transition: transform .25s ease;
 }
+.panchang-tabs button:hover { color: var(--maroon); }
+.panchang-tabs button.active { color: var(--maroon); }
+.panchang-tabs button.active::after { transform: translateX(-50%) scaleX(1); }
 
+/* ─── Detail Card ─── */
 .panchang-detail-card {
-  margin-top: 18px;
-  padding: 28px;
-  background: #f6f6f4;
-  border-radius: 22px;
-  box-shadow: 0 18px 45px rgba(106, 62, 27, .07);
+  margin-top: 20px;
+  padding: 30px 32px;
+  background: #fff;
+  border: 1px solid #ede4d4;
+  border-radius: 18px;
+  box-shadow: 0 12px 40px rgba(103,24,23,.04);
+  transition: opacity .3s ease;
 }
-
-.panchang-detail-card h2 {
+.panchang-detail-card > h2 {
   text-align: center;
   font-family: 'Tiro Devanagari Sanskrit', serif;
   color: var(--maroon);
-  margin: 0;
+  font-size: 21px;
+  margin: 0 0 6px;
+  position: relative;
+}
+.panchang-detail-card > h2::after {
+  content: '⸻';
+  display: block;
+  color: var(--gold);
+  font-size: 14px;
+  letter-spacing: 6px;
+  margin-top: 2px;
+}
+.panchang-detail-card > hr { display: none; }
+
+/* ─── Tab Content ─── */
+.tab-content {
+  transition: opacity .3s ease;
 }
 
-.panchang-detail-card hr {
-  border: 0;
-  border-top: 1px solid #dedbd3;
-  margin: 18px 0;
+/* ─── Panchang Facts ─── */
+.panchang-facts {
+  display: grid;
+  gap: 0;
+  border: 1px solid #ede4d4;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.panchang-facts > div {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  padding: 13px 20px;
+  border-bottom: 1px solid #f0e9dd;
+  gap: 8px;
+}
+.panchang-facts > div:last-child { border-bottom: 0; }
+.panchang-facts > div:nth-child(even) { background: #faf8f4; }
+.panchang-facts b {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+}
+.panchang-facts span {
+  font-size: 15px;
+  color: var(--ink);
+  font-weight: 600;
 }
 
-.panchang-facts { display: grid; gap: 15px; }
-.panchang-facts div { display: grid; grid-template-columns: 1fr 1.3fr; }
-.panchang-facts span { text-align: right; color: #514843; }
-.panchang-placeholder { text-align: center; color: var(--muted); }
-.panchang-notice { text-align: center; color: var(--muted); font-size: 12px; margin-top: 22px; }
+/* ─── Special Events ─── */
+.panchang-events {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.panchang-event-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #fff6e8, #fffaef);
+  border: 1px solid #eddcc0;
+  border-radius: 20px;
+  font-size: 13px;
+  color: #7a5030;
+  font-weight: 500;
+}
+.panchang-event-tag::before { content: '✦'; color: var(--gold); font-size: 10px; }
 
+/* ─── Forecast Grid ─── */
 .panchang-forecast-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: 14px;
 }
-
 .panchang-forecast-card {
-  padding: 17px;
-  background: #fff;
-  border: 1px solid #e4d9c6;
-  border-radius: 12px;
+  padding: 20px;
+  background: #faf8f4;
+  border: 1px solid #ede4d4;
+  border-radius: 14px;
+  transition: .2s;
 }
-
-.panchang-forecast-card h3 { margin: 0 0 8px; color: #701116; font-size: 1.2rem; }
-.panchang-forecast-card p { margin: 0; color: #39312c; line-height: 1.7; }
+.panchang-forecast-card:hover {
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(103,24,23,.05);
+  transform: translateY(-2px);
+}
+.panchang-forecast-card h3 {
+  margin: 0 0 8px;
+  color: var(--maroon);
+  font-size: 17px;
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+}
+.panchang-forecast-card p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.7;
+}
 .panchang-forecast-card small {
   display: block;
   margin-top: 12px;
   padding-top: 10px;
-  border-top: 1px solid #eee4d4;
+  border-top: 1px dashed #e4d9c6;
   color: #8a3a21;
-  line-height: 1.55;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.panchang-placeholder { text-align: center; color: var(--muted); padding: 20px 0; }
+
+/* ─── Footer notice ─── */
+.panchang-notice {
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 22px;
+  opacity: .7;
 }
 
-.subheading { text-align: center; margin-top: 50px; }
+/* ─── Horoscope ─── */
+.subheading {
+  text-align: center;
+  margin-top: 50px;
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+  color: var(--maroon);
+  font-size: 24px;
+  position: relative;
+}
+.subheading::after {
+  content: '⸻';
+  display: block;
+  color: var(--gold);
+  font-size: 14px;
+  letter-spacing: 6px;
+  margin-top: 2px;
+}
 
-/* Horoscope Grid */
 .horoscope-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
+  margin-top: 10px;
 }
-
-.horoscope-grid article {
+.horoscope-card {
+  display: flex;
+  flex-direction: column;
   background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 22px;
+  border: 1px solid #ede4d4;
+  border-radius: 14px;
+  padding: 20px 18px;
+  transition: .2s;
+}
+.horoscope-card:hover {
+  box-shadow: 0 6px 24px rgba(103,24,23,.06);
+  transform: translateY(-3px);
+  border-color: var(--line);
+}
+.horoscope-card h3 {
+  color: var(--maroon);
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+}
+.horoscope-card p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--ink);
 }
 
-.horoscope-card { display: flex; flex-direction: column; transition: box-shadow .2s; }
-.horoscope-card:hover { box-shadow: 0 4px 16px rgba(74, 29, 18, .12); }
-.horoscope-card h3 { color: var(--maroon); margin: 0 0 10px; font-size: 18px; }
-.horoscope-card p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink); }
+/* ─── Loading shimmer ─── */
+@keyframes shimmer { 0% { background-position: -200px 0; } 100% { background-position: calc(200px + 100%) 0; } }
+.panchang-loading {
+  background: linear-gradient(90deg, #f0ebe2 25%, #fcf9f4 50%, #f0ebe2 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.4s infinite ease-in-out;
+  border-radius: 6px;
+  color: transparent !important;
+  user-select: none;
+  pointer-events: none;
+}
 
+/* ─── Responsive ─── */
 @media (max-width: 820px) {
+  .panchang-hero { padding: 22px 20px; gap: 20px; }
+  .panchang-hero h1 { font-size: 25px; }
+  .panchang-summary { gap: 6px 14px; }
+  .panchang-facts > div { grid-template-columns: 100px 1fr; padding: 11px 16px; }
   .horoscope-grid { grid-template-columns: 1fr 1fr; }
 }
-
-@media (max-width: 560px) {
-  .panchang-hero { grid-template-columns: 105px 1fr; gap: 14px; }
-  .panchang-calendar strong { font-size: 45px; }
-  .panchang-calendar i { width: 56px; height: 56px; }
-  .panchang-hero h1 { font-size: 25px; }
-  .panchang-summary, .panchang-forecast-grid { grid-template-columns: 1fr; }
+@media (max-width: 600px) {
+  .panchang-hero { grid-template-columns: 1fr; text-align: center; }
+  .panchang-calendar { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .panchang-calendar strong { font-size: 40px; }
+  .panchang-moon { margin: 0; width: 56px; height: 56px; }
+  .panchang-hero::before { font-size: 90px; right: -10px; bottom: -20px; }
+  .panchang-hero h1 { font-size: 22px; }
+  .panchang-summary { grid-template-columns: 1fr 1fr; text-align: left; }
   .panchang-tabs { overflow-x: auto; }
-  .panchang-tabs button, .panchang-tabs a { white-space: nowrap; padding: 9px 15px; }
-  .panchang-detail-card { padding: 21px 16px; }
+  .panchang-tabs button { white-space: nowrap; padding: 8px 18px; font-size: 14px; }
+  .panchang-detail-card { padding: 22px 16px; }
+  .panchang-forecast-grid { grid-template-columns: 1fr; }
   .panchang-date-nav label { display: block; text-align: center; }
   .panchang-date-nav input { display: block; margin-top: 4px; }
   .horoscope-grid { grid-template-columns: 1fr; }
+  .panchang-facts > div { grid-template-columns: 1fr 1fr; }
 }

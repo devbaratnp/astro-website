@@ -17,6 +17,7 @@
   var summarySunrise = document.getElementById('summary-sunrise');
   var summarySunset = document.getElementById('summary-sunset');
   var tabBtns = document.querySelectorAll('.tab-btn');
+  var eventsContainer = document.querySelector('.panchang-events');
 
   function toNepaliDateStr(dateVal) {
     try {
@@ -45,6 +46,22 @@
     tabPanchang.innerHTML = rows.length > 0
       ? '<div class="panchang-facts">' + rows.join('') + '</div>'
       : '<p class="panchang-placeholder">पञ्चाङ्ग विवरण अहिले उपलब्ध छैन।</p>';
+  }
+
+  function updateSpecialEvents(panchang) {
+    if (!eventsContainer) return;
+    var events = panchang && panchang.special_events ? panchang.special_events : [];
+    if (events.length > 0) {
+      var html = '';
+      for (var i = 0; i < events.length; i++) {
+        var text = events[i].ne || events[i].en || '';
+        html += '<span class="panchang-event-tag">' + text + '</span>';
+      }
+      eventsContainer.innerHTML = html;
+      eventsContainer.style.display = 'flex';
+    } else {
+      eventsContainer.style.display = 'none';
+    }
   }
 
   function updateForecasts(items) {
@@ -84,13 +101,24 @@
     }
   }
 
+  function fadeIn(el) {
+    if (!el) return;
+    el.style.opacity = '0';
+    el.style.transition = 'opacity .3s ease';
+    requestAnimationFrame(function () {
+      el.style.opacity = '1';
+    });
+  }
+
   function updateAll(dateVal, data) {
     var pc = data && data.panchang ? data.panchang : null;
     var items = data && data.horoscope && data.horoscope.items ? data.horoscope.items : [];
     updatePanchang(pc);
     updatePanchangFacts(pc);
+    updateSpecialEvents(pc);
     updateForecasts(items);
     updateHeroHeader(dateVal, pc);
+    fadeIn(document.querySelector('.panchang-detail-card'));
   }
 
   function fetchData(dateVal) {
@@ -131,9 +159,14 @@
       tabBtns.forEach(function (b) { b.classList.remove('active'); });
       btn.classList.add('active');
       var tab = btn.getAttribute('data-tab');
-      tabPanchang.style.display = tab === 'पञ्चाङ्ग' ? 'block' : 'none';
-      tabDay.style.display = tab === 'दिन फल' ? 'block' : 'none';
-      tabNight.style.display = tab === 'रात्री फल' ? 'block' : 'none';
+      var contents = [tabPanchang, tabDay, tabNight];
+      contents.forEach(function (el) { if (el) { el.style.opacity = '0'; } });
+      setTimeout(function () {
+        if (tabPanchang) tabPanchang.style.display = tab === 'पञ्चाङ्ग' ? 'block' : 'none';
+        if (tabDay) tabDay.style.display = tab === 'दिन फल' ? 'block' : 'none';
+        if (tabNight) tabNight.style.display = tab === 'रात्री फल' ? 'block' : 'none';
+        contents.forEach(function (el) { if (el && el.style.display !== 'none') { el.style.opacity = '1'; } });
+      }, 150);
       if (detailTitle) detailTitle.textContent = tab;
     });
   });
