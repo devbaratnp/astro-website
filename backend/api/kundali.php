@@ -15,11 +15,21 @@ if ($method !== 'POST') {
 
 $input = getJsonInput();
 
-$requiredFields = ['name', 'phone', 'birth_date', 'birth_time', 'birth_place'];
-foreach ($requiredFields as $field) {
+$requiredFields = [
+    'name' => 'नाम',
+    'phone' => 'फोन',
+    'birth_date' => 'जन्म मिति',
+    'birth_time' => 'जन्म समय',
+    'birth_place' => 'जन्म स्थान',
+];
+$missing = [];
+foreach ($requiredFields as $field => $label) {
     if (!isset($input[$field]) || !is_string($input[$field]) || trim($input[$field]) === '') {
-        jsonError("कृपया आवश्यक विवरण भरिपुर्याउनुहोस्।", 422);
+        $missing[] = $label;
     }
+}
+if (count($missing) > 0) {
+    jsonError('कृपया ' . implode(', ', $missing) . ' भर्नुहोस्।', 422);
 }
 
 $birthTimeStr = trim($input['birth_time']);
@@ -27,7 +37,7 @@ $birthTimeStr = trim($input['birth_time']);
 $t = DateTime::createFromFormat('H:i', $birthTimeStr) ?: DateTime::createFromFormat('H:i:s', $birthTimeStr);
 $timeErrs = DateTime::getLastErrors();
 if (!$t || ($timeErrs && ($timeErrs['warning_count'] > 0 || $timeErrs['error_count'] > 0)) || ($t->format('H:i') !== $birthTimeStr && $t->format('H:i:s') !== $birthTimeStr)) {
-    jsonError('जन्म समय मान्य छैन। कृपया विवरण जाँच गर्नुहोस्।', 422);
+    jsonError('जन्म समय (घण्टा:मिनेट) मान्य छैन। उदाहरण: १२:३०', 422);
 }
 
 $birthBs = null;
@@ -46,7 +56,7 @@ if (!empty($input['birth_date'])) {
     }
 }
 if (!$birthDateStr) {
-    jsonError('जन्म मिति मान्य छैन। कृपया बि.सं. मिति ठीक गर्नुहोस्।', 422);
+    jsonError('जन्म मिति (बि.सं.) मान्य छैन। वर्ष, महिना र गते ठीकसँग चयन गर्नुहोस्।', 422);
 }
 
 try {
@@ -59,7 +69,7 @@ try {
     $details = $astrology->getBasicDetails();
 } catch (Throwable $error) {
     error_log('Kundali calculation failed: ' . $error->getMessage());
-    jsonError('जन्म मिति वा समय मान्य छैन। कृपया विवरण जाँच गर्नुहोस्।', 422);
+    jsonError('गणना गर्दा समस्या भयो। कृपया मिति, समय र स्थान जाँच गरी पुनः प्रयास गर्नुहोस्।', 422);
 }
 
 try {

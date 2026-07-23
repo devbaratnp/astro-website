@@ -167,3 +167,47 @@
   .k-summary-card strong { font-size: 14px; }
   .bhava-grid { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* ─── Toast ─── */
+.kundali-toast {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-16px);
+  background: #2d2d2d;
+  color: #f0e9dd;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s ease, transform .35s ease;
+  max-width: 90vw;
+  text-align: center;
+  line-height: 1.6;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.kundali-toast.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.kundali-toast.error {
+  background: #3d1a1a;
+  border-color: rgba(220,80,60,0.25);
+}
+.kundali-toast.success {
+  background: #1a3d1a;
+  border-color: rgba(80,200,80,0.2);
+}
+.kundali-toast .toast-close {
+  margin-left: 14px;
+  cursor: pointer;
+  opacity: 0.5;
+  font-size: 18px;
+  vertical-align: middle;
+}
+.kundali-toast .toast-close:hover { opacity: 1; }
