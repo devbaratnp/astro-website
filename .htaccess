@@ -1,6 +1,5 @@
 RewriteEngine On
 RewriteBase /
-DirectoryIndex index.html
 
 # Redirect to canonical (skip for local/dev)
 RewriteCond %{HTTP_HOST} !^localhost(:[0-9]+)?$ [NC]
@@ -9,32 +8,39 @@ RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} !^www\. [NC]
 RewriteRule ^ https://www.astroshreehari.com%{REQUEST_URI} [L,R=301]
 
-# Keep old public PHP URLs from bypassing the React application.
-RewriteRule ^index\.php$ / [R=301,L,NE]
-RewriteRule ^about\.php$ /about [R=301,L,NE]
-RewriteRule ^services\.php$ /services [R=301,L,NE]
-RewriteRule ^appointment\.php$ /appointment [R=301,L,NE]
-RewriteRule ^contact\.php$ /contact [R=301,L,NE]
+# Allow files and directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
 
-# Serve React SPA for root URL.
-RewriteRule ^$ index.html [L]
-
-# Serve the PHP admin portal. Its existing PHP and HTML files must not be
-# intercepted by the public React single-page application.
-RewriteRule ^admin/?$ admin/index.php [L]
-
-# Allow webhook.php (must be before SPA rules)
-RewriteRule ^webhook\.php$ - [L]
-
-# Allow PHP backend API
+# Serve PHP backend API
 RewriteRule ^backend/ - [L]
 
-# Allow existing files and directories
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+# Webhook
+RewriteRule ^webhook\.php$ - [L]
 
-# SPA: route everything else to React index.html
-RewriteRule ^ index.html [L]
+# Public page routes
+RewriteRule ^$ index.php [L]
+RewriteRule ^about/?$ about.php [L,QSA]
+RewriteRule ^services/?$ services.php [L,QSA]
+RewriteRule ^appointment/?$ appointment.php [L,QSA]
+RewriteRule ^contact/?$ contact.php [L,QSA]
+RewriteRule ^kundali/?$ kundali.php [L,QSA]
+RewriteRule ^pooja/?$ pooja.php [L,QSA]
+RewriteRule ^panchang/?$ panchang.php [L,QSA]
+RewriteRule ^payment/?$ payment.php [L,QSA]
+RewriteRule ^blog/?$ blog.php [L,QSA]
+RewriteRule ^article/([^/]+)/?$ article.php?slug=$1 [L,QSA]
+RewriteRule ^events/?$ events.php [L,QSA]
+RewriteRule ^gallery/?$ gallery.php [L,QSA]
+RewriteRule ^muhurta/?$ muhurta.php [L,QSA]
+RewriteRule ^store/?$ store.php [L,QSA]
+
+# Admin route
+RewriteRule ^admin/?$ admin/index.php [L]
+
+# 404 for everything else
+RewriteRule .* - [R=404,L]
 
 # Security headers
 <IfModule mod_headers.c>
@@ -46,8 +52,8 @@ RewriteRule ^ index.html [L]
     Header set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://fonts.googleapis.com; frame-src https://meet.jit.si https://www.google.com; base-uri 'self'; form-action 'self'"
 </IfModule>
 
-# Security
-<FilesMatch "\.(env|sql|md|log)$">
+# Security: deny access to sensitive files
+<FilesMatch "\.(env|sql|md|log|yml|json)$">
     Require all denied
 </FilesMatch>
 
