@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var data = {};
     var fd = new FormData(form);
     fd.forEach(function (v, k) { data[k] = v; });
+    data.birth_date = [data.birth_year, data.birth_month, data.birth_day].join('-');
 
     fetch('/backend/api/kundali.php', {
       method: 'POST',

@@ -14,7 +14,29 @@ renderPublicHeader('जन्मकुण्डली | Astro Shree Hari', 'स�
       <div class="form-grid">
         <label>नाम *<input name="name" required /></label>
         <label>फोन *<input name="phone" inputmode="tel" required /></label>
-        <label>जन्म मिति *<input type="date" name="birth_date" required /></label>
+        <label class="full">जन्म मिति (बि.सं.) *
+          <span class="bs-date-row">
+            <select name="birth_year" required>
+              <option value="">वर्ष</option>
+              <?php for ($y = 2055; $y <= 2085; $y++): ?>
+              <option value="<?php echo $y; ?>"<?php echo $y === 2083 ? ' selected' : ''; ?>><?php echo $y; ?></option>
+              <?php endfor; ?>
+            </select>
+            <select name="birth_month" required>
+              <option value="">महिना</option>
+              <option value="1">बैशाख</option><option value="2">जेठ</option><option value="3">असार</option>
+              <option value="4" selected>श्रावण</option><option value="5">भाद्र</option><option value="6">आश्विन</option>
+              <option value="7">कार्तिक</option><option value="8">मंसिर</option><option value="9">पौष</option>
+              <option value="10">माघ</option><option value="11">फाल्गुन</option><option value="12">चैत्र</option>
+            </select>
+            <select name="birth_day" required>
+              <option value="">गते</option>
+              <?php for ($d = 1; $d <= 32; $d++): ?>
+              <option value="<?php echo $d; ?>"<?php echo $d === 7 ? ' selected' : ''; ?>><?php echo $d; ?></option>
+              <?php endfor; ?>
+            </select>
+          </span>
+        </label>
         <label>जन्म समय *<input type="time" name="birth_time" required /></label>
         <label class="full">जन्म स्थान *<input name="birth_place" placeholder="जस्तै: काठमाडौँ" required /></label>
       </div>

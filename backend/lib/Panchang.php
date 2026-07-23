@@ -312,6 +312,24 @@ class Panchang {
         return ['y' => $bsYear, 'm' => $bsMonth, 'd' => $diffDays + 1];
     }
 
+    public static function bsToAd(int $bsYear, int $bsMonth, int $bsDay): array {
+        $bsData = self::getBsData();
+        $baseAd = gmmktime(0, 0, 0, 4, 13, 1918);
+        $totalDays = 0;
+        $y = 1975;
+        while ($y < $bsYear) {
+            $totalDays += is_array($bsData[$y] ?? null) ? array_sum($bsData[$y]) : 365;
+            $y++;
+        }
+        $months = $bsData[$bsYear] ?? [31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30];
+        for ($m = 1; $m < $bsMonth; $m++) {
+            $totalDays += $months[$m - 1] ?? 30;
+        }
+        $totalDays += $bsDay - 1;
+        $secs = $baseAd + $totalDays * 86400;
+        return ['y' => (int)gmdate('Y', $secs), 'm' => (int)gmdate('m', $secs), 'd' => (int)gmdate('d', $secs)];
+    }
+
     private static function getBsData(): array {
         return [
             1900=>[31,31,31,32,31,31,29,30,30,29,30,30],1901=>[31,31,32,31,31,31,30,29,30,29,30,30],

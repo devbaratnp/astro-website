@@ -287,7 +287,7 @@ class Astrology {
 
     private static function findRahuSS(float $ah, int $bsY): array {
         $d4 = floor(($ah - 1687850.2) / 4016);
-        $d5 = ($ah - 1687850.2) % 4016;
+        $d5 = fmod($ah - 1687850.2, 4016);
         if ($bsY < 2063) {
             $d2 = 212.83333333;
             $d = 27.6350901611;
@@ -389,7 +389,7 @@ class Astrology {
         $dv7 = 323 + $t3; $dv8 = 299 + $t2; $dv6 = 278 + $t1;
         $sayanaSurya = self::n360($pastsuryaNirayan + $B);
         $rasino = (int)floor($sayanaSurya / 30) % 12;
-        $sunDegInRashi = $sayanaSurya % 30;
+        $sunDegInRashi = fmod($sayanaSurya, 30);
         $ud12 = self::get12Udayman($latDeg);
         $udaymanCurr = $ud12[$rasino];
         $checkEast = (30 - $sunDegInRashi) * $udaymanCurr / 30;
