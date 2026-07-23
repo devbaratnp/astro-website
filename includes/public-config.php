@@ -7,7 +7,7 @@ if (!defined('ASTRO_PUBLIC')) {
 define('PHONE', '9779844639228');
 define('PHONE_DISPLAY', '+977 9844639228');
 define('EMAIL', 'Astroshreeharee@gmail.com');
-define('SITE_URL', 'https://www.astroshreehari.com');
+define('SITE_URL', getenv('APP_URL') ?: 'https://www.astroshreehari.com');
 
 require_once __DIR__ . '/../backend/includes/helpers.php';
 require_once __DIR__ . '/../backend/config/database.php';

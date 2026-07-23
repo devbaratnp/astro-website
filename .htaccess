@@ -1,7 +1,6 @@
 RewriteEngine On
-RewriteBase /
 
-# Redirect to canonical (skip for local/dev)
+# Redirect to canonical production URL (skip for local/dev)
 RewriteCond %{HTTP_HOST} !^localhost(:[0-9]+)?$ [NC]
 RewriteCond %{HTTP_HOST} !^127\.0\.0\.1(:[0-9]+)?$ [NC]
 RewriteCond %{HTTPS} off [OR]
