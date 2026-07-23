@@ -9,6 +9,13 @@ define('PHONE_DISPLAY', '+977 9844639228');
 define('EMAIL', 'Astroshreeharee@gmail.com');
 define('SITE_URL', getenv('APP_URL') ?: 'https://www.astroshreehari.com');
 
+$parsedUrl = parse_url(SITE_URL);
+define('BASE_PATH', rtrim($parsedUrl['path'] ?? '', '/'));
+
+function assetUrl(string $path): string {
+    return BASE_PATH . $path;
+}
+
 require_once __DIR__ . '/../backend/includes/helpers.php';
 require_once __DIR__ . '/../backend/config/database.php';
 

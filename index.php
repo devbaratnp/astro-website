@@ -208,7 +208,7 @@ $homeTools = [
           </div>
           <div class="portrait-wrap">
             <div class="portrait-ring"></div>
-            <img src="/assets/sitaram-timilsina.jpeg" alt="पं. ज्यो. सीताराम तिमल्सेना" />
+            <img src="<?php echo assetUrl('/assets/sitaram-timilsina.jpeg'); ?>" alt="पं. ज्यो. सीताराम तिमल्सेना" />
             <div class="name-plaque"><strong>पं. ज्यो. सीताराम तिमल्सेना</strong><span>नेपाली ज्योतिष तथा कर्मकाण्ड विशेषज्ञ</span></div>
           </div>
         </div>
@@ -304,7 +304,7 @@ $homeTools = [
       <section id="about" class="section about-section">
         <div class="container about-grid">
           <div class="about-photo org-logo-panel">
-            <img src="/assets/shreehari-logo.webp" alt="श्रीहरि ज्योतिष परामर्श केन्द्र नेपालको लोगो" />
+            <img src="<?php echo assetUrl('/assets/shreehari-logo.webp'); ?>" alt="श्रीहरि ज्योतिष परामर्श केन्द्र नेपालको लोगो" />
             <div class="organization-badge"><strong>श्रीहरि</strong><span>ज्योतिष परामर्श केन्द्र नेपाल</span></div>
           </div>
           <div class="about-copy">

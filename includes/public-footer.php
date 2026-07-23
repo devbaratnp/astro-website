@@ -14,7 +14,7 @@ function renderPublicFooter(array $extraJs = []): void {
         <div class="container footer-grid">
           <div class="footer-brand-block">
             <a href="/" class="footer-brand" aria-label="श्रीहरि ज्योतिष गृहपृष्ठ">
-              <img src="/assets/shreehari-logo.webp" alt="श्रीहरि ज्योतिष लोगो" width="64" height="64" />
+              <img src="<?php echo assetUrl('/assets/shreehari-logo.webp'); ?>" alt="श्रीहरि ज्योतिष लोगो" width="64" height="64" />
               <span><strong>श्रीहरि पूजा भण्डार</strong><b>एवं ज्योतिष परामर्श केन्द्र नेपाल</b></span>
             </a>
             <p>शास्त्र, संस्कार र जीवनका लागि विश्वसनीय मार्गदर्शन। धर्मशास्त्र, कर्मकाण्ड र ज्योतिषशास्त्रमा आधारित सेवा।</p>
@@ -64,9 +64,9 @@ function renderPublicFooter(array $extraJs = []): void {
       </a>
     </div>
 
-    <script src="/assets/js/site.js"></script>
+    <script src="<?php echo assetUrl('/assets/js/site.js'); ?>"></script>
     <?php foreach ($extraJs as $jsFile): ?>
-      <script src="<?php echo htmlspecialchars($jsFile, ENT_QUOTES, 'UTF-8'); ?>"></script>
+      <script src="<?php echo htmlspecialchars(strpos($jsFile, '/') === 0 ? BASE_PATH . $jsFile : $jsFile, ENT_QUOTES, 'UTF-8'); ?>"></script>
     <?php endforeach; ?>
   </body>
 </html>

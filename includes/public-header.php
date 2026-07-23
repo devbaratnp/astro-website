@@ -38,11 +38,11 @@ function renderPublicHeader(
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <?php renderSeo($title, $description, $currentPage, $ogImage, $jsonLd, $ogType); ?>
-    <link rel="icon" type="image/png" href="/assets/shreehari-icon-192.png" />
-    <link rel="apple-touch-icon" href="/assets/shreehari-icon-192.png" />
-    <link rel="stylesheet" href="/assets/css/site.css" />
+    <link rel="icon" type="image/png" href="<?php echo assetUrl('/assets/shreehari-icon-192.png'); ?>" />
+    <link rel="apple-touch-icon" href="<?php echo assetUrl('/assets/shreehari-icon-192.png'); ?>" />
+    <link rel="stylesheet" href="<?php echo assetUrl('/assets/css/site.css'); ?>" />
     <?php foreach ($extraCss as $cssFile): ?>
-      <link rel="stylesheet" href="<?php echo htmlspecialchars($cssFile, ENT_QUOTES, 'UTF-8'); ?>" />
+      <link rel="stylesheet" href="<?php echo htmlspecialchars(strpos($cssFile, '/') === 0 ? BASE_PATH . $cssFile : $cssFile, ENT_QUOTES, 'UTF-8'); ?>" />
     <?php endforeach; ?>
   </head>
   <body>
@@ -50,7 +50,7 @@ function renderPublicHeader(
       <header class="header">
         <div class="nav-wrap">
           <a to="/" href="/" class="brand" aria-label="Astro Shree Hari home">
-            <img class="brand-logo" src="/assets/shreehari-logo.webp" alt="श्रीहरि ज्योतिष लोगो" width="56" height="56" />
+            <img class="brand-logo" src="<?php echo assetUrl('/assets/shreehari-logo.webp'); ?>" alt="श्रीहरि ज्योतिष लोगो" width="56" height="56" />
             <span>
               <strong>Astro Shree Hari</strong>
               <small>श्रीहरि पूजा भण्डार एवं ज्योतिष परामर्श केन्द्र नेपाल</small>

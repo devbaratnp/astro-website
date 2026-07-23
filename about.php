@@ -6,7 +6,7 @@ renderPublicHeader('पण्डित तथा ज्योतिषी सी
   <section class="section about-intro">
     <div class="container about-grid">
       <div class="about-photo">
-        <img src="/assets/sitaram-timilsina.jpeg" alt="पण्डित तथा ज्योतिषी सीताराम तिमल्सेना" />
+        <img src="<?php echo assetUrl('/assets/sitaram-timilsina.jpeg'); ?>" alt="पण्डित तथा ज्योतिषी सीताराम तिमल्सेना" />
         <div class="experience"><strong>१०+</strong><span>वर्षको ज्योतिषीय<br />परामर्श र सेवा</span></div>
       </div>
       <div class="about-copy">
