@@ -141,32 +141,29 @@ $testimonials = [];
 $services = getServicesList();
 
 try {
+    require_once __DIR__ . '/backend/lib/Panchang.php';
+    $panchangData = Panchang::getForDate(date('Y-m-d'));
+    if ($panchangData && !empty($panchangData['tithi'])) {
+        $panchangHasData = true;
+        $fields = [
+            'tithi' => 'तिथि',
+            'nakshatra' => 'नक्षत्र',
+            'moon_rashi' => 'चन्द्र राशि',
+            'sunrise' => 'सूर्योदय',
+            'sunset' => 'सूर्यास्त',
+        ];
+        foreach ($fields as $key => $label) {
+            $val = $panchangData[$key] ?? null;
+            if ($val === null || $val === '') continue;
+            if ($key === 'sunrise' || $key === 'sunset') {
+                $val = substr($val, 0, 5);
+            }
+            $panchangItems[] = ['key' => $key, 'label' => $label, 'value' => $val];
+        }
+        if (empty($panchangItems)) $panchangHasData = false;
+    }
     $db = getDbConnection();
     if ($db) {
-        $pStmt = $db->prepare("SELECT tithi, nakshatra, moon_rashi, sunrise, sunset FROM panchang WHERE date = CURDATE() LIMIT 1");
-        $pStmt->execute();
-        $panchangRow = $pStmt->fetch();
-        if ($panchangRow && (!empty($panchangRow['tithi']) || !empty($panchangRow['nakshatra']))) {
-            $panchangHasData = true;
-            $fields = [
-                ['tithi', 'तिथि'],
-                ['nakshatra', 'नक्षत्र'],
-                ['moon_rashi', 'चन्द्र राशि'],
-                ['sunrise', 'सूर्योदय'],
-                ['sunset', 'सूर्यास्त'],
-            ];
-            foreach ($fields as $f) {
-                $key = $f[0];
-                $label = $f[1];
-                $val = $panchangRow[$key] ?? null;
-                if ($val === null || $val === '' || $val === false) continue;
-                if ($key === 'sunrise' || $key === 'sunset') {
-                    $val = substr($val, 0, 5);
-                }
-                $panchangItems[] = ['key' => $key, 'label' => $label, 'value' => $val];
-            }
-            if (empty($panchangItems)) $panchangHasData = false;
-        }
         $aStmt = $db->prepare("SELECT id, title_ne, slug, excerpt_ne, cover_image FROM articles WHERE is_published = 1 ORDER BY published_at DESC LIMIT 3");
         $aStmt->execute();
         $articles = $aStmt->fetchAll();
@@ -175,7 +172,7 @@ try {
         $testimonials = $tStmt->fetchAll();
     }
 } catch (Throwable $e) {
-    error_log('Home page DB error: ' . $e->getMessage());
+    error_log('Home page data error: ' . $e->getMessage());
 }
 
 renderPublicHeader(
