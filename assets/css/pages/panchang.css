@@ -479,8 +479,13 @@
   .panchang-tabs button { white-space: nowrap; padding: 8px 18px; font-size: 14px; }
   .panchang-detail-card { padding: 22px 16px; }
   .panchang-forecast-grid { grid-template-columns: 1fr; }
-  .panchang-date-nav .bs-date-field select { min-width: 60px; font-size: 12px; padding: 5px 8px; }
-  .panchang-date-nav .bs-date-row { gap: 4px; }
+  .panchang-date-nav { flex-wrap: wrap; gap: 8px; }
+  .panchang-date-nav .nav-btn { width: 34px; height: 34px; font-size: 18px; }
+  .panchang-date-bs { order: 3; width: 100%; }
+  .panchang-date-label { width: 100%; text-align: center; }
+  .panchang-date-nav .bs-date-row { justify-content: center; }
+  .panchang-date-nav .bs-date-field select { min-width: 54px; font-size: 11px; padding: 4px 6px; }
+  .panchang-date-nav .bs-date-row { gap: 3px; }
   .horoscope-grid { grid-template-columns: 1fr; }
   .panchang-facts > div { grid-template-columns: 1fr 1fr; }
 }
