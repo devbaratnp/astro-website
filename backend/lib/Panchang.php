@@ -330,7 +330,7 @@ class Panchang {
         return ['y' => (int)gmdate('Y', $secs), 'm' => (int)gmdate('m', $secs), 'd' => (int)gmdate('d', $secs)];
     }
 
-    private static function getBsData(): array {
+    public static function getBsData(): array {
         return [
             1900=>[31,31,31,32,31,31,29,30,30,29,30,30],1901=>[31,31,32,31,31,31,30,29,30,29,30,30],
             1902=>[31,31,32,32,31,30,30,29,30,29,30,30],1903=>[31,32,31,32,31,30,30,30,29,29,30,31],

@@ -9,6 +9,46 @@
 }
 .panchang-shell { max-width: 840px; }
 
+/* ─── BS Date Selectors ─── */
+.panchang-date-bs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.panchang-date-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+}
+.panchang-date-nav .bs-date-row {
+  display: flex;
+  gap: 6px;
+}
+.panchang-date-nav .bs-date-field {
+  display: flex;
+  flex-direction: column;
+}
+.panchang-date-nav .bs-date-field select {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 6px 10px;
+  background: #fff;
+  color: var(--ink);
+  font-weight: 500;
+  font-size: 13px;
+  font-family: 'Tiro Devanagari Sanskrit', serif;
+  cursor: pointer;
+  transition: .2s;
+  min-width: 70px;
+  text-align: center;
+}
+.panchang-date-nav .bs-date-field select:focus {
+  outline: none;
+  border-color: var(--maroon);
+  box-shadow: 0 0 0 3px rgba(103,24,23,.08);
+}
+
 /* ─── Date Navigation ─── */
 .panchang-date-nav {
   display: flex;
@@ -439,8 +479,8 @@
   .panchang-tabs button { white-space: nowrap; padding: 8px 18px; font-size: 14px; }
   .panchang-detail-card { padding: 22px 16px; }
   .panchang-forecast-grid { grid-template-columns: 1fr; }
-  .panchang-date-nav label { display: block; text-align: center; }
-  .panchang-date-nav input { display: block; margin-top: 4px; }
+  .panchang-date-nav .bs-date-field select { min-width: 60px; font-size: 12px; padding: 5px 8px; }
+  .panchang-date-nav .bs-date-row { gap: 4px; }
   .horoscope-grid { grid-template-columns: 1fr; }
   .panchang-facts > div { grid-template-columns: 1fr 1fr; }
 }

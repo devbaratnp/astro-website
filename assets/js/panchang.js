@@ -1,8 +1,16 @@
 (function () {
   var dataEl = document.getElementById('panchang-data');
-  var initialData = dataEl ? JSON.parse(dataEl.textContent) : { panchang: null, horoscope: { items: [] } };
+  var initialData = dataEl ? JSON.parse(dataEl.textContent) : { panchang: null, horoscope: { items: [] }, bs_initial: null };
+  var bsMonthsEl = document.getElementById('panchang-bs-months');
+  var bsMonths = bsMonthsEl ? JSON.parse(bsMonthsEl.textContent) : ['बैशाख','जेठ','असार','श्रावण','भाद्र','आश्विन','कार्तिक','मंसिर','पौष','माघ','फाल्गुन','चैत्र'];
+  var bsDataEl = document.getElementById('panchang-bs-data');
+  var BS_DATA = bsDataEl ? JSON.parse(bsDataEl.textContent) : {};
+  var BS_START = 1900;
+  var BASE_AD = new Date(1918, 3, 13);
 
-  var dateInput = document.getElementById('panchang-date');
+  var yearSel = document.getElementById('bs-year');
+  var monthSel = document.getElementById('bs-month');
+  var daySel = document.getElementById('bs-day');
   var prevBtn = document.getElementById('prev-day');
   var nextBtn = document.getElementById('next-day');
   var detailTitle = document.getElementById('detail-title');
@@ -19,12 +27,114 @@
   var tabBtns = document.querySelectorAll('.tab-btn');
   var eventsContainer = document.querySelector('.panchang-events');
 
-  function toNepaliDateStr(dateVal) {
-    try {
-      return new Intl.DateTimeFormat('ne-NP', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(dateVal + 'T12:00:00'));
-    } catch (e) {
-      return dateVal;
+  function toN(num) {
+    if (num === undefined || num === null) return '';
+    return String(num).replace(/[0-9]/g, function (d) { return '०१२३४५६७८९'[d]; });
+  }
+
+  function bsMonthDays(year, idx0) {
+    if (BS_DATA[year]) return BS_DATA[year][idx0];
+    return 30;
+  }
+
+  function bsYearDays(year) {
+    if (BS_DATA[year]) {
+      var s = 0;
+      for (var j = 0; j < 12; j++) s += BS_DATA[year][j];
+      return s;
     }
+    return 365;
+  }
+
+  function bs2ad(y, m, d) {
+    var t = 0;
+    if (y >= BS_START) {
+      for (var i = BS_START; i < y; i++) t += bsYearDays(i);
+    } else {
+      for (var i = y; i < BS_START; i++) t -= bsYearDays(i);
+    }
+    for (var j = 0; j < m - 1; j++) t += bsMonthDays(y, j);
+    t += d - 1;
+    var r = new Date(BASE_AD);
+    r.setDate(r.getDate() + t);
+    return r;
+  }
+
+  function ad2bs(dt) {
+    var tgt = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+    var df = Math.round((tgt - BASE_AD) / 864e5);
+    var y = BS_START;
+    if (df >= 0) {
+      while (true) {
+        var yd = bsYearDays(y);
+        if (df < yd) break;
+        df -= yd;
+        y++;
+        if (y > 2100) break;
+      }
+    } else {
+      while (df < 0) {
+        y--;
+        df += bsYearDays(y);
+        if (y < 1900) break;
+      }
+    }
+    var m = 1;
+    for (var i = 0; i < 12; i++) {
+      var md = bsMonthDays(y, i);
+      if (df < md) { m = i + 1; break; }
+      df -= md;
+    }
+    return { y: y, m: m, d: df + 1 };
+  }
+
+  function formatBsDate(bs) {
+    if (!bs) return '';
+    return bsMonths[bs.m - 1] + ' ' + toN(bs.y);
+  }
+
+  function popSelect(sel, vals, fn) {
+    sel.innerHTML = '';
+    for (var i = 0; i < vals.length; i++) {
+      var opt = document.createElement('option');
+      opt.value = vals[i];
+      opt.textContent = fn ? fn(vals[i]) : vals[i];
+      sel.appendChild(opt);
+    }
+  }
+
+  function range(start, end) {
+    var a = [];
+    for (var i = start; i <= end; i++) a.push(i);
+    return a;
+  }
+
+  function getMaxDay(year, month) {
+    return bsMonthDays(year, month - 1);
+  }
+
+  function updateMaxDay() {
+    var y = parseInt(yearSel.value, 10);
+    var m = parseInt(monthSel.value, 10);
+    var maxD = getMaxDay(y, m);
+    var cur = parseInt(daySel.value, 10);
+    popSelect(daySel, range(1, maxD), toN);
+    if (cur <= maxD) daySel.value = cur;
+  }
+
+  function getBsFromSelects() {
+    return {
+      y: parseInt(yearSel.value, 10),
+      m: parseInt(monthSel.value, 10),
+      d: parseInt(daySel.value, 10)
+    };
+  }
+
+  function setSelectsFromBs(bs) {
+    yearSel.value = bs.y;
+    monthSel.value = bs.m;
+    updateMaxDay();
+    daySel.value = Math.min(bs.d, parseInt(daySel.options[daySel.options.length - 1].value, 10));
   }
 
   function updatePanchang(panchang) {
@@ -87,14 +197,17 @@
     horoGrid.innerHTML = horoCards.length > 0 ? horoCards.join('') : '';
   }
 
-  function updateHeroHeader(dateVal, panchang) {
-    var dt = new Date(dateVal + 'T12:00:00');
-    var dayNum = dt.getDate();
-    var dateStr = toNepaliDateStr(dateVal);
+  function updateHeroHeader(panchang) {
+    var bs = panchang && panchang.bs_date;
     var calStrong = document.querySelector('.panchang-calendar strong');
     var calB = document.querySelector('.panchang-calendar b');
-    if (calStrong) calStrong.textContent = dayNum;
-    if (calB) calB.textContent = dateStr;
+    if (bs) {
+      if (calStrong) calStrong.textContent = toN(bs.d);
+      if (calB) calB.textContent = formatBsDate(bs);
+    } else {
+      if (calStrong) calStrong.textContent = '-';
+      if (calB) calB.textContent = '-';
+    }
     var titleEl = document.querySelector('.panchang-hero h1');
     if (titleEl) {
       titleEl.textContent = (panchang && panchang.special_events_ne) ? panchang.special_events_ne : 'आजको पञ्चाङ्ग';
@@ -110,66 +223,109 @@
     });
   }
 
-  function updateAll(dateVal, data) {
+  function updateAll(data) {
     var pc = data && data.panchang ? data.panchang : null;
     var items = data && data.horoscope && data.horoscope.items ? data.horoscope.items : [];
     updatePanchang(pc);
     updatePanchangFacts(pc);
     updateSpecialEvents(pc);
     updateForecasts(items);
-    updateHeroHeader(dateVal, pc);
+    updateHeroHeader(pc);
     fadeIn(document.querySelector('.panchang-detail-card'));
   }
 
-  function fetchData(dateVal) {
+  function fetchDataFromAd(adDateStr) {
     return Promise.all([
-      fetch('/backend/api/panchang.php?date=' + encodeURIComponent(dateVal)).then(function (r) { return r.json(); }).then(function (d) { return d.success ? d.data : null; }).catch(function () { return null; }),
-      fetch('/backend/api/horoscope.php?date=' + encodeURIComponent(dateVal)).then(function (r) { return r.json(); }).then(function (d) { return d.success ? d.data : null; }).catch(function () { return null; }),
+      fetch('/backend/api/panchang.php?date=' + encodeURIComponent(adDateStr)).then(function (r) { return r.json(); }).then(function (d) { return d.success ? d.data : null; }).catch(function () { return null; }),
+      fetch('/backend/api/horoscope.php?date=' + encodeURIComponent(adDateStr)).then(function (r) { return r.json(); }).then(function (d) { return d.success ? d.data : null; }).catch(function () { return null; }),
     ]).then(function (results) {
       var data = { panchang: results[0] ? results[0].panchang : null, horoscope: results[1] ? results[1] : { items: [] } };
       var he = document.querySelector('.panchang-hero h1');
       if (he) he.textContent = 'लोड हुँदैछ…';
-      updateAll(dateVal, data);
+      if (data.panchang && data.panchang.bs_date) {
+        setSelectsFromBs(data.panchang.bs_date);
+      }
+      updateAll(data);
       return data;
     });
   }
 
+  function getAdDateStr() {
+    var bs = getBsFromSelects();
+    var ad = bs2ad(bs.y, bs.m, bs.d);
+    var y = ad.getFullYear();
+    var m = String(ad.getMonth() + 1).padStart(2, '0');
+    var d = String(ad.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + d;
+  }
+
+  function fetchData() {
+    var adDateStr = getAdDateStr();
+    return fetchDataFromAd(adDateStr);
+  }
+
   function changeDate(daysDelta) {
-    var dt = new Date(dateInput.value + 'T12:00:00');
-    dt.setDate(dt.getDate() + daysDelta);
-    var newDate = dt.toISOString().slice(0, 10);
-    dateInput.value = newDate;
-    fetchData(newDate);
+    var bs = getBsFromSelects();
+    var ad = bs2ad(bs.y, bs.m, bs.d);
+    ad.setDate(ad.getDate() + daysDelta);
+    var newBs = ad2bs(ad);
+    setSelectsFromBs(newBs);
+    fetchData();
   }
 
-  if (prevBtn) {
-    prevBtn.addEventListener('click', function () { changeDate(-1); });
-  }
-  if (nextBtn) {
-    nextBtn.addEventListener('click', function () { changeDate(1); });
-  }
-  if (dateInput) {
-    dateInput.addEventListener('change', function () {
-      fetchData(dateInput.value);
+  function init() {
+    popSelect(yearSel, range(1900, 2100), toN);
+    popSelect(monthSel, range(1, 12), function (v) { return bsMonths[v - 1]; });
+
+    var bsInit = initialData.bs_initial;
+    if (bsInit) {
+      setSelectsFromBs(bsInit);
+    } else {
+      var now = new Date();
+      var todayBs = ad2bs(now);
+      setSelectsFromBs(todayBs);
+    }
+
+    yearSel.addEventListener('change', function () {
+      updateMaxDay();
+      fetchData();
     });
+    monthSel.addEventListener('change', function () {
+      updateMaxDay();
+      fetchData();
+    });
+    daySel.addEventListener('change', fetchData);
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function () { changeDate(-1); });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function () { changeDate(1); });
+    }
+
+    tabBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        tabBtns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var tab = btn.getAttribute('data-tab');
+        var contents = [tabPanchang, tabDay, tabNight];
+        contents.forEach(function (el) { if (el) { el.style.opacity = '0'; } });
+        setTimeout(function () {
+          if (tabPanchang) tabPanchang.style.display = tab === 'पञ्चाङ्ग' ? 'block' : 'none';
+          if (tabDay) tabDay.style.display = tab === 'दिन फल' ? 'block' : 'none';
+          if (tabNight) tabNight.style.display = tab === 'रात्री फल' ? 'block' : 'none';
+          contents.forEach(function (el) { if (el && el.style.display !== 'none') { el.style.opacity = '1'; } });
+        }, 150);
+        if (detailTitle) detailTitle.textContent = tab;
+      });
+    });
+
+    updateAll(initialData);
   }
 
-  tabBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      tabBtns.forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      var tab = btn.getAttribute('data-tab');
-      var contents = [tabPanchang, tabDay, tabNight];
-      contents.forEach(function (el) { if (el) { el.style.opacity = '0'; } });
-      setTimeout(function () {
-        if (tabPanchang) tabPanchang.style.display = tab === 'पञ्चाङ्ग' ? 'block' : 'none';
-        if (tabDay) tabDay.style.display = tab === 'दिन फल' ? 'block' : 'none';
-        if (tabNight) tabNight.style.display = tab === 'रात्री फल' ? 'block' : 'none';
-        contents.forEach(function (el) { if (el && el.style.display !== 'none') { el.style.opacity = '1'; } });
-      }, 150);
-      if (detailTitle) detailTitle.textContent = tab;
-    });
-  });
-
-  updateAll(dateInput ? dateInput.value : new Date().toISOString().slice(0, 10), initialData);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();

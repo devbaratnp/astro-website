@@ -11,6 +11,15 @@ try {
     error_log('panchang calculation error: ' . $e->getMessage());
 }
 
+$bsMonthsList = ['बैशाख','जेठ','असार','श्रावण','भाद्र','आश्विन','कार्तिक','मंसिर','पौष','माघ','फाल्गुन','चैत्र'];
+$bsDate = $panchang['bs_date'] ?? ['y' => 2070, 'm' => 1, 'd' => 1];
+$bsDayNum = $bsDate['d'];
+$bsMonthName = $bsMonthsList[$bsDate['m'] - 1] ?? '';
+$bsYearNum = (string)$bsDate['y'];
+$nepaliDigits = ['०','१','२','३','४','५','६','७','८','९'];
+$bsDayNep = str_replace(range(0, 9), $nepaliDigits, (string)$bsDayNum);
+$bsYearNep = str_replace(range(0, 9), $nepaliDigits, $bsYearNum);
+
 $items = [];
 $rashiNames = ['मेष', 'वृष', 'मिथुन', 'कर्कट', 'सिंह', 'कन्या', 'तुला', 'वृश्चिक', 'धनु', 'मकर', 'कुम्भ', 'मीन'];
 
@@ -55,7 +64,6 @@ try {
 
 $fmt = new IntlDateFormatter('ne-NP', IntlDateFormatter::LONG, IntlDateFormatter::NONE, 'Asia/Kathmandu');
 $dateStr = $fmt->format(strtotime($date));
-$dayNum = (int) date('j', strtotime($date));
 
 $tabs = ['पञ्चाङ्ग', 'दिन फल', 'रात्री फल'];
 
@@ -75,17 +83,27 @@ renderPublicHeader('आजको पञ्चाङ्ग र राशिफल
   <div class="container panchang-shell">
     <div class="panchang-date-nav">
       <button type="button" class="nav-btn" id="prev-day" aria-label="अघिल्लो दिन">&lsaquo;</button>
-      <label>
-        आजको पञ्चाङ्ग
-        <input type="date" id="panchang-date" value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>" />
-      </label>
+      <div class="panchang-date-bs">
+        <small class="panchang-date-label">मिति (नेपाली)</small>
+        <div class="bs-date-row">
+          <div class="bs-date-field">
+            <select id="bs-year"></select>
+          </div>
+          <div class="bs-date-field">
+            <select id="bs-month"></select>
+          </div>
+          <div class="bs-date-field">
+            <select id="bs-day"></select>
+          </div>
+        </div>
+      </div>
       <button type="button" class="nav-btn" id="next-day" aria-label="अर्को दिन">&rsaquo;</button>
     </div>
 
     <header class="panchang-hero">
       <aside class="panchang-calendar">
-        <strong><?php echo $dayNum; ?></strong>
-        <b><?php echo htmlspecialchars($dateStr, ENT_QUOTES, 'UTF-8'); ?></b>
+        <strong id="hero-bs-day"><?php echo $bsDayNep; ?></strong>
+        <b id="hero-bs-date"><?php echo htmlspecialchars($bsMonthName, ENT_QUOTES, 'UTF-8'); ?> <?php echo htmlspecialchars($bsYearNep, ENT_QUOTES, 'UTF-8'); ?></b>
         <span>आजको पञ्चाङ्ग</span>
         <i class="panchang-moon" aria-hidden="true"></i>
       </aside>
@@ -187,7 +205,10 @@ renderPublicHeader('आजको पञ्चाङ्ग र राशिफल
 <?php echo json_encode([
     'panchang' => $panchang,
     'horoscope' => ['items' => $items],
+    'bs_initial' => $bsDate,
 ], JSON_UNESCAPED_UNICODE); ?>
 </script>
+<script id="panchang-bs-months" type="application/json"><?php echo json_encode($bsMonthsList, JSON_UNESCAPED_UNICODE); ?></script>
+<script id="panchang-bs-data" type="application/json"><?php echo json_encode(Panchang::getBsData()); ?></script>
 <?php
 renderPublicFooter(['/assets/js/panchang.js']);
