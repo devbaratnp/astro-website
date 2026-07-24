@@ -25,7 +25,7 @@ function renderPublicFooter(array $extraJs = []): void {
             <a href="/about">हाम्रो बारेमा</a>
             <a href="/services">सेवाहरू</a>
             <a href="/blog">लेख तथा रचनाहरू</a>
-            <a href="/events">कार्यक्रम तथा यात्रा</a>
+
             <a href="/gallery">मिडिया ग्यालेरी</a>
             <a href="/muhurta">मुहूर्त परीक्षण</a>
             <a href="/store">पूजा भण्डार</a>

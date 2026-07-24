@@ -17,20 +17,20 @@ function renderPublicHeader(
     ?array $jsonLd = null,
     string $ogType = 'website'
 ): void {
-    $navLinks = [
-        '/' => 'गृहपृष्ठ',
-        '/about' => 'हाम्रो बारेमा',
-        '/services' => 'सेवाहरू',
-        '/kundali' => 'कुण्डली',
-        '/panchang' => 'पञ्चाङ्ग',
-        '/muhurta' => 'मुहूर्त',
-        '/blog' => 'लेख',
-        '/events' => 'कार्यक्रम',
-        '/gallery' => 'ग्यालेरी',
-        '/pooja' => 'ई-पूजा',
-        '/store' => 'पूजा भण्डार',
-        '/appointment' => 'परामर्श प्रक्रिया',
-        '/contact' => 'सम्पर्क',
+    $navItems = [
+        ['url' => '/',           'label' => 'गृहपृष्ठ'],
+        ['url' => '/about',      'label' => 'हाम्रो बारेमा'],
+        ['url' => '/services',   'label' => 'सेवाहरू', 'dropdown' => [
+            ['url' => '/kundali',   'label' => 'कुण्डली'],
+            ['url' => '/panchang',  'label' => 'पञ्चाङ्ग'],
+            ['url' => '/muhurta',   'label' => 'मुहूर्त'],
+            ['url' => '/pooja',     'label' => 'ई-पूजा'],
+            ['url' => '/store',     'label' => 'पूजा भण्डार'],
+        ]],
+        ['url' => '/blog',       'label' => 'लेख'],
+        ['url' => '/gallery',    'label' => 'ग्यालेरी'],
+        ['url' => '/appointment','label' => 'परामर्श'],
+        ['url' => '/contact',    'label' => 'सम्पर्क'],
     ];
     ?>
 <!doctype html>
@@ -61,11 +61,24 @@ function renderPublicHeader(
             <?php echo renderIcon('List'); ?>
           </button>
           <nav class="nav" id="main-nav">
-            <?php foreach ($navLinks as $url => $label): ?>
-              <?php $isActive = ($currentPage === $url || ($url !== '/' && str_starts_with($currentPage, $url))); ?>
-              <a href="<?php echo $url; ?>" class="<?php echo $isActive ? 'active' : ''; ?>">
-                <?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?>
+            <?php foreach ($navItems as $item): ?>
+              <?php if (!empty($item['dropdown'])): ?>
+              <div class="nav-dropdown">
+                <a href="<?php echo $item['url']; ?>" class="nav-dropdown-trigger <?php echo (str_starts_with($currentPage, $item['url']) && $item['url'] !== '/') ? 'active' : ''; ?>">
+                  <?php echo htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8'); ?>
+                  <svg class="dd-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </a>
+                <div class="nav-dropdown-menu">
+                  <?php foreach ($item['dropdown'] as $sub): ?>
+                  <a href="<?php echo $sub['url']; ?>" class="<?php echo ($currentPage === $sub['url']) ? 'active' : ''; ?>"><?php echo htmlspecialchars($sub['label'], ENT_QUOTES, 'UTF-8'); ?></a>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+              <?php else: ?>
+              <a href="<?php echo $item['url']; ?>" class="<?php echo ($currentPage === $item['url'] || ($item['url'] !== '/' && str_starts_with($currentPage, $item['url']))) ? 'active' : ''; ?>">
+                <?php echo htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8'); ?>
               </a>
+              <?php endif; ?>
             <?php endforeach; ?>
           </nav>
           <a class="phone-link" href="tel:+<?php echo PHONE; ?>">

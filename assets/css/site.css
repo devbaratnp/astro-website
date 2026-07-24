@@ -446,6 +446,47 @@ button, input, select, textarea { font: inherit; }
   z-index: 20;
 }
 
+/* ── Nav dropdown ── */
+.nav-dropdown { position: relative; }
+.nav-dropdown-trigger { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+.dd-arrow { transition: transform .2s; }
+.nav-dropdown:hover .dd-arrow { transform: rotate(180deg); }
+.nav-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #4a0f0e;
+  min-width: 160px;
+  padding: 8px 0;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.3);
+  z-index: 100;
+}
+.nav-dropdown-menu a {
+  display: block;
+  padding: 10px 20px;
+  white-space: nowrap;
+  font-size: 13px;
+}
+.nav-dropdown-menu a:hover { background: rgba(255,255,255,.08); }
+.nav-dropdown:hover .nav-dropdown-menu { display: block; }
+
+@media (max-width: 820px) {
+  .nav-dropdown-menu {
+    position: static;
+    transform: none;
+    background: transparent;
+    box-shadow: none;
+    padding: 0 0 0 16px;
+    display: block;
+    border-radius: 0;
+  }
+  .nav-dropdown-menu a { padding: 8px 16px; font-size: 12px; opacity: .85; }
+  .dd-arrow { display: none; }
+}
+
 /* Responsive Media Queries */
 @media (max-width: 1100px) {
   .phone-link, .nav-cta { display: none; }

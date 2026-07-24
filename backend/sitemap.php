@@ -10,7 +10,7 @@ $staticPages = [
     '/about' => [],
     '/services' => [],
     '/blog' => ['changefreq' => 'weekly', 'priority' => '0.8'],
-    '/events' => ['changefreq' => 'weekly', 'priority' => '0.7'],
+
     '/gallery' => ['priority' => '0.6'],
     '/muhurta' => ['priority' => '0.7'],
     '/appointment' => ['priority' => '0.9'],

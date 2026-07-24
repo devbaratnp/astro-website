@@ -107,7 +107,22 @@ function galleryThumb($item) {
                         <input type="hidden" name="url" value="<?= htmlspecialchars($editItem['url'] ?? '') ?>" class="file-hidden">
                     </div>
                 </div>
-                <div class="field"><label>थम्बनेल URL</label><input name="thumbnail" class="form-input" placeholder="यदि भिडियो हो भने" value="<?= htmlspecialchars($editItem['thumbnail'] ?? '') ?>"></div>
+                <div class="field">
+                    <label>थम्बनेल</label>
+                    <div class="file-upload-wrap" data-field="thumbnail">
+                        <div class="file-zone" data-field="thumbnail" role="button" tabindex="0" aria-label="Upload thumbnail">
+                            <?php if (!empty($editItem['thumbnail'])): ?>
+                            <img src="<?= htmlspecialchars($editItem['thumbnail']) ?>" alt="preview" class="file-preview">
+                            <?php else: ?>
+                            <span><span class="upload-icon">☁️</span>Drop image here or click to upload</span>
+                            <?php endif; ?>
+                        </div>
+                        <?php if (!empty($editItem['thumbnail'])): ?>
+                        <button type="button" class="file-clear" data-field="thumbnail" aria-label="Clear image">✕</button>
+                        <?php endif; ?>
+                        <input type="hidden" name="thumbnail" value="<?= htmlspecialchars($editItem['thumbnail'] ?? '') ?>" class="file-hidden">
+                    </div>
+                </div>
                 <div class="field"><label>Embed URL</label><input name="embed_url" class="form-input" placeholder="https://www.youtube.com/embed/..." value="<?= htmlspecialchars($editItem['embed_url'] ?? '') ?>"></div>
                 <div class="field"><label>स्रोत</label><input name="source" class="form-input" placeholder="YouTube / Facebook" value="<?= htmlspecialchars($editItem['source'] ?? '') ?>"></div>
                 <div class="field"><label>क्रम</label><input name="sort_order" type="number" class="form-input" value="<?= (int)($editItem['sort_order'] ?? 0) ?>"></div>

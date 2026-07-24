@@ -9,10 +9,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_product'])) {
     $id = $_POST['id'] ?? null;
     $images = [];
     if (!empty($_POST['image_urls'])) {
-        $urls = explode("\n", trim($_POST['image_urls']));
-        foreach ($urls as $u) {
-            $u = trim($u);
-            if ($u) $images[] = $u;
+        $decoded = json_decode($_POST['image_urls'], true);
+        if (is_array($decoded)) {
+            $images = $decoded;
+        } else {
+            $urls = explode("\n", trim($_POST['image_urls']));
+            foreach ($urls as $u) {
+                $u = trim($u);
+                if ($u) $images[] = $u;
+            }
         }
     }
 
@@ -93,11 +98,25 @@ $products = $db->query("SELECT * FROM products ORDER BY category, title_ne")->fe
                 </div>
                 <div class="field full"><label>विवरण (नेपाली)</label><textarea name="description_ne" rows="3" class="form-input"><?= htmlspecialchars($editProduct['description_ne'] ?? '') ?></textarea></div>
                 <div class="field full"><label>विवरण (अङ्ग्रेजी)</label><textarea name="description_en" rows="3" class="form-input"><?= htmlspecialchars($editProduct['description_en'] ?? '') ?></textarea></div>
-                <div class="field full"><label>छवि URL हरू (प्रति लाइन एक)</label>
-                    <textarea name="image_urls" rows="3" class="form-input" placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"><?php
-                        $imgs = $editProduct ? json_decode($editProduct['images'] ?? '[]', true) : [];
-                        echo htmlspecialchars(implode("\n", $imgs));
-                    ?></textarea>
+                <div class="field full">
+                    <label>उत्पादन छविहरू</label>
+                    <div class="file-upload-wrap" data-field="product_images">
+                        <div class="file-zone" data-field="product_images" role="button" tabindex="0" aria-label="Upload product image">
+                            <span><span class="upload-icon">☁️</span>Tap to add product image</span>
+                        </div>
+                        <input type="hidden" name="image_urls" value='<?= htmlspecialchars($editProduct ? ($editProduct['images'] ?? '[]') : '[]') ?>' class="file-hidden" id="product-images-data">
+                        <div class="multi-preview" id="product-images-preview">
+                            <?php
+                                $imgs = $editProduct ? json_decode($editProduct['images'] ?? '[]', true) : [];
+                                foreach ($imgs as $url):
+                            ?>
+                            <div class="multi-preview-item">
+                                <img src="<?= htmlspecialchars($url) ?>" alt="">
+                                <button type="button" class="multi-preview-remove" data-url="<?= htmlspecialchars($url) ?>" aria-label="Remove image">✕</button>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-actions">
@@ -145,5 +164,155 @@ $products = $db->query("SELECT * FROM products ORDER BY category, title_ne")->fe
         </table>
     </div>
 </div>
+
+<style>
+.multi-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+.multi-preview-item {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--line-light);
+    flex-shrink: 0;
+}
+.multi-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.multi-preview-remove {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 0;
+    background: var(--wine, #b33a3a);
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,.3);
+    min-width: 44px;
+    min-height: 44px;
+    background-clip: padding-box;
+}
+.multi-preview-remove:active {
+    transform: scale(.9);
+}
+</style>
+
+<script>
+(function(){
+    var API_BASE = '<?= BASE_URL ?>/backend/api';
+
+    function getImageUrls() {
+        var el = document.getElementById('product-images-data');
+        try { return JSON.parse(el.value || '[]'); } catch(e) { return []; }
+    }
+
+    function setImageUrls(urls) {
+        document.getElementById('product-images-data').value = JSON.stringify(urls);
+        renderPreview(urls);
+    }
+
+    function renderPreview(urls) {
+        var container = document.getElementById('product-images-preview');
+        container.innerHTML = urls.map(function(url) {
+            return '<div class="multi-preview-item">' +
+                '<img src="' + url.replace(/'/g, "\\'") + '" alt="">' +
+                '<button type="button" class="multi-preview-remove" data-url="' + url.replace(/'/g, "\\'") + '" aria-label="Remove image">✕</button>' +
+            '</div>';
+        }).join('');
+    }
+
+    document.addEventListener('click', function(e) {
+        var removeBtn = e.target.closest('.multi-preview-remove');
+        if (removeBtn) {
+            var url = removeBtn.dataset.url;
+            var urls = getImageUrls().filter(function(u) { return u !== url; });
+            setImageUrls(urls);
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        var zone = e.target.closest('.file-zone[data-field="product_images"]');
+        if (!zone) return;
+        var input = zone.querySelector('input[type="file"]');
+        if (!input) {
+            input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/jpeg,image/png,image/webp,image/gif';
+            input.style.display = 'none';
+            zone.appendChild(input);
+        }
+        input.click();
+    });
+
+    document.addEventListener('change', function(e) {
+        var zone = e.target.closest('.file-zone[data-field="product_images"]');
+        if (!zone) return;
+        var fileInput = zone.querySelector('input[type="file"]');
+        if (fileInput && e.target === fileInput && fileInput.files[0]) {
+            uploadProductImage(fileInput.files[0]);
+            fileInput.value = '';
+        }
+    });
+
+    document.addEventListener('dragover', function(e) {
+        var zone = e.target.closest('.file-zone[data-field="product_images"]');
+        if (zone) { e.preventDefault(); zone.classList.add('drag-over'); }
+    });
+
+    document.addEventListener('dragleave', function(e) {
+        var zone = e.target.closest('.file-zone[data-field="product_images"]');
+        if (zone) zone.classList.remove('drag-over');
+    });
+
+    document.addEventListener('drop', function(e) {
+        var zone = e.target.closest('.file-zone[data-field="product_images"]');
+        if (!zone) return;
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        var file = e.dataTransfer.files[0];
+        if (file) uploadProductImage(file);
+    });
+
+    function uploadProductImage(file) {
+        var zone = document.querySelector('.file-zone[data-field="product_images"]');
+        zone.innerHTML = '<span><span class="upload-icon">⏳</span>Uploading...</span>';
+
+        var fd = new FormData();
+        fd.append('file', file);
+        fd.append('type', 'general');
+
+        fetch(API_BASE + '/upload.php', {
+            method: 'POST',
+            credentials: 'same-origin',
+            body: fd
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            if (!d.success) throw new Error(d.message || 'Upload failed');
+            var urls = getImageUrls();
+            urls.push(d.data.url);
+            setImageUrls(urls);
+            zone.innerHTML = '<span><span class="upload-icon">☁️</span>Tap to add product image</span>';
+        })
+        .catch(function(e) {
+            zone.innerHTML = '<span><span class="upload-icon">⚠️</span>Upload failed. Try again.</span>';
+        });
+    }
+})();
+</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
