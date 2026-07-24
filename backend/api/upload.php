@@ -10,6 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') jsonError('Method not allowed', 405);
 $type = $_POST['type'] ?? 'general';
 $allowedDirs = [
     'article' => __DIR__ . '/../uploads/articles/',
+    'event' => __DIR__ . '/../uploads/events/',
+    'testimonial' => __DIR__ . '/../uploads/testimonials/',
     'gallery' => __DIR__ . '/../uploads/gallery/',
     'general' => __DIR__ . '/../uploads/general/',
 ];

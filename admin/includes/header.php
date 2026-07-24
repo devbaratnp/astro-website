@@ -15,13 +15,18 @@ $navMain = [
     ['page' => 'pooja-orders.php', 'label' => 'Pooja Orders',    'icon' => 'flame'],
     ['page' => 'payments.php',     'label' => 'Payments',       'icon' => 'card'],
     ['page' => 'pooja-services.php','label' => 'Pooja Services', 'icon' => 'star'],
+    ['page' => 'services.php',     'label' => 'Services · सेवाहरू', 'icon' => 'star'],
     ['page' => 'products.php',     'label' => 'Products',       'icon' => 'package'],
 ];
 
 $navContent = [
     ['page' => 'articles.php',    'label' => 'Articles · लेखहरू', 'icon' => 'file'],
+    ['page' => 'events.php',      'label' => 'Events · कार्यक्रम', 'icon' => 'sun'],
+    ['page' => 'testimonials.php','label' => 'Testimonials',    'icon' => 'star'],
+    ['page' => 'gallery.php',     'label' => 'Gallery',         'icon' => 'image'],
     ['page' => 'messages.php',    'label' => 'Messages',       'icon' => 'mail'],
     ['page' => 'panchang.php',    'label' => 'Panchang · पञ्चाङ्ग', 'icon' => 'sun'],
+    ['page' => 'users.php',       'label' => 'Admin Users',    'icon' => 'settings'],
     ['page' => 'settings.php',    'label' => 'Settings',       'icon' => 'settings'],
 ];
 
@@ -33,6 +38,11 @@ $titles = [
     'products.php' => 'Products',
     'pooja-services.php' => 'Pooja Services',
     'articles.php' => 'Articles',
+    'events.php' => 'Events',
+    'testimonials.php' => 'Testimonials',
+    'gallery.php' => 'Gallery',
+    'services.php' => 'Services',
+    'users.php' => 'Admin Users',
     'messages.php' => 'Messages',
     'panchang.php' => 'Panchang',
     'settings.php' => 'Settings',

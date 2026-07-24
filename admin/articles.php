@@ -81,7 +81,22 @@ $articles = $db->query("SELECT id, title_ne, title_en, slug, is_published, excer
                 <div class="field"><label>शीर्षक (नेपाली) *</label><input name="title_ne" required class="form-input" value="<?= htmlspecialchars($editArticle['title_ne'] ?? '') ?>"></div>
                 <div class="field"><label>शीर्षक (अङ्ग्रेजी)</label><input name="title_en" class="form-input" value="<?= htmlspecialchars($editArticle['title_en'] ?? '') ?>"></div>
                 <div class="field"><label>URL Slug</label><input name="slug" class="form-input" placeholder="auto-generated" value="<?= htmlspecialchars($editArticle['slug'] ?? '') ?>"></div>
-                <div class="field"><label>कभर छवि URL</label><input name="cover_image" class="form-input" placeholder="/assets/blog/..." value="<?= htmlspecialchars($editArticle['cover_image'] ?? '') ?>"></div>
+                <div class="field">
+                    <label>कभर छवि</label>
+                    <div class="file-upload-wrap" data-field="cover_image">
+                        <div class="file-zone" data-field="cover_image" role="button" tabindex="0" aria-label="Upload cover image">
+                            <?php if (!empty($editArticle['cover_image'])): ?>
+                            <img src="<?= htmlspecialchars($editArticle['cover_image']) ?>" alt="preview" class="file-preview">
+                            <?php else: ?>
+                            <span><span class="upload-icon">☁️</span>Drop image here or click to upload</span>
+                            <?php endif; ?>
+                        </div>
+                        <?php if (!empty($editArticle['cover_image'])): ?>
+                        <button type="button" class="file-clear" data-field="cover_image" aria-label="Clear image">✕</button>
+                        <?php endif; ?>
+                        <input type="hidden" name="cover_image" value="<?= htmlspecialchars($editArticle['cover_image'] ?? '') ?>" class="file-hidden">
+                    </div>
+                </div>
                 <div class="field full"><label>सारांश (नेपाली)</label><textarea name="excerpt_ne" rows="2" class="form-input"><?= htmlspecialchars($editArticle['excerpt_ne'] ?? '') ?></textarea></div>
                 <div class="field full"><label>सारांश (अङ्ग्रेजी)</label><textarea name="excerpt_en" rows="2" class="form-input"><?= htmlspecialchars($editArticle['excerpt_en'] ?? '') ?></textarea></div>
                 <div class="field full"><label>सामग्री (नेपाली) *</label><textarea name="content_ne" required rows="8" class="form-input" style="font-family:monospace"><?= htmlspecialchars($editArticle['content_ne'] ?? '') ?></textarea></div>
@@ -126,5 +141,110 @@ $articles = $db->query("SELECT id, title_ne, title_en, slug, is_published, excer
         </table>
     </div>
 </div>
+
+<script>
+(function(){
+    var API_BASE = '<?= BASE_URL ?>/backend/api';
+
+    document.addEventListener('click', function(e) {
+        var clearBtn = e.target.closest('.file-clear');
+        if (clearBtn) {
+            var field = clearBtn.dataset.field;
+            var wrap = document.querySelector('.file-upload-wrap[data-field="' + field + '"]');
+            if (!wrap) return;
+            wrap.querySelector('.file-zone').innerHTML = '<span><span class="upload-icon">☁️</span>Drop image here or click to upload</span>';
+            wrap.querySelector('.file-hidden').value = '';
+            var btn = wrap.querySelector('.file-clear');
+            if (btn) btn.remove();
+        }
+    });
+
+    document.addEventListener('change', function(e) {
+        var zone = e.target.closest('.file-zone');
+        if (!zone) return;
+        var fileInput = zone.querySelector('input[type="file"]');
+        if (fileInput && e.target === fileInput) {
+            uploadArticleImage(fileInput, zone);
+        }
+    });
+
+    document.addEventListener('dragover', function(e) {
+        var zone = e.target.closest('.file-zone');
+        if (zone) { e.preventDefault(); zone.classList.add('drag-over'); }
+    });
+
+    document.addEventListener('dragleave', function(e) {
+        var zone = e.target.closest('.file-zone');
+        if (zone) zone.classList.remove('drag-over');
+    });
+
+    document.addEventListener('drop', function(e) {
+        var zone = e.target.closest('.file-zone');
+        if (!zone) return;
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        var file = e.dataTransfer.files[0];
+        if (file) uploadArticleImageFile(file, zone.dataset.field);
+    });
+
+    document.addEventListener('click', function(e) {
+        var zone = e.target.closest('.file-zone');
+        if (!zone) return;
+        var input = zone.querySelector('input[type="file"]');
+        if (!input) {
+            input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/jpeg,image/png,image/webp,image/gif,image/svg+xml';
+            input.style.display = 'none';
+            zone.appendChild(input);
+        }
+        input.click();
+    });
+
+    function uploadArticleImage(input, zone) {
+        var file = input.files[0];
+        if (!file) return;
+        uploadArticleImageFile(file, zone.dataset.field);
+    }
+
+    function uploadArticleImageFile(file, field) {
+        var zone = document.querySelector('.file-zone[data-field="' + field + '"]');
+        if (!zone) return;
+        zone.innerHTML = '<span><span class="upload-icon">⏳</span>Uploading...</span>';
+
+        var fd = new FormData();
+        fd.append('file', file);
+        fd.append('type', 'article');
+
+        fetch(API_BASE + '/upload.php', {
+            method: 'POST',
+            credentials: 'same-origin',
+            body: fd
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            if (!d.success) throw new Error(d.message || 'Upload failed');
+            var url = d.data.url;
+            zone.innerHTML = '<img src="' + url + '" alt="preview" class="file-preview">';
+            var wrap = document.querySelector('.file-upload-wrap[data-field="' + field + '"]');
+            if (wrap) {
+                wrap.querySelector('.file-hidden').value = url;
+                if (!wrap.querySelector('.file-clear')) {
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'file-clear';
+                    btn.dataset.field = field;
+                    btn.setAttribute('aria-label', 'Clear image');
+                    btn.textContent = '✕';
+                    wrap.appendChild(btn);
+                }
+            }
+        })
+        .catch(function(e) {
+            zone.innerHTML = '<span><span class="upload-icon">⚠️</span>Upload failed. Try again.</span>';
+        });
+    }
+})();
+</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
