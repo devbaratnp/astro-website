@@ -198,7 +198,9 @@
 }
 
 @media (max-width: 820px) {
-  .contact-grid, .payment-layout { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .contact-card { display: none; }
+  .payment-layout { grid-template-columns: 1fr; }
   .result-grid { grid-template-columns: 1fr 1fr; }
 }
 

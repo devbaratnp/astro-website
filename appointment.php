@@ -157,7 +157,7 @@ renderPublicHeader(
           <option value="phone">Phone</option>
           <option value="inperson">प्रत्यक्ष</option>
         </select></label>
-        <label class="full">तपाईंको प्रश्न / समस्या *<textarea name="message" required rows="4" placeholder="आफ्नो प्रश्न वा समस्या विस्तारमा लेख्नुहोस्..." /></label>
+        <label class="full">तपाईंको प्रश्न / समस्या *<textarea name="message" required rows="4" placeholder="आफ्नो प्रश्न वा समस्या विस्तारमा लेख्नुहोस्..."></textarea></label>
       </div>
       <button class="button button-maroon full-button" type="submit" id="submit-btn">WhatsApp मार्फत अनुरोध पठाउनुहोस्</button>
       <p id="success-msg" class="success" style="display:none"></p>
