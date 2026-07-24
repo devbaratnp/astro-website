@@ -480,9 +480,10 @@ button, input, select, textarea { font: inherit; }
     background: transparent;
     box-shadow: none;
     padding: 0 0 0 16px;
-    display: block;
+    display: none;
     border-radius: 0;
   }
+  .nav-dropdown.open .nav-dropdown-menu { display: block; }
   .nav-dropdown-menu a { padding: 8px 16px; font-size: 12px; opacity: .85; }
   .dd-arrow { display: none; }
 }

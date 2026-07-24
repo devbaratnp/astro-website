@@ -8,6 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Nav dropdown toggle on mobile
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('.nav-dropdown-trigger');
+    if (!trigger) return;
+    const dd = trigger.closest('.nav-dropdown');
+    if (!dd) return;
+    if (window.innerWidth > 820) return;
+    e.preventDefault();
+    dd.classList.toggle('open');
+  });
+
   // Ticking clock for home page element if present
   const clockEl = document.querySelector('.astro-clock');
   if (clockEl) {
