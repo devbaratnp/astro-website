@@ -5,14 +5,6 @@ require_once __DIR__ . '/../backend/config/database.php';
 $db = Database::getConnection();
 $alertHtml = '';
 
-function generateSlug($str) {
-    $str = mb_strtolower(trim($str));
-    $str = preg_replace('/[^\w\s\-]/u', '', $str);
-    $str = preg_replace('/\s+/', '-', $str);
-    $str = preg_replace('/-+/', '-', $str);
-    return trim($str, '-') ?: 'post-' . time();
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_article'])) {
     $id = $_POST['id'] ?? null;
     $slug = $_POST['slug'] ?: generateSlug($_POST['title_ne']);
