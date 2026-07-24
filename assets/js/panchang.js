@@ -274,16 +274,12 @@
   }
 
   function init() {
-    popSelect(yearSel, range(1900, 2100), toN);
-    popSelect(monthSel, range(1, 12), function (v) { return bsMonths[v - 1]; });
-
     var bsInit = initialData.bs_initial;
     if (bsInit) {
-      setSelectsFromBs(bsInit);
-    } else {
-      var now = new Date();
-      var todayBs = ad2bs(now);
-      setSelectsFromBs(todayBs);
+      yearSel.value = bsInit.y;
+      monthSel.value = bsInit.m;
+      updateMaxDay();
+      daySel.value = Math.min(bsInit.d, parseInt(daySel.options[daySel.options.length - 1].value, 10));
     }
 
     yearSel.addEventListener('change', function () {

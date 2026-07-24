@@ -85,15 +85,33 @@ renderPublicHeader('आजको पञ्चाङ्ग र राशिफल
       <button type="button" class="nav-btn" id="prev-day" aria-label="अघिल्लो दिन">&lsaquo;</button>
       <div class="panchang-date-bs">
         <small class="panchang-date-label">मिति (नेपाली)</small>
+<?php
+$bsData = Panchang::getBsData();
+$bsYearVal = (int)$bsYearNum;
+$bsMonthVal = (int)$bsDate['m'];
+$maxDay = $bsData[$bsYearVal][$bsMonthVal - 1] ?? 30;
+?>
         <div class="bs-date-row">
           <div class="bs-date-field">
-            <select id="bs-year"></select>
+            <select id="bs-year">
+<?php for ($y = 1900; $y <= 2100; $y++): ?>
+              <option value="<?php echo $y; ?>"<?php echo $y === $bsYearVal ? ' selected' : ''; ?>><?php echo str_replace(range(0,9), $nepaliDigits, (string)$y); ?></option>
+<?php endfor; ?>
+            </select>
           </div>
           <div class="bs-date-field">
-            <select id="bs-month"></select>
+            <select id="bs-month">
+<?php foreach ($bsMonthsList as $i => $name): $mi = $i + 1; ?>
+              <option value="<?php echo $mi; ?>"<?php echo $mi === $bsMonthVal ? ' selected' : ''; ?>><?php echo $name; ?></option>
+<?php endforeach; ?>
+            </select>
           </div>
           <div class="bs-date-field">
-            <select id="bs-day"></select>
+            <select id="bs-day">
+<?php for ($d = 1; $d <= $maxDay; $d++): ?>
+              <option value="<?php echo $d; ?>"<?php echo $d === $bsDayNum ? ' selected' : ''; ?>><?php echo str_replace(range(0,9), $nepaliDigits, (string)$d); ?></option>
+<?php endfor; ?>
+            </select>
           </div>
         </div>
       </div>
