@@ -49,32 +49,43 @@ renderPublicHeader('जन्मकुण्डली | Astro Shree Hari', 'स�
         <h2 id="kundali-heading"></h2>
       </div>
 
-      <div class="kundali-layout">
-        <div class="kundali-chart-section">
-          <h3 class="kundali-section-title">लग्न कुण्डली</h3>
-          <div class="chart-container" id="kundali-chart"></div>
-        </div>
+      <div class="report-shell">
+        <aside class="ornament ornament-left" aria-hidden="true"></aside>
+        <aside class="ornament ornament-right" aria-hidden="true"></aside>
 
-        <div class="kundali-details-section">
-          <div class="kundali-summary-cards">
-            <div class="k-summary-card"><b>जन्म राशि</b><strong id="kr-rashi"></strong></div>
-            <div class="k-summary-card"><b>जन्म नक्षत्र</b><strong id="kr-nakshatra"></strong></div>
-            <div class="k-summary-card"><b>लग्न राशि</b><strong id="kr-lagna"></strong></div>
-            <div class="k-summary-card"><b>नवमांश</b><strong id="kr-navamsha"></strong></div>
-            <div class="k-summary-card"><b>नक्षत्र पाद</b><strong id="kr-pada"></strong></div>
-            <div class="k-summary-card"><b>मांगलिक</b><strong id="kr-mangal"></strong></div>
-          </div>
-
-          <h3 class="kundali-section-title">ग्रह स्थिति</h3>
-          <div class="graha-table-wrap">
-            <table class="graha-table" id="graha-table">
-              <thead><tr><th>ग्रह</th><th>राशि</th><th>अंश</th><th>भाव</th></tr></thead>
+        <div class="report-content">
+          <div class="planet-table-wrap">
+            <table class="planet-table" id="graha-table" aria-label="ग्रह विवरण">
+              <thead>
+                <tr><th>ग्रह</th><th>राशि</th><th>भाव / अंश</th><th>नक्षत्र</th><th>नक्षत्रेश</th><th>अवस्था</th></tr>
+              </thead>
               <tbody></tbody>
             </table>
           </div>
 
-          <h3 class="kundali-section-title">भाव स्वामी</h3>
-          <div class="bhava-grid" id="bhava-grid"></div>
+          <div class="report-meta" id="report-meta" aria-label="ज्योतिष गणना विवरण">
+            <strong>दिव्य ज्योतिष</strong>
+            <span class="divider">|</span>
+            <strong>सूर्यक्रान्ति:</strong>
+            <span id="meta-surya-kranti">—</span>
+            <span class="divider">|</span>
+            <strong>इष्टकाल:</strong>
+            <span id="meta-ishtakal">—</span>
+          </div>
+
+          <section class="kundli-card" aria-labelledby="lagnaHeading">
+            <div class="kundli-inner">
+              <h1 id="lagnaHeading">लग्न कुण्डली</h1>
+              <div id="lagnaChart" class="chart-host" aria-label="लग्न कुण्डली चार्ट"></div>
+            </div>
+          </section>
+
+          <section class="kundli-card" aria-labelledby="rashiHeading">
+            <div class="kundli-inner">
+              <h2 id="rashiHeading">राशि कुण्डली</h2>
+              <div id="rashiChart" class="chart-host" aria-label="राशि कुण्डली चार्ट"></div>
+            </div>
+          </section>
         </div>
       </div>
     </div>

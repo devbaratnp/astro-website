@@ -516,6 +516,7 @@ class Astrology {
             $dInR = fmod($deg, 30);
             $rashiName = self::$rashiNames[$ri];
             $house = (($ri - $lagRashiIdx + 12) % 12) + 1;
+            $isRetro = ($key === 'ra' || $key === 'ke');
             $planetList[$key] = [
                 'name' => self::$grahaNames[$key],
                 'deg' => round($deg, 2),
@@ -523,7 +524,7 @@ class Astrology {
                 'rashi_idx' => $ri,
                 'deg_in_rashi' => round($dInR, 2),
                 'house' => $house,
-                'is_retro' => false,
+                'is_retro' => $isRetro,
             ];
         }
 
@@ -555,6 +556,8 @@ class Astrology {
         $nkS = 360 / 27;
         $yogIdx = (int)floor(self::n360($mo['pos'] + $su['pos']) / $nkS) % 27;
 
+        $ishtakalGhati = $eastkalMin / 24;
+
         return [
             'rashi' => self::$rashiNames[$moRashiIdx],
             'rashi_idx' => $moRashiIdx,
@@ -571,6 +574,8 @@ class Astrology {
             'mangal_dosha' => $mangalDosha,
             'mangal_house' => $maHouse,
             'navamsha_rashi' => self::$rashiNames[$navRashi],
+            'sunrise_hr' => round($riseHr, 4),
+            'ishtakal_ghati' => round($ishtakalGhati, 2),
             'date' => $adDt->format('Y-m-d H:i'),
             'place' => $this->birthPlace,
             'lat' => $this->lat,
