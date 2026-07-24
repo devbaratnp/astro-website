@@ -37,13 +37,13 @@ $unreadCount = $db->query("SELECT COUNT(*) FROM contact_messages WHERE is_read =
     <p class="header-sub"><?= $unreadCount ?> नयाँ सन्देश</p>
 </div>
 
-<div class="filter-tabs">
-    <a href="?filter=all" class="<?= $filter === 'all' ? 'active' : '' ?>">सबै</a>
-    <a href="?filter=unread" class="<?= $filter === 'unread' ? 'active' : '' ?>">नपढिएको (<?= $unreadCount ?>)</a>
+<div class="section-tabs">
+    <a href="?filter=all" class="section-tab <?= $filter === 'all' ? 'active' : '' ?>">सबै</a>
+    <a href="?filter=unread" class="section-tab <?= $filter === 'unread' ? 'active' : '' ?>">नपढिएको (<?= $unreadCount ?>)</a>
 </div>
 
-<div class="data-table-wrapper">
-    <table class="data-table">
+<div class="data-table-wrap">
+    <table class="data-table" role="table" aria-label="Messages">
         <thead>
             <tr><th>#</th><th>नाम</th><th>सम्पर्क</th><th>विषय</th><th>स्थिति</th><th>मिति</th><th>कार्य</th></tr>
         </thead>
@@ -54,18 +54,18 @@ $unreadCount = $db->query("SELECT COUNT(*) FROM contact_messages WHERE is_read =
                 <td class="td-name"><?= htmlspecialchars($m['name']) ?></td>
                 <td>
                     <?php if ($m['phone']): ?><div><?= htmlspecialchars($m['phone']) ?></div><?php endif; ?>
-                    <?php if ($m['email']): ?><small style="color:var(--muted)"><?= htmlspecialchars($m['email']) ?></small><?php endif; ?>
+                    <?php if ($m['email']): ?><small class="text-muted"><?= htmlspecialchars($m['email']) ?></small><?php endif; ?>
                 </td>
                 <td><?= htmlspecialchars($m['subject']) ?></td>
                 <td><span class="badge badge-<?= $m['is_read'] ? 'completed' : 'pending' ?>"><?= $m['is_read'] ? 'पढियो' : 'नयाँ' ?></span></td>
                 <td><?= $m['created_at'] ?></td>
                 <td>
                     <div class="action-form">
-                        <button class="btn-sm" onclick="toggleMsg(<?= $m['id'] ?>)">विवरण</button>
+                        <button class="btn-sm" onclick="toggleMsg(<?= $m['id'] ?>)" aria-expanded="false">विवरण</button>
                         <?php if (!$m['is_read']): ?>
-                        <a href="?mark_read=<?= $m['id'] ?>&<?= csrfQuery() ?>" class="btn-sm btn-primary">पढियो</a>
+                        <a href="?mark_read=<?= $m['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-primary">पढियो</a>
                         <?php endif; ?>
-                        <a href="?delete=<?= $m['id'] ?>&<?= csrfQuery() ?>" class="btn-sm btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+                        <a href="?delete=<?= $m['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
                     </div>
                 </td>
             </tr>
@@ -78,16 +78,47 @@ $unreadCount = $db->query("SELECT COUNT(*) FROM contact_messages WHERE is_read =
             </tr>
             <?php endforeach; ?>
             <?php if (empty($messages)): ?>
-            <tr><td colspan="7" class="empty-state">कुनै सन्देश छैन</td></tr>
+            <tr><td colspan="7"><div class="empty-state">कुनै सन्देश छैन</div></td></tr>
             <?php endif; ?>
         </tbody>
     </table>
 </div>
 
+<div class="mobile-records">
+    <?php if (empty($messages)): ?>
+    <div class="empty-state">कुनै सन्देश छैन</div>
+    <?php else: foreach ($messages as $m): ?>
+    <div class="mobile-record" style="<?= !$m['is_read'] ? 'border-left:3px solid var(--gold-500)' : '' ?>">
+        <div class="mobile-record-header">
+            <div>
+                <h3 class="mobile-record-title"><?= htmlspecialchars($m['name']) ?></h3>
+                <span class="mobile-record-ref"><?= htmlspecialchars($m['subject']) ?> · <?= $m['created_at'] ?></span>
+            </div>
+            <?php if (!$m['is_read']): ?><span class="badge badge-pending">नयाँ</span><?php endif; ?>
+        </div>
+        <div class="mobile-record-body" style="grid-template-columns:1fr">
+            <div class="mobile-record-field">
+                <span>सन्देश</span>
+                <strong><?= nl2br(htmlspecialchars(mb_substr($m['message'], 0, 150))) ?><?= mb_strlen($m['message']) > 150 ? '...' : '' ?></strong>
+            </div>
+        </div>
+        <div class="mobile-record-footer">
+            <button class="btn btn-xs btn-outline" onclick="toggleMsg(<?= $m['id'] ?>)">पूरा विवरण</button>
+            <?php if (!$m['is_read']): ?>
+            <a href="?mark_read=<?= $m['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-primary">पढियो</a>
+            <?php endif; ?>
+            <a href="?delete=<?= $m['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+        </div>
+    </div>
+    <?php endforeach; endif; ?>
+</div>
+
 <script>
 function toggleMsg(id) {
     var row = document.getElementById('msg-' + id);
-    row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+    if (!row) return;
+    var isHidden = row.style.display === 'none' || row.style.display === '';
+    row.style.display = isHidden ? 'table-row' : 'none';
 }
 </script>
 

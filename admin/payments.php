@@ -45,15 +45,15 @@ $payments = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll();
     <h1>भुक्तानी प्रमाणिकरण</h1>
 </div>
 
-<div class="filter-tabs">
-    <a href="?status=pending" class="<?= $statusFilter === 'pending' ? 'active' : '' ?>">पेन्डिङ</a>
-    <a href="?status=approved" class="<?= $statusFilter === 'approved' ? 'active' : '' ?>">स्वीकृत</a>
-    <a href="?status=rejected" class="<?= $statusFilter === 'rejected' ? 'active' : '' ?>">अस्वीकृत</a>
-    <a href="?status=all" class="<?= $statusFilter === 'all' ? 'active' : '' ?>">सबै</a>
+<div class="section-tabs">
+    <a href="?status=pending" class="section-tab <?= $statusFilter === 'pending' ? 'active' : '' ?>">पेन्डिङ</a>
+    <a href="?status=approved" class="section-tab <?= $statusFilter === 'approved' ? 'active' : '' ?>">स्वीकृत</a>
+    <a href="?status=rejected" class="section-tab <?= $statusFilter === 'rejected' ? 'active' : '' ?>">अस्वीकृत</a>
+    <a href="?status=all" class="section-tab <?= $statusFilter === 'all' ? 'active' : '' ?>">सबै</a>
 </div>
 
-<div class="data-table-wrapper">
-    <table class="data-table">
+<div class="data-table-wrap">
+    <table class="data-table" role="table" aria-label="Payments list">
         <thead>
             <tr>
                 <th>#</th>
@@ -61,8 +61,7 @@ $payments = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll();
                 <th>फोन</th>
                 <th>रकम</th>
                 <th>विधि</th>
-                <th>Ref. ID</th>
-                <th>स्क्रिनसट</th>
+                <th>स्थिति</th>
                 <th>मिति</th>
                 <th>कार्य</th>
             </tr>
@@ -75,26 +74,17 @@ $payments = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll();
                 <td><?= htmlspecialchars($p['user_phone']) ?></td>
                 <td class="td-amount">रु <?= number_format($p['amount']) ?></td>
                 <td><?= strtoupper($p['method']) ?></td>
-                <td><?= htmlspecialchars($p['transaction_ref']) ?></td>
-                <td>
-                    <?php if ($p['screenshot_path']): ?>
-                        <a href="<?= htmlspecialchars($p['screenshot_path']) ?>" target="_blank" class="btn-sm">हेर्नुहोस्</a>
-                    <?php else: ?>
-                        —
-                    <?php endif; ?>
-                </td>
+                <td><span class="badge badge-<?= $p['status'] ?>"><?= $p['status'] ?></span></td>
                 <td><?= $p['created_at'] ?></td>
                 <td>
                     <?php if ($p['status'] === 'pending'): ?>
                     <form method="POST" class="action-form">
                         <?= csrfField() ?>
                         <input type="hidden" name="id" value="<?= $p['id'] ?>">
-                        <input name="admin_notes" placeholder="नोट" class="form-input" style="width:100px;font-size:.8rem">
-                        <button type="submit" name="payment_action" value="approved" class="btn-sm" style="background:#155724;color:white">✔</button>
-                        <button type="submit" name="payment_action" value="rejected" class="btn-sm btn-danger">✘</button>
+                        <button type="submit" name="payment_action" value="approved" class="btn btn-xs" style="background:#155724;color:white">स्वीकृत</button>
+                        <button type="submit" name="payment_action" value="rejected" class="btn btn-xs btn-danger">अस्वीकृत</button>
                     </form>
                     <?php else: ?>
-                        <span class="badge badge-<?= $p['status'] ?>"><?= $p['status'] ?></span>
                         <?php if ($p['admin_notes']): ?>
                             <small style="display:block;color:#755f59;font-size:.75rem"><?= htmlspecialchars($p['admin_notes']) ?></small>
                         <?php endif; ?>
@@ -103,10 +93,54 @@ $payments = $statusFilter === 'all' ? $query->fetchAll() : $query->fetchAll();
             </tr>
             <?php endforeach; ?>
             <?php if (empty($payments)): ?>
-            <tr><td colspan="9" class="empty-state">कुनै भुक्तानी फेला परेन</td></tr>
+            <tr><td colspan="8"><div class="empty-state">कुनै भुक्तानी फेला परेन</div></td></tr>
             <?php endif; ?>
         </tbody>
     </table>
+</div>
+
+<div class="mobile-records">
+    <?php if (empty($payments)): ?>
+    <div class="empty-state">कुनै भुक्तानी फेला परेन</div>
+    <?php else: foreach ($payments as $p): ?>
+    <div class="mobile-record">
+        <div class="mobile-record-header">
+            <div>
+                <h3 class="mobile-record-title"><?= htmlspecialchars($p['user_name']) ?></h3>
+                <span class="mobile-record-ref">#<?= $p['id'] ?> · <?= htmlspecialchars($p['user_phone']) ?></span>
+            </div>
+            <span class="badge badge-<?= $p['status'] ?>"><?= $p['status'] ?></span>
+        </div>
+        <div class="mobile-record-body">
+            <div class="mobile-record-field">
+                <span>रकम</span>
+                <strong>रु <?= number_format($p['amount']) ?></strong>
+            </div>
+            <div class="mobile-record-field">
+                <span>विधि</span>
+                <strong><?= strtoupper($p['method']) ?></strong>
+            </div>
+            <div class="mobile-record-field">
+                <span>मिति</span>
+                <strong><?= $p['created_at'] ?></strong>
+            </div>
+            <div class="mobile-record-field">
+                <span>Ref.</span>
+                <strong><?= htmlspecialchars($p['transaction_ref'] ?: '—') ?></strong>
+            </div>
+        </div>
+        <?php if ($p['status'] === 'pending'): ?>
+        <div class="mobile-record-footer">
+            <form method="POST" class="action-form">
+                <?= csrfField() ?>
+                <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                <button type="submit" name="payment_action" value="approved" class="btn btn-sm" style="background:#155724;color:white">स्वीकृत</button>
+                <button type="submit" name="payment_action" value="rejected" class="btn btn-sm btn-danger">अस्वीकृत</button>
+            </form>
+        </div>
+        <?php endif; ?>
+    </div>
+    <?php endforeach; endif; ?>
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

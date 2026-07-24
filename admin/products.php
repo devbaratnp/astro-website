@@ -84,22 +84,22 @@ $products = $db->query("SELECT * FROM products ORDER BY category, title_ne")->fe
             <input type="hidden" name="id" value="<?= $editProduct['id'] ?>">
             <?php endif; ?>
             <div class="form-grid">
-                <div class="field"><label>शीर्षक (नेपाली) *</label><input name="title_ne" required class="form-input" value="<?= htmlspecialchars($editProduct['title_ne'] ?? '') ?>"></div>
-                <div class="field"><label>शीर्षक (अङ्ग्रेजी)</label><input name="title_en" class="form-input" value="<?= htmlspecialchars($editProduct['title_en'] ?? '') ?>"></div>
-                <div class="field"><label>मूल्य (रु) *</label><input name="price" type="number" step="0.01" required class="form-input" value="<?= htmlspecialchars($editProduct['price'] ?? '') ?>"></div>
-                <div class="field"><label>साधारण मूल्य (रु)</label><input name="compare_price" type="number" step="0.01" class="form-input" value="<?= htmlspecialchars($editProduct['compare_price'] ?? '') ?>"></div>
-                <div class="field"><label>कोटि</label><input name="category" class="form-input" placeholder="जस्तै: माला, धूप, मूर्ति" value="<?= htmlspecialchars($editProduct['category'] ?? '') ?>"></div>
-                <div class="field"><label>स्टक स्थिति</label>
-                    <select name="stock_status" class="form-input">
+                <div class="form-field"><label class="form-label">शीर्षक (नेपाली) *</label><input name="title_ne" required class="form-input" value="<?= htmlspecialchars($editProduct['title_ne'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">शीर्षक (अङ्ग्रेजी)</label><input name="title_en" class="form-input" value="<?= htmlspecialchars($editProduct['title_en'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">मूल्य (रु) *</label><input name="price" type="number" step="0.01" required class="form-input" value="<?= htmlspecialchars($editProduct['price'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">साधारण मूल्य (रु)</label><input name="compare_price" type="number" step="0.01" class="form-input" value="<?= htmlspecialchars($editProduct['compare_price'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">कोटि</label><input name="category" class="form-input" placeholder="जस्तै: माला, धूप, मूर्ति" value="<?= htmlspecialchars($editProduct['category'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">स्टक स्थिति</label>
+                    <select name="stock_status" class="form-select">
                         <option value="in_stock" <?= ($editProduct['stock_status'] ?? '') === 'in_stock' ? 'selected' : '' ?>>स्टकमा छ</option>
                         <option value="out_of_stock" <?= ($editProduct['stock_status'] ?? '') === 'out_of_stock' ? 'selected' : '' ?>>स्टक छैन</option>
                         <option value="pre_order" <?= ($editProduct['stock_status'] ?? '') === 'pre_order' ? 'selected' : '' ?>>प्रि-अर्डर</option>
                     </select>
                 </div>
-                <div class="field full"><label>विवरण (नेपाली)</label><textarea name="description_ne" rows="3" class="form-input"><?= htmlspecialchars($editProduct['description_ne'] ?? '') ?></textarea></div>
-                <div class="field full"><label>विवरण (अङ्ग्रेजी)</label><textarea name="description_en" rows="3" class="form-input"><?= htmlspecialchars($editProduct['description_en'] ?? '') ?></textarea></div>
-                <div class="field full">
-                    <label>उत्पादन छविहरू</label>
+                <div class="form-field full"><label class="form-label">विवरण (नेपाली)</label><textarea name="description_ne" rows="3" class="form-textarea"><?= htmlspecialchars($editProduct['description_ne'] ?? '') ?></textarea></div>
+                <div class="form-field full"><label class="form-label">विवरण (अङ्ग्रेजी)</label><textarea name="description_en" rows="3" class="form-textarea"><?= htmlspecialchars($editProduct['description_en'] ?? '') ?></textarea></div>
+                <div class="form-field full">
+                    <label class="form-label">उत्पादन छविहरू</label>
                     <div class="file-upload-wrap" data-field="product_images">
                         <div class="file-zone" data-field="product_images" role="button" tabindex="0" aria-label="Upload product image">
                             <span><span class="upload-icon">☁️</span>Tap to add product image</span>
@@ -128,8 +128,8 @@ $products = $db->query("SELECT * FROM products ORDER BY category, title_ne")->fe
         </form>
     </div>
 
-    <div class="data-table-wrapper">
-        <table class="data-table">
+    <div class="data-table-wrap">
+        <table class="data-table" role="table" aria-label="Products list">
             <thead>
                 <tr><th>उत्पादन</th><th>मूल्य</th><th>कोटि</th><th>स्टक</th><th>स्थिति</th><th>कार्य</th></tr>
             </thead>
@@ -138,7 +138,7 @@ $products = $db->query("SELECT * FROM products ORDER BY category, title_ne")->fe
                 <tr>
                     <td class="td-name">
                         <?= htmlspecialchars($p['title_ne']) ?>
-                        <?php if ($p['title_en']): ?><br><small style="color:var(--muted)"><?= htmlspecialchars($p['title_en']) ?></small><?php endif; ?>
+                        <?php if ($p['title_en']): ?><br><small class="text-muted"><?= htmlspecialchars($p['title_en']) ?></small><?php endif; ?>
                     </td>
                     <td class="td-amount">रु <?= number_format($p['price']) ?></td>
                     <td><?= htmlspecialchars($p['category'] ?: '—') ?></td>
@@ -150,19 +150,51 @@ $products = $db->query("SELECT * FROM products ORDER BY category, title_ne")->fe
                     <td><span class="badge badge-<?= $p['is_active'] ? 'confirmed' : 'cancelled' ?>"><?= $p['is_active'] ? 'सक्रिय' : 'निष्क्रिय' ?></span></td>
                     <td>
                         <div class="action-form">
-                            <a href="?edit=<?= $p['id'] ?>" class="btn-sm">सम्पादन</a>
-                            <a href="?toggle=<?= $p['id'] ?>&<?= csrfQuery() ?>" class="btn-sm"><?= $p['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
-                            <a href="?delete=<?= $p['id'] ?>&<?= csrfQuery() ?>" class="btn-sm btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+                            <a href="?edit=<?= $p['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
+                            <a href="?toggle=<?= $p['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-outline"><?= $p['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
+                            <a href="?delete=<?= $p['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
                         </div>
                     </td>
                 </tr>
                 <?php endforeach; ?>
                 <?php if (empty($products)): ?>
-                <tr><td colspan="6" class="empty-state">कुनै उत्पादन छैन — माथि नयाँ थप्नुहोस्</td></tr>
+                <tr><td colspan="6"><div class="empty-state">कुनै उत्पादन छैन — माथि नयाँ थप्नुहोस्</div></td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
+</div>
+
+<div class="mobile-records">
+    <?php if (empty($products)): ?>
+    <div class="empty-state">कुनै उत्पादन छैन</div>
+    <?php else: foreach ($products as $p): ?>
+    <div class="mobile-record">
+        <div class="mobile-record-header">
+            <h3 class="mobile-record-title"><?= htmlspecialchars($p['title_ne']) ?></h3>
+            <span class="badge badge-<?= $p['is_active'] ? 'confirmed' : 'cancelled' ?>"><?= $p['is_active'] ? 'सक्रिय' : 'निष्क्रिय' ?></span>
+        </div>
+        <div class="mobile-record-body">
+            <div class="mobile-record-field">
+                <span>मूल्य</span>
+                <strong>रु <?= number_format($p['price']) ?></strong>
+            </div>
+            <div class="mobile-record-field">
+                <span>स्टक</span>
+                <strong><?= $p['stock_status'] === 'in_stock' ? 'स्टकमा' : ($p['stock_status'] === 'pre_order' ? 'प्रि-अर्डर' : 'सकिएको') ?></strong>
+            </div>
+            <div class="mobile-record-field">
+                <span>कोटि</span>
+                <strong><?= htmlspecialchars($p['category'] ?: '—') ?></strong>
+            </div>
+        </div>
+        <div class="mobile-record-footer">
+            <a href="?edit=<?= $p['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
+            <a href="?toggle=<?= $p['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-outline"><?= $p['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
+            <a href="?delete=<?= $p['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+        </div>
+    </div>
+    <?php endforeach; endif; ?>
 </div>
 
 <style>
@@ -194,7 +226,7 @@ $products = $db->query("SELECT * FROM products ORDER BY category, title_ne")->fe
     height: 26px;
     border-radius: 50%;
     border: 0;
-    background: var(--wine, #b33a3a);
+    background: var(--wine-700);
     color: #fff;
     font-size: 13px;
     cursor: pointer;
@@ -202,13 +234,10 @@ $products = $db->query("SELECT * FROM products ORDER BY category, title_ne")->fe
     place-items: center;
     padding: 0;
     box-shadow: 0 1px 4px rgba(0,0,0,.3);
-    min-width: 44px;
-    min-height: 44px;
     background-clip: padding-box;
 }
-.multi-preview-remove:active {
-    transform: scale(.9);
-}
+.multi-preview-remove:hover { background: var(--wine-800); }
+.multi-preview-remove:active { transform: scale(.9); }
 </style>
 
 <script>

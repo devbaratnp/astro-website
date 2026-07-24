@@ -43,24 +43,24 @@ while ($row = $stmt->fetch()) $settings[$row['setting_key']] = $row['setting_val
     <h1>सेटिङ्स</h1>
 </div>
 
-<div class="settings-grid">
+<div class="two-col-layout">
     <div class="form-card">
         <h3>साइट सेटिङ्स</h3>
         <form method="POST">
             <?= csrfField() ?>
             <div class="form-grid">
-                <div class="field"><label>साइट नाम</label><input name="site_name" class="form-input" value="<?= htmlspecialchars($settings['site_name'] ?? '') ?>"></div>
-                <div class="field"><label>ट्यागलाइन (नेपाली)</label><input name="site_tagline_ne" class="form-input" value="<?= htmlspecialchars($settings['site_tagline_ne'] ?? '') ?>"></div>
-                <div class="field"><label>ट्यागलाइन (अङ्ग्रेजी)</label><input name="site_tagline_en" class="form-input" value="<?= htmlspecialchars($settings['site_tagline_en'] ?? '') ?>"></div>
-                <div class="field"><label>फोन</label><input name="phone" class="form-input" value="<?= htmlspecialchars($settings['phone'] ?? '') ?>"></div>
-                <div class="field"><label>फोन (प्रदर्शन)</label><input name="phone_display" class="form-input" value="<?= htmlspecialchars($settings['phone_display'] ?? '') ?>"></div>
-                <div class="field"><label>इमेल</label><input name="email" type="email" class="form-input" value="<?= htmlspecialchars($settings['email'] ?? '') ?>"></div>
-                <div class="field"><label>ठेगाना</label><input name="address" class="form-input" value="<?= htmlspecialchars($settings['address'] ?? '') ?>"></div>
-                <div class="field"><label>YouTube URL</label><input name="youtube_url" class="form-input" placeholder="https://youtube.com/..." value="<?= htmlspecialchars($settings['youtube_url'] ?? '') ?>"></div>
-                <div class="field"><label>Facebook URL</label><input name="facebook_url" class="form-input" placeholder="https://facebook.com/..." value="<?= htmlspecialchars($settings['facebook_url'] ?? '') ?>"></div>
-                <div class="field"><label>WhatsApp नम्बर</label><input name="whatsapp_number" class="form-input" value="<?= htmlspecialchars($settings['whatsapp_number'] ?? '') ?>"></div>
-                <div class="field">
-                    <label>लोगो URL</label>
+                <div class="form-field"><label class="form-label">साइट नाम</label><input name="site_name" class="form-input" value="<?= htmlspecialchars($settings['site_name'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">ट्यागलाइन (नेपाली)</label><input name="site_tagline_ne" class="form-input" value="<?= htmlspecialchars($settings['site_tagline_ne'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">ट्यागलाइन (अङ्ग्रेजी)</label><input name="site_tagline_en" class="form-input" value="<?= htmlspecialchars($settings['site_tagline_en'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">फोन</label><input name="phone" class="form-input" value="<?= htmlspecialchars($settings['phone'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">फोन (प्रदर्शन)</label><input name="phone_display" class="form-input" value="<?= htmlspecialchars($settings['phone_display'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">इमेल</label><input name="email" type="email" class="form-input" value="<?= htmlspecialchars($settings['email'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">ठेगाना</label><input name="address" class="form-input" value="<?= htmlspecialchars($settings['address'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">YouTube URL</label><input name="youtube_url" class="form-input" placeholder="https://youtube.com/..." value="<?= htmlspecialchars($settings['youtube_url'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">Facebook URL</label><input name="facebook_url" class="form-input" placeholder="https://facebook.com/..." value="<?= htmlspecialchars($settings['facebook_url'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">WhatsApp नम्बर</label><input name="whatsapp_number" class="form-input" value="<?= htmlspecialchars($settings['whatsapp_number'] ?? '') ?>"></div>
+                <div class="form-field">
+                    <label class="form-label">लोगो URL</label>
                     <div class="file-upload-wrap" data-field="logo_url">
                         <div class="file-zone" data-field="logo_url" role="button" tabindex="0" aria-label="Upload logo">
                             <?php if (!empty($settings['logo_url'])): ?>
@@ -75,8 +75,8 @@ while ($row = $stmt->fetch()) $settings[$row['setting_key']] = $row['setting_val
                         <input type="hidden" name="logo_url" value="<?= htmlspecialchars($settings['logo_url'] ?? '') ?>" class="file-hidden">
                     </div>
                 </div>
-                <div class="field">
-                    <label>फेभिकन URL</label>
+                <div class="form-field">
+                    <label class="form-label">फेभिकन URL</label>
                     <div class="file-upload-wrap" data-field="favicon_url">
                         <div class="file-zone" data-field="favicon_url" role="button" tabindex="0" aria-label="Upload favicon">
                             <?php if (!empty($settings['favicon_url'])): ?>
@@ -91,8 +91,8 @@ while ($row = $stmt->fetch()) $settings[$row['setting_key']] = $row['setting_val
                         <input type="hidden" name="favicon_url" value="<?= htmlspecialchars($settings['favicon_url'] ?? '') ?>" class="file-hidden">
                     </div>
                 </div>
-                <div class="field"><label>खुल्ने समय</label><input name="business_hours" class="form-input" value="<?= htmlspecialchars($settings['business_hours'] ?? '') ?>"></div>
-                <div class="field"><label>परामर्श समय</label><input name="consultation_hours" class="form-input" value="<?= htmlspecialchars($settings['consultation_hours'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">खुल्ने समय</label><input name="business_hours" class="form-input" value="<?= htmlspecialchars($settings['business_hours'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">परामर्श समय</label><input name="consultation_hours" class="form-input" value="<?= htmlspecialchars($settings['consultation_hours'] ?? '') ?>"></div>
             </div>
             <div class="form-actions">
                 <button type="submit" name="save_settings" class="btn btn-primary">सेटिङ्स सुरक्षित गर्नुहोस्</button>
@@ -104,17 +104,19 @@ while ($row = $stmt->fetch()) $settings[$row['setting_key']] = $row['setting_val
         <h3>पासवर्ड परिवर्तन गर्नुहोस्</h3>
         <form method="POST">
             <?= csrfField() ?>
-            <div class="field">
-                <label class="form-label">हालको पासवर्ड</label>
-                <input type="password" name="current_password" required class="form-input">
-            </div>
-            <div class="field">
-                <label class="form-label">नयाँ पासवर्ड</label>
-                <input type="password" name="new_password" required minlength="6" class="form-input">
-            </div>
-            <div class="field">
-                <label class="form-label">नयाँ पासवर्ड पुष्टि गर्नुहोस्</label>
-                <input type="password" name="confirm_password" required minlength="6" class="form-input">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label class="form-label">हालको पासवर्ड</label>
+                    <input type="password" name="current_password" required class="form-input">
+                </div>
+                <div class="form-field">
+                    <label class="form-label">नयाँ पासवर्ड</label>
+                    <input type="password" name="new_password" required minlength="6" class="form-input">
+                </div>
+                <div class="form-field">
+                    <label class="form-label">नयाँ पासवर्ड पुष्टि गर्नुहोस्</label>
+                    <input type="password" name="confirm_password" required minlength="6" class="form-input">
+                </div>
             </div>
             <div class="form-actions">
                 <button type="submit" name="change_password" class="btn btn-primary">परिवर्तन गर्नुहोस्</button>
@@ -122,18 +124,6 @@ while ($row = $stmt->fetch()) $settings[$row['setting_key']] = $row['setting_val
         </form>
     </div>
 </div>
-
-<style>
-.settings-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    align-items: start;
-}
-@media (max-width: 820px) {
-    .settings-grid { grid-template-columns: 1fr; }
-}
-</style>
 
 <script>
 (function(){

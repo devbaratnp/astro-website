@@ -77,16 +77,16 @@ $users = $db->query("SELECT id, username, display_name, role, created_at FROM ad
             <input type="hidden" name="id" value="<?= $editUser['id'] ?>">
             <?php endif; ?>
             <div class="form-grid">
-                <div class="field"><label>प्रयोगकर्ता नाम *</label><input name="username" required class="form-input" value="<?= htmlspecialchars($editUser['username'] ?? '') ?>"></div>
-                <div class="field"><label>नाम *</label><input name="display_name" required class="form-input" value="<?= htmlspecialchars($editUser['display_name'] ?? '') ?>"></div>
-                <div class="field">
-                    <label>भूमिका</label>
-                    <select name="role" class="form-input">
+                <div class="form-field"><label class="form-label">प्रयोगकर्ता नाम *</label><input name="username" required class="form-input" value="<?= htmlspecialchars($editUser['username'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">नाम *</label><input name="display_name" required class="form-input" value="<?= htmlspecialchars($editUser['display_name'] ?? '') ?>"></div>
+                <div class="form-field">
+                    <label class="form-label">भूमिका</label>
+                    <select name="role" class="form-select">
                         <option value="admin" <?= $editUser && $editUser['role'] === 'admin' ? 'selected' : '' ?>>प्रशासक</option>
                         <option value="editor" <?= $editUser && $editUser['role'] === 'editor' ? 'selected' : '' ?>>सम्पादक</option>
                     </select>
                 </div>
-                <div class="field"><label><?= $editUser ? 'नयाँ पासवर्ड (खाली राखेमा परिवर्तन हुँदैन)' : 'पासवर्ड *' ?></label><input name="password" type="text" class="form-input" placeholder="कम्तीमा ६ क्यारेक्टर" <?= $editUser ? '' : 'required' ?>></div>
+                <div class="form-field"><label class="form-label"><?= $editUser ? 'नयाँ पासवर्ड (खाली राखेमा परिवर्तन हुँदैन)' : 'पासवर्ड *' ?></label><input name="password" type="text" class="form-input" placeholder="कम्तीमा ६ क्यारेक्टर" <?= $editUser ? '' : 'required' ?>></div>
             </div>
             <div class="form-actions">
                 <button type="submit" name="save_user" class="btn btn-primary"><?= $editUser ? 'अपडेट गर्नुहोस्' : 'सुरक्षित गर्नुहोस्' ?></button>
@@ -97,8 +97,8 @@ $users = $db->query("SELECT id, username, display_name, role, created_at FROM ad
         </form>
     </div>
 
-    <div class="data-table-wrapper">
-        <table class="data-table">
+    <div class="data-table-wrap">
+        <table class="data-table" role="table" aria-label="Admin users">
             <thead>
                 <tr><th>प्रयोगकर्ता</th><th>नाम</th><th>भूमिका</th><th>मिति</th><th>कार्य</th></tr>
             </thead>
@@ -111,9 +111,9 @@ $users = $db->query("SELECT id, username, display_name, role, created_at FROM ad
                     <td><?= $u['created_at'] ?></td>
                     <td>
                         <div class="action-form">
-                            <a href="?edit=<?= $u['id'] ?>" class="btn-sm">सम्पादन</a>
+                            <a href="?edit=<?= $u['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
                             <?php if ((int)$u['id'] !== (int)$_SESSION['admin_id']): ?>
-                            <a href="?delete=<?= $u['id'] ?>&<?= csrfQuery() ?>" class="btn-sm btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+                            <a href="?delete=<?= $u['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
                             <?php endif; ?>
                         </div>
                     </td>
@@ -122,6 +122,34 @@ $users = $db->query("SELECT id, username, display_name, role, created_at FROM ad
             </tbody>
         </table>
     </div>
+</div>
+
+<div class="mobile-records">
+    <?php foreach ($users as $u): ?>
+    <div class="mobile-record">
+        <div class="mobile-record-header">
+            <h3 class="mobile-record-title"><?= htmlspecialchars($u['display_name']) ?></h3>
+            <span class="badge badge-<?= $u['role'] === 'admin' ? 'gold' : 'info' ?>"><?= $u['role'] ?></span>
+        </div>
+        <div class="mobile-record-body">
+            <div class="mobile-record-field">
+                <span>प्रयोगकर्ता</span>
+                <strong><?= htmlspecialchars($u['username']) ?></strong>
+            </div>
+            <div class="mobile-record-field">
+                <span>मिति</span>
+                <strong><?= $u['created_at'] ?></strong>
+            </div>
+        </div>
+        <div class="mobile-record-footer">
+            <a href="?edit=<?= $u['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
+            <?php if ((int)$u['id'] !== (int)$_SESSION['admin_id']): ?>
+            <a href="?delete=<?= $u['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endforeach; ?>
+</div>
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

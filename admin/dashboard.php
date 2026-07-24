@@ -18,16 +18,46 @@ $stats = [
 ?>
 
 <div class="page-header">
-    <h1>नमस्ते, <?= htmlspecialchars($_SESSION['admin_name'] ?? 'प्रशासक') ?> 🙏</h1>
+    <h1>नमस्ते, <?= htmlspecialchars($_SESSION['admin_name'] ?? 'प्रशासक') ?></h1>
 </div>
 
 <div class="stats-grid">
-    <div class="stat-card stat-red"><strong><?= $stats['pending_appointments'] ?></strong><span>नयाँ परामर्श</span></div>
-    <div class="stat-card stat-gold"><strong><?= $stats['today_appointments'] ?></strong><span>आजको परामर्श</span></div>
-    <div class="stat-card stat-amber"><strong><?= $stats['pending_pooja'] ?></strong><span>पूजा अर्डर</span></div>
-    <div class="stat-card stat-red"><strong><?= $stats['pending_payments'] ?></strong><span>भुक्तानी पेन्डिङ</span></div>
-    <div class="stat-card stat-amber"><strong><?= $stats['unread_messages'] ?></strong><span>नपढिएको सन्देश</span></div>
-    <div class="stat-card stat-green"><strong><?= $stats['active_services'] ?></strong><span>सक्रिय सेवा</span></div>
+    <div class="stat-card stat-card-red">
+        <div class="stat-card-body">
+            <span class="stat-card-value"><?= $stats['pending_appointments'] ?></span>
+            <span class="stat-card-label">नयाँ परामर्श</span>
+        </div>
+    </div>
+    <div class="stat-card stat-card-gold">
+        <div class="stat-card-body">
+            <span class="stat-card-value"><?= $stats['today_appointments'] ?></span>
+            <span class="stat-card-label">आजको परामर्श</span>
+        </div>
+    </div>
+    <div class="stat-card stat-card-amber">
+        <div class="stat-card-body">
+            <span class="stat-card-value"><?= $stats['pending_pooja'] ?></span>
+            <span class="stat-card-label">पूजा अर्डर</span>
+        </div>
+    </div>
+    <div class="stat-card stat-card-red">
+        <div class="stat-card-body">
+            <span class="stat-card-value"><?= $stats['pending_payments'] ?></span>
+            <span class="stat-card-label">भुक्तानी पेन्डिङ</span>
+        </div>
+    </div>
+    <div class="stat-card stat-card-amber">
+        <div class="stat-card-body">
+            <span class="stat-card-value"><?= $stats['unread_messages'] ?></span>
+            <span class="stat-card-label">नपढिएको सन्देश</span>
+        </div>
+    </div>
+    <div class="stat-card stat-card-green">
+        <div class="stat-card-body">
+            <span class="stat-card-value"><?= $stats['active_services'] ?></span>
+            <span class="stat-card-label">सक्रिय सेवा</span>
+        </div>
+    </div>
 </div>
 
 <div class="dashboard-grid">
@@ -39,10 +69,8 @@ $stats = [
             while ($row = $recent->fetch()):
         ?>
         <div class="list-item">
-            <span class="list-name"><?= htmlspecialchars($row['name']) ?></span>
-            <span class="list-phone"><?= htmlspecialchars($row['phone']) ?></span>
-            <span class="list-service"><?= htmlspecialchars($row['service_type']) ?></span>
-            <span class="list-date"><?= $row['preferred_date'] ?? '—' ?></span>
+            <span class="list-item-name"><?= htmlspecialchars($row['name']) ?></span>
+            <span class="list-item-meta"><?= htmlspecialchars($row['phone']) ?></span>
             <span class="badge badge-<?= $row['status'] ?>"><?= $row['status'] ?></span>
         </div>
         <?php
@@ -60,11 +88,10 @@ $stats = [
         if ($msgs->rowCount() > 0):
             while ($m = $msgs->fetch()):
         ?>
-        <div class="list-item" style="<?= !$m['is_read'] ? 'font-weight:700' : '' ?>">
-            <span class="list-name"><?= htmlspecialchars($m['name']) ?></span>
-            <span class="list-service"><?= htmlspecialchars($m['subject']) ?></span>
+        <div class="list-item">
+            <span class="list-item-name" style="<?= !$m['is_read'] ? 'font-weight:700' : '' ?>"><?= htmlspecialchars($m['name']) ?></span>
+            <span class="list-item-meta"><?= htmlspecialchars($m['subject']) ?></span>
             <span class="badge badge-<?= $m['is_read'] ? 'completed' : 'pending' ?>"><?= $m['is_read'] ? 'पढियो' : 'नयाँ' ?></span>
-            <span class="list-date"><?= $m['created_at'] ?></span>
         </div>
         <?php
             endwhile;
@@ -76,10 +103,30 @@ $stats = [
 </div>
 
 <div class="stats-grid" style="margin-top:24px">
-    <div class="stat-card"><strong><?= $stats['total_appointments'] ?></strong><span>जम्मा परामर्श</span></div>
-    <div class="stat-card"><strong><?= $stats['active_services'] ?></strong><span>सक्रिय पूजा सेवा</span></div>
-    <div class="stat-card"><strong><?= $stats['total_products'] ?></strong><span>स्टोर उत्पादन</span></div>
-    <div class="stat-card"><strong><?= $stats['total_articles'] ?></strong><span>प्रकाशित लेख</span></div>
+    <div class="stat-card">
+        <div class="stat-card-body">
+            <span class="stat-card-value"><?= $stats['total_appointments'] ?></span>
+            <span class="stat-card-label">जम्मा परामर्श</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-body">
+            <span class="stat-card-value"><?= $stats['active_services'] ?></span>
+            <span class="stat-card-label">सक्रिय पूजा सेवा</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-body">
+            <span class="stat-card-value"><?= $stats['total_products'] ?></span>
+            <span class="stat-card-label">स्टोर उत्पादन</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-body">
+            <span class="stat-card-value"><?= $stats['total_articles'] ?></span>
+            <span class="stat-card-label">प्रकाशित लेख</span>
+        </div>
+    </div>
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

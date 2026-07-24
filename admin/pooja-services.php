@@ -75,12 +75,12 @@ $services = $db->query("SELECT * FROM pooja_services ORDER BY category, title_ne
             <input type="hidden" name="id" value="<?= $editService['id'] ?>">
             <?php endif; ?>
             <div class="form-grid">
-                <div class="field"><label>शीर्षक (नेपाली) *</label><input name="title_ne" required class="form-input" value="<?= htmlspecialchars($editService['title_ne'] ?? '') ?>"></div>
-                <div class="field"><label>शीर्षक (अङ्ग्रेजी)</label><input name="title_en" class="form-input" value="<?= htmlspecialchars($editService['title_en'] ?? '') ?>"></div>
-                <div class="field"><label>विवरण (नेपाली)</label><textarea name="description_ne" rows="3" class="form-input"><?= htmlspecialchars($editService['description_ne'] ?? '') ?></textarea></div>
-                <div class="field"><label>विवरण (अङ्ग्रेजी)</label><textarea name="description_en" rows="3" class="form-input"><?= htmlspecialchars($editService['description_en'] ?? '') ?></textarea></div>
-                <div class="field"><label>कोटि</label>
-                    <select name="category" class="form-input">
+                <div class="form-field"><label class="form-label">शीर्षक (नेपाली) *</label><input name="title_ne" required class="form-input" value="<?= htmlspecialchars($editService['title_ne'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">शीर्षक (अङ्ग्रेजी)</label><input name="title_en" class="form-input" value="<?= htmlspecialchars($editService['title_en'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">विवरण (नेपाली)</label><textarea name="description_ne" rows="3" class="form-textarea"><?= htmlspecialchars($editService['description_ne'] ?? '') ?></textarea></div>
+                <div class="form-field"><label class="form-label">विवरण (अङ्ग्रेजी)</label><textarea name="description_en" rows="3" class="form-textarea"><?= htmlspecialchars($editService['description_en'] ?? '') ?></textarea></div>
+                <div class="form-field"><label class="form-label">कोटि</label>
+                    <select name="category" class="form-select">
                         <option value="shanti" <?= ($editService['category'] ?? '') === 'shanti' ? 'selected' : '' ?>>शान्ति</option>
                         <option value="graha" <?= ($editService['category'] ?? '') === 'graha' ? 'selected' : '' ?>>ग्रह</option>
                         <option value="sanskar" <?= ($editService['category'] ?? '') === 'sanskar' ? 'selected' : '' ?>>संस्कार</option>
@@ -88,10 +88,10 @@ $services = $db->query("SELECT * FROM pooja_services ORDER BY category, title_ne
                         <option value="other" <?= ($editService['category'] ?? '') === 'other' ? 'selected' : '' ?>>अन्य</option>
                     </select>
                 </div>
-                <div class="field"><label>मूल्य (रु)</label><input name="base_price" type="number" step="0.01" class="form-input" value="<?= htmlspecialchars($editService['base_price'] ?? '') ?>"></div>
-                <div class="field"><label>अवधि (मिनेट)</label><input name="duration_minutes" type="number" class="form-input" value="<?= htmlspecialchars($editService['duration_minutes'] ?? '') ?>"></div>
-                <div class="field" style="display:flex;align-items:center;gap:12px;padding-top:24px">
-                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                <div class="form-field"><label class="form-label">मूल्य (रु)</label><input name="base_price" type="number" step="0.01" class="form-input" value="<?= htmlspecialchars($editService['base_price'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">अवधि (मिनेट)</label><input name="duration_minutes" type="number" class="form-input" value="<?= htmlspecialchars($editService['duration_minutes'] ?? '') ?>"></div>
+                <div class="form-field">
+                    <label class="checkbox-label">
                         <input type="checkbox" name="materials_available" value="1" <?= !empty($editService['materials_available']) ? 'checked' : '' ?>>
                         सामग्री उपलब्ध छ
                     </label>
@@ -106,33 +106,62 @@ $services = $db->query("SELECT * FROM pooja_services ORDER BY category, title_ne
         </form>
     </div>
 
-    <div class="data-table-wrapper">
-        <table class="data-table">
+    <div class="data-table-wrap">
+        <table class="data-table" role="table" aria-label="Pooja services">
             <thead>
                 <tr><th>शीर्षक</th><th>कोटि</th><th>मूल्य</th><th>स्थिति</th><th>कार्य</th></tr>
             </thead>
             <tbody>
                 <?php foreach ($services as $s): ?>
                 <tr>
-                    <td class="td-name"><?= htmlspecialchars($s['title_ne']) ?><?= $s['title_en'] ? '<br><small style="color:var(--muted)">' . htmlspecialchars($s['title_en']) . '</small>' : '' ?></td>
+                    <td class="td-name"><?= htmlspecialchars($s['title_ne']) ?><?= $s['title_en'] ? '<br><small class="text-muted">' . htmlspecialchars($s['title_en']) . '</small>' : '' ?></td>
                     <td><?= $s['category'] ?></td>
                     <td class="td-amount"><?= $s['base_price'] ? 'रु ' . number_format($s['base_price']) : '—' ?></td>
                     <td><span class="badge badge-<?= $s['is_active'] ? 'confirmed' : 'cancelled' ?>"><?= $s['is_active'] ? 'सक्रिय' : 'निष्क्रिय' ?></span></td>
                     <td>
                         <div class="action-form">
-                            <a href="?edit=<?= $s['id'] ?>" class="btn-sm">सम्पादन</a>
-                            <a href="?toggle=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn-sm"><?= $s['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
-                            <a href="?delete=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn-sm btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+                            <a href="?edit=<?= $s['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
+                            <a href="?toggle=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-outline"><?= $s['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
+                            <a href="?delete=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
                         </div>
                     </td>
                 </tr>
                 <?php endforeach; ?>
                 <?php if (empty($services)): ?>
-                <tr><td colspan="5" class="empty-state">कुनै सेवा छैन</td></tr>
+                <tr><td colspan="5"><div class="empty-state">कुनै सेवा छैन</div></td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
+</div>
+
+<div class="mobile-records">
+    <?php if (empty($services)): ?>
+    <div class="empty-state">कुनै सेवा छैन</div>
+    <?php else: foreach ($services as $s): ?>
+    <div class="mobile-record">
+        <div class="mobile-record-header">
+            <h3 class="mobile-record-title"><?= htmlspecialchars($s['title_ne']) ?></h3>
+            <span class="badge badge-<?= $s['is_active'] ? 'confirmed' : 'cancelled' ?>"><?= $s['is_active'] ? 'सक्रिय' : 'निष्क्रिय' ?></span>
+        </div>
+        <div class="mobile-record-body">
+            <div class="mobile-record-field">
+                <span>कोटि</span>
+                <strong><?= $s['category'] ?></strong>
+            </div>
+            <div class="mobile-record-field">
+                <span>मूल्य</span>
+                <strong><?= $s['base_price'] ? 'रु ' . number_format($s['base_price']) : '—' ?></strong>
+            </div>
+        </div>
+        <div class="mobile-record-footer">
+            <a href="?edit=<?= $s['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
+            <a href="?toggle=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-outline"><?= $s['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
+            <a href="?delete=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+        </div>
+    </div>
+    <?php endforeach; endif; ?>
+</div>
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

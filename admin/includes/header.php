@@ -93,6 +93,8 @@ function renderNav($items, $currentPage, $icons) {
 </head>
 <body>
 
+<a href="#main-content" class="skip-link">मुख्य सामग्रीमा जानुहोस्</a>
+
 <aside class="sidebar" id="sidebar" aria-label="Main navigation">
     <div class="sidebar-head">
         <a href="<?= BASE_URL ?>/admin/dashboard.php" class="sidebar-brand">
@@ -103,6 +105,7 @@ function renderNav($items, $currentPage, $icons) {
             </span>
         </a>
         <button class="sidebar-close" id="sidebarClose" type="button" aria-label="Close navigation"><?= $icons['x'] ?></button>
+        <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" type="button" aria-label="Collapse sidebar" title="Collapse sidebar"><?= $icons['menu'] ?></button>
     </div>
     <div class="sidebar-scroll">
         <nav class="sidebar-nav" aria-label="Main">
@@ -163,4 +166,4 @@ function renderNav($items, $currentPage, $icons) {
         </div>
     </header>
 
-    <main class="admin-main">
+    <main class="admin-main" id="main-content" tabindex="-1">

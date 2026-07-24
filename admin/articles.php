@@ -70,11 +70,11 @@ $articles = $db->query("SELECT id, title_ne, title_en, slug, is_published, excer
             <input type="hidden" name="id" value="<?= $editArticle['id'] ?>">
             <?php endif; ?>
             <div class="form-grid">
-                <div class="field"><label>शीर्षक (नेपाली) *</label><input name="title_ne" required class="form-input" value="<?= htmlspecialchars($editArticle['title_ne'] ?? '') ?>"></div>
-                <div class="field"><label>शीर्षक (अङ्ग्रेजी)</label><input name="title_en" class="form-input" value="<?= htmlspecialchars($editArticle['title_en'] ?? '') ?>"></div>
-                <div class="field"><label>URL Slug</label><input name="slug" class="form-input" placeholder="auto-generated" value="<?= htmlspecialchars($editArticle['slug'] ?? '') ?>"></div>
-                <div class="field">
-                    <label>कभर छवि</label>
+                <div class="form-field"><label class="form-label">शीर्षक (नेपाली) *</label><input name="title_ne" required class="form-input" value="<?= htmlspecialchars($editArticle['title_ne'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">शीर्षक (अङ्ग्रेजी)</label><input name="title_en" class="form-input" value="<?= htmlspecialchars($editArticle['title_en'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">URL Slug</label><input name="slug" class="form-input" placeholder="auto-generated" value="<?= htmlspecialchars($editArticle['slug'] ?? '') ?>"></div>
+                <div class="form-field">
+                    <label class="form-label">कभर छवि</label>
                     <div class="file-upload-wrap" data-field="cover_image">
                         <div class="file-zone" data-field="cover_image" role="button" tabindex="0" aria-label="Upload cover image">
                             <?php if (!empty($editArticle['cover_image'])): ?>
@@ -89,10 +89,10 @@ $articles = $db->query("SELECT id, title_ne, title_en, slug, is_published, excer
                         <input type="hidden" name="cover_image" value="<?= htmlspecialchars($editArticle['cover_image'] ?? '') ?>" class="file-hidden">
                     </div>
                 </div>
-                <div class="field full"><label>सारांश (नेपाली)</label><textarea name="excerpt_ne" rows="2" class="form-input"><?= htmlspecialchars($editArticle['excerpt_ne'] ?? '') ?></textarea></div>
-                <div class="field full"><label>सारांश (अङ्ग्रेजी)</label><textarea name="excerpt_en" rows="2" class="form-input"><?= htmlspecialchars($editArticle['excerpt_en'] ?? '') ?></textarea></div>
-                <div class="field full"><label>सामग्री (नेपाली) *</label><textarea name="content_ne" required rows="8" class="form-input" style="font-family:monospace"><?= htmlspecialchars($editArticle['content_ne'] ?? '') ?></textarea></div>
-                <div class="field full"><label>सामग्री (अङ्ग्रेजी)</label><textarea name="content_en" rows="8" class="form-input" style="font-family:monospace"><?= htmlspecialchars($editArticle['content_en'] ?? '') ?></textarea></div>
+                <div class="form-field full"><label class="form-label">सारांश (नेपाली)</label><textarea name="excerpt_ne" rows="2" class="form-textarea"><?= htmlspecialchars($editArticle['excerpt_ne'] ?? '') ?></textarea></div>
+                <div class="form-field full"><label class="form-label">सारांश (अङ्ग्रेजी)</label><textarea name="excerpt_en" rows="2" class="form-textarea"><?= htmlspecialchars($editArticle['excerpt_en'] ?? '') ?></textarea></div>
+                <div class="form-field full"><label class="form-label">सामग्री (नेपाली) *</label><textarea name="content_ne" required rows="8" class="form-textarea" style="font-family:monospace"><?= htmlspecialchars($editArticle['content_ne'] ?? '') ?></textarea></div>
+                <div class="form-field full"><label class="form-label">सामग्री (अङ्ग्रेजी)</label><textarea name="content_en" rows="8" class="form-textarea" style="font-family:monospace"><?= htmlspecialchars($editArticle['content_en'] ?? '') ?></textarea></div>
             </div>
             <div class="form-actions">
                 <button type="submit" name="save_article" class="btn btn-primary"><?= $editArticle ? 'अपडेट गर्नुहोस्' : 'लेख सुरक्षित गर्नुहोस्' ?></button>
@@ -103,35 +103,66 @@ $articles = $db->query("SELECT id, title_ne, title_en, slug, is_published, excer
         </form>
     </div>
 
-    <div class="data-table-wrapper">
-        <table class="data-table">
+    <div class="data-table-wrap">
+        <table class="data-table" role="table" aria-label="Articles list">
             <thead>
                 <tr><th>शीर्षक</th><th>Slug</th><th>स्थिति</th><th>मिति</th><th>कार्य</th></tr>
             </thead>
             <tbody>
                 <?php foreach ($articles as $a): ?>
                 <tr>
-                    <td class="td-name"><?= htmlspecialchars($a['title_ne']) ?><?= $a['title_en'] ? '<br><small style="color:var(--muted)">' . htmlspecialchars($a['title_en']) . '</small>' : '' ?></td>
+                    <td class="td-name"><?= htmlspecialchars($a['title_ne']) ?><?= $a['title_en'] ? '<br><small class="text-muted">' . htmlspecialchars($a['title_en']) . '</small>' : '' ?></td>
                     <td><code style="font-size:.8rem"><?= htmlspecialchars($a['slug']) ?></code></td>
                     <td><span class="badge badge-confirmed">प्रकाशित</span></td>
                     <td><?= $a['published_at'] ?? $a['created_at'] ?></td>
                     <td>
                         <div class="action-form">
                             <?php if ($a['slug']): ?>
-                            <a href="<?= BASE_URL ?>/article/<?= urlencode($a['slug']) ?>" target="_blank" class="btn-sm btn-gold">हेर्नुहोस्</a>
+                            <a href="<?= BASE_URL ?>/article/<?= urlencode($a['slug']) ?>" target="_blank" rel="noreferrer" class="btn btn-xs btn-gold">हेर्नुहोस्</a>
                             <?php endif; ?>
-                            <a href="?edit=<?= $a['id'] ?>" class="btn-sm">सम्पादन</a>
-                            <a href="?delete=<?= $a['id'] ?>&<?= csrfQuery() ?>" class="btn-sm btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+                            <a href="?edit=<?= $a['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
+                            <a href="?delete=<?= $a['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
                         </div>
                     </td>
                 </tr>
                 <?php endforeach; ?>
                 <?php if (empty($articles)): ?>
-                <tr><td colspan="5" class="empty-state">कुनै लेख छैन</td></tr>
+                <tr><td colspan="5"><div class="empty-state">कुनै लेख छैन</div></td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
+</div>
+
+<div class="mobile-records">
+    <?php if (empty($articles)): ?>
+    <div class="empty-state">कुनै लेख छैन</div>
+    <?php else: foreach ($articles as $a): ?>
+    <div class="mobile-record">
+        <div class="mobile-record-header">
+            <h3 class="mobile-record-title"><?= htmlspecialchars($a['title_ne']) ?></h3>
+            <span class="badge badge-confirmed">प्रकाशित</span>
+        </div>
+        <div class="mobile-record-body">
+            <div class="mobile-record-field">
+                <span>Slug</span>
+                <strong><?= htmlspecialchars($a['slug']) ?></strong>
+            </div>
+            <div class="mobile-record-field">
+                <span>मिति</span>
+                <strong><?= $a['published_at'] ?? $a['created_at'] ?></strong>
+            </div>
+        </div>
+        <div class="mobile-record-footer">
+            <?php if ($a['slug']): ?>
+            <a href="<?= BASE_URL ?>/article/<?= urlencode($a['slug']) ?>" target="_blank" rel="noreferrer" class="btn btn-xs btn-gold">हेर्नुहोस्</a>
+            <?php endif; ?>
+            <a href="?edit=<?= $a['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
+            <a href="?delete=<?= $a['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+        </div>
+    </div>
+    <?php endforeach; endif; ?>
+</div>
 </div>
 
 <script>

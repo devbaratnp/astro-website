@@ -68,25 +68,25 @@ $testimonials = $db->query("SELECT * FROM testimonials ORDER BY sort_order ASC, 
             <input type="hidden" name="id" value="<?= $editTestimonial['id'] ?>">
             <?php endif; ?>
             <div class="form-grid">
-                <div class="field"><label>नाम *</label><input name="name" required class="form-input" value="<?= htmlspecialchars($editTestimonial['name'] ?? '') ?>"></div>
-                <div class="field"><label>शीर्षक</label><input name="title" class="form-input" placeholder="ग्राहक / भक्त" value="<?= htmlspecialchars($editTestimonial['title'] ?? '') ?>"></div>
-                <div class="field"><label>मूल्याङ्कन</label>
-                    <select name="rating" class="form-input">
+                <div class="form-field"><label class="form-label">नाम *</label><input name="name" required class="form-input" value="<?= htmlspecialchars($editTestimonial['name'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">शीर्षक</label><input name="title" class="form-input" placeholder="ग्राहक / भक्त" value="<?= htmlspecialchars($editTestimonial['title'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">मूल्याङ्कन</label>
+                    <select name="rating" class="form-select">
                         <?php for ($i = 5; $i >= 1; $i--): ?>
                         <option value="<?= $i ?>" <?= ($editTestimonial['rating'] ?? 5) == $i ? 'selected' : '' ?>><?= $i ?> ★</option>
                         <?php endfor; ?>
                     </select>
                 </div>
-                <div class="field"><label>स्थान</label><input name="location" class="form-input" value="<?= htmlspecialchars($editTestimonial['location'] ?? '') ?>"></div>
-                <div class="field"><label>क्रम</label><input name="sort_order" type="number" class="form-input" value="<?= (int)($editTestimonial['sort_order'] ?? 0) ?>"></div>
-                <div class="field">
+                <div class="form-field"><label class="form-label">स्थान</label><input name="location" class="form-input" value="<?= htmlspecialchars($editTestimonial['location'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">क्रम</label><input name="sort_order" type="number" class="form-input" value="<?= (int)($editTestimonial['sort_order'] ?? 0) ?>"></div>
+                <div class="form-field">
                     <label class="checkbox-label">
                         <input type="checkbox" name="is_active" value="1" <?= $editTestimonial === null || ($editTestimonial['is_active'] ?? 1) ? 'checked' : '' ?>>
                         सक्रिय
                     </label>
                 </div>
-                <div class="field">
-                    <label>फोटो</label>
+                <div class="form-field">
+                    <label class="form-label">फोटो</label>
                     <div class="file-upload-wrap" data-field="photo">
                         <div class="file-zone" data-field="photo" role="button" tabindex="0" aria-label="Upload photo">
                             <?php if (!empty($editTestimonial['photo'])): ?>
@@ -101,7 +101,7 @@ $testimonials = $db->query("SELECT * FROM testimonials ORDER BY sort_order ASC, 
                         <input type="hidden" name="photo" value="<?= htmlspecialchars($editTestimonial['photo'] ?? '') ?>" class="file-hidden">
                     </div>
                 </div>
-                <div class="field full"><label>सामग्री *</label><textarea name="content" required rows="4" class="form-input"><?= htmlspecialchars($editTestimonial['content'] ?? '') ?></textarea></div>
+                <div class="form-field full"><label class="form-label">सामग्री *</label><textarea name="content" required rows="4" class="form-textarea"><?= htmlspecialchars($editTestimonial['content'] ?? '') ?></textarea></div>
             </div>
             <div class="form-actions">
                 <button type="submit" name="save_testimonial" class="btn btn-primary"><?= $editTestimonial ? 'अपडेट गर्नुहोस्' : 'सुरक्षित गर्नुहोस्' ?></button>
@@ -112,35 +112,63 @@ $testimonials = $db->query("SELECT * FROM testimonials ORDER BY sort_order ASC, 
         </form>
     </div>
 
-    <div class="data-table-wrapper">
-        <table class="data-table">
+    <div class="data-table-wrap">
+        <table class="data-table" role="table" aria-label="Testimonials">
             <thead>
-                <tr><th>नाम</th><th>सामग्री</th><th>मूल्याङ्कन</th><th>स्थान</th><th>क्रम</th><th>स्थिति</th><th>कार्य</th></tr>
+                <tr><th>नाम</th><th>सामग्री</th><th>मूल्याङ्कन</th><th>स्थान</th><th>स्थिति</th><th>कार्य</th></tr>
             </thead>
             <tbody>
                 <?php foreach ($testimonials as $t): ?>
                 <tr>
-                    <td class="td-name"><?= htmlspecialchars($t['name']) ?><?= $t['title'] ? '<br><small style="color:var(--muted)">' . htmlspecialchars($t['title']) . '</small>' : '' ?></td>
+                    <td class="td-name"><?= htmlspecialchars($t['name']) ?><?= $t['title'] ? '<br><small class="text-muted">' . htmlspecialchars($t['title']) . '</small>' : '' ?></td>
                     <td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?= htmlspecialchars(mb_substr($t['content'], 0, 100)) ?></td>
-                    <td><span style="color:var(--gold)"><?= str_repeat('★', (int)$t['rating']) . str_repeat('☆', 5 - (int)$t['rating']) ?></span></td>
+                    <td><?= str_repeat('★', (int)$t['rating']) . str_repeat('☆', 5 - (int)$t['rating']) ?></td>
                     <td><?= htmlspecialchars($t['location'] ?? '-') ?></td>
-                    <td><?= (int)$t['sort_order'] ?></td>
                     <td><span class="badge badge-<?= $t['is_active'] ? 'confirmed' : 'muted' ?>"><?= $t['is_active'] ? 'सक्रिय' : 'निष्क्रिय' ?></span></td>
                     <td>
                         <div class="action-form">
-                            <a href="?edit=<?= $t['id'] ?>" class="btn-sm">सम्पादन</a>
-                            <a href="?toggle=<?= $t['id'] ?>&<?= csrfQuery() ?>" class="btn-sm"><?= $t['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
-                            <a href="?delete=<?= $t['id'] ?>&<?= csrfQuery() ?>" class="btn-sm btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+                            <a href="?edit=<?= $t['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
+                            <a href="?toggle=<?= $t['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-outline"><?= $t['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
+                            <a href="?delete=<?= $t['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
                         </div>
                     </td>
                 </tr>
                 <?php endforeach; ?>
                 <?php if (empty($testimonials)): ?>
-                <tr><td colspan="7" class="empty-state">कुनै प्रशंसापत्र छैन</td></tr>
+                <tr><td colspan="6"><div class="empty-state">कुनै प्रशंसापत्र छैन</div></td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
+</div>
+
+<div class="mobile-records">
+    <?php if (empty($testimonials)): ?>
+    <div class="empty-state">कुनै प्रशंसापत्र छैन</div>
+    <?php else: foreach ($testimonials as $t): ?>
+    <div class="mobile-record">
+        <div class="mobile-record-header">
+            <h3 class="mobile-record-title"><?= htmlspecialchars($t['name']) ?></h3>
+            <span class="badge badge-<?= $t['is_active'] ? 'confirmed' : 'muted' ?>"><?= $t['is_active'] ? 'सक्रिय' : 'निष्क्रिय' ?></span>
+        </div>
+        <div class="mobile-record-body">
+            <div class="mobile-record-field">
+                <span>मूल्याङ्कन</span>
+                <strong><?= str_repeat('★', (int)$t['rating']) . str_repeat('☆', 5 - (int)$t['rating']) ?></strong>
+            </div>
+            <div class="mobile-record-field">
+                <span>स्थान</span>
+                <strong><?= htmlspecialchars($t['location'] ?? '-') ?></strong>
+            </div>
+        </div>
+        <div class="mobile-record-footer">
+            <a href="?edit=<?= $t['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
+            <a href="?toggle=<?= $t['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-outline"><?= $t['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
+            <a href="?delete=<?= $t['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+        </div>
+    </div>
+    <?php endforeach; endif; ?>
+</div>
 </div>
 
 <script>

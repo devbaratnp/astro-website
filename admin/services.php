@@ -68,19 +68,19 @@ $services = $db->query("SELECT * FROM services ORDER BY sort_order ASC")->fetchA
             <input type="hidden" name="id" value="<?= $editService['id'] ?>">
             <?php endif; ?>
             <div class="form-grid">
-                <div class="field"><label>कुञ्जी (key) *</label><input name="service_key" required class="form-input" placeholder="kundali" value="<?= htmlspecialchars($editService['service_key'] ?? '') ?>"></div>
-                <div class="field"><label>आइकन</label><input name="icon" class="form-input" placeholder="ChartPolar" value="<?= htmlspecialchars($editService['icon'] ?? '') ?>"></div>
-                <div class="field"><label>शीर्षक (नेपाली) *</label><input name="title_ne" required class="form-input" value="<?= htmlspecialchars($editService['title_ne'] ?? '') ?>"></div>
-                <div class="field"><label>शीर्षक (अङ्ग्रेजी)</label><input name="title_en" class="form-input" value="<?= htmlspecialchars($editService['title_en'] ?? '') ?>"></div>
-                <div class="field"><label>क्रम</label><input name="sort_order" type="number" class="form-input" value="<?= (int)($editService['sort_order'] ?? 0) ?>"></div>
-                <div class="field">
+                <div class="form-field"><label class="form-label">कुञ्जी (key) *</label><input name="service_key" required class="form-input" placeholder="kundali" value="<?= htmlspecialchars($editService['service_key'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">आइकन</label><input name="icon" class="form-input" placeholder="ChartPolar" value="<?= htmlspecialchars($editService['icon'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">शीर्षक (नेपाली) *</label><input name="title_ne" required class="form-input" value="<?= htmlspecialchars($editService['title_ne'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">शीर्षक (अङ्ग्रेजी)</label><input name="title_en" class="form-input" value="<?= htmlspecialchars($editService['title_en'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">क्रम</label><input name="sort_order" type="number" class="form-input" value="<?= (int)($editService['sort_order'] ?? 0) ?>"></div>
+                <div class="form-field">
                     <label class="checkbox-label">
                         <input type="checkbox" name="is_active" value="1" <?= $editService === null || ($editService['is_active'] ?? 1) ? 'checked' : '' ?>>
                         सक्रिय
                     </label>
                 </div>
-                <div class="field full"><label>विवरण (नेपाली)</label><textarea name="description_ne" rows="3" class="form-input"><?= htmlspecialchars($editService['description_ne'] ?? '') ?></textarea></div>
-                <div class="field full"><label>विवरण (अङ्ग्रेजी)</label><textarea name="description_en" rows="3" class="form-input"><?= htmlspecialchars($editService['description_en'] ?? '') ?></textarea></div>
+                <div class="form-field full"><label class="form-label">विवरण (नेपाली)</label><textarea name="description_ne" rows="3" class="form-textarea"><?= htmlspecialchars($editService['description_ne'] ?? '') ?></textarea></div>
+                <div class="form-field full"><label class="form-label">विवरण (अङ्ग्रेजी)</label><textarea name="description_en" rows="3" class="form-textarea"><?= htmlspecialchars($editService['description_en'] ?? '') ?></textarea></div>
             </div>
             <div class="form-actions">
                 <button type="submit" name="save_service" class="btn btn-primary"><?= $editService ? 'अपडेट गर्नुहोस्' : 'सुरक्षित गर्नुहोस्' ?></button>
@@ -91,34 +91,62 @@ $services = $db->query("SELECT * FROM services ORDER BY sort_order ASC")->fetchA
         </form>
     </div>
 
-    <div class="data-table-wrapper">
-        <table class="data-table">
+    <div class="data-table-wrap">
+        <table class="data-table" role="table" aria-label="Services">
             <thead>
-                <tr><th>कुञ्जी</th><th>शीर्षक</th><th>आइकन</th><th>क्रम</th><th>स्थिति</th><th>कार्य</th></tr>
+                <tr><th>कुञ्जी</th><th>शीर्षक</th><th>क्रम</th><th>स्थिति</th><th>कार्य</th></tr>
             </thead>
             <tbody>
                 <?php foreach ($services as $s): ?>
                 <tr>
                     <td><code style="font-size:.8rem"><?= htmlspecialchars($s['service_key']) ?></code></td>
-                    <td class="td-name"><?= htmlspecialchars($s['title_ne']) ?><?= $s['title_en'] ? '<br><small style="color:var(--muted)">' . htmlspecialchars($s['title_en']) . '</small>' : '' ?></td>
-                    <td><?= htmlspecialchars($s['icon'] ?? '-') ?></td>
+                    <td class="td-name"><?= htmlspecialchars($s['title_ne']) ?><?= $s['title_en'] ? '<br><small class="text-muted">' . htmlspecialchars($s['title_en']) . '</small>' : '' ?></td>
                     <td><?= (int)$s['sort_order'] ?></td>
                     <td><span class="badge badge-<?= $s['is_active'] ? 'confirmed' : 'muted' ?>"><?= $s['is_active'] ? 'सक्रिय' : 'निष्क्रिय' ?></span></td>
                     <td>
                         <div class="action-form">
-                            <a href="?edit=<?= $s['id'] ?>" class="btn-sm">सम्पादन</a>
-                            <a href="?toggle=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn-sm"><?= $s['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
-                            <a href="?delete=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn-sm btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+                            <a href="?edit=<?= $s['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
+                            <a href="?toggle=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-outline"><?= $s['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
+                            <a href="?delete=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
                         </div>
                     </td>
                 </tr>
                 <?php endforeach; ?>
                 <?php if (empty($services)): ?>
-                <tr><td colspan="6" class="empty-state">कुनै सेवा छैन</td></tr>
+                <tr><td colspan="5"><div class="empty-state">कुनै सेवा छैन</div></td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
+</div>
+
+<div class="mobile-records">
+    <?php if (empty($services)): ?>
+    <div class="empty-state">कुनै सेवा छैन</div>
+    <?php else: foreach ($services as $s): ?>
+    <div class="mobile-record">
+        <div class="mobile-record-header">
+            <h3 class="mobile-record-title"><?= htmlspecialchars($s['title_ne']) ?></h3>
+            <span class="badge badge-<?= $s['is_active'] ? 'confirmed' : 'muted' ?>"><?= $s['is_active'] ? 'सक्रिय' : 'निष्क्रिय' ?></span>
+        </div>
+        <div class="mobile-record-body">
+            <div class="mobile-record-field">
+                <span>कुञ्जी</span>
+                <strong><?= htmlspecialchars($s['service_key']) ?></strong>
+            </div>
+            <div class="mobile-record-field">
+                <span>क्रम</span>
+                <strong><?= (int)$s['sort_order'] ?></strong>
+            </div>
+        </div>
+        <div class="mobile-record-footer">
+            <a href="?edit=<?= $s['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
+            <a href="?toggle=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-outline"><?= $s['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
+            <a href="?delete=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+        </div>
+    </div>
+    <?php endforeach; endif; ?>
+</div>
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

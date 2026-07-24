@@ -57,21 +57,21 @@ $recent = $db->query("SELECT date, tithi, nakshatra FROM panchang ORDER BY date 
         <form method="POST">
             <?= csrfField() ?>
             <div class="form-grid">
-                <div class="field"><label>मिति</label><input name="date" type="date" class="form-input" value="<?= $selectedDate ?>" onchange="location.href='?date='+this.value"></div>
-                <div class="field"><label>तिथि</label><input name="tithi" class="form-input" value="<?= htmlspecialchars($panchang['tithi'] ?? $calculated['tithi']) ?>"></div>
-                <div class="field"><label>नक्षत्र</label><input name="nakshatra" class="form-input" value="<?= htmlspecialchars($panchang['nakshatra'] ?? $calculated['nakshatra']) ?>"></div>
-                <div class="field"><label>सूर्योदय</label><input name="sunrise" type="time" class="form-input" value="<?= htmlspecialchars($panchang['sunrise'] ?? $calculated['sunrise']) ?>"></div>
-                <div class="field"><label>सूर्यास्त</label><input name="sunset" type="time" class="form-input" value="<?= htmlspecialchars($panchang['sunset'] ?? $calculated['sunset']) ?>"></div>
-                <div class="field"><label>चन्द्र राशि</label><input name="moon_rashi" class="form-input" value="<?= htmlspecialchars($panchang['moon_rashi'] ?? $calculated['moon_rashi'] ?? '') ?>"></div>
-                <div class="field"><label>राहुकाल</label><input name="rahu_kaal" type="time" class="form-input" value="<?= htmlspecialchars($panchang['rahu_kaal'] ?? '') ?>"></div>
-                <div class="field full"><label>शुभ समय (प्रति लाइन एक)</label>
-                    <textarea name="auspicious_times" rows="3" class="form-input"><?php
+                <div class="form-field"><label class="form-label">मिति</label><input name="date" type="date" class="form-input" value="<?= $selectedDate ?>" onchange="location.href='?date='+this.value"></div>
+                <div class="form-field"><label class="form-label">तिथि</label><input name="tithi" class="form-input" value="<?= htmlspecialchars($panchang['tithi'] ?? $calculated['tithi']) ?>"></div>
+                <div class="form-field"><label class="form-label">नक्षत्र</label><input name="nakshatra" class="form-input" value="<?= htmlspecialchars($panchang['nakshatra'] ?? $calculated['nakshatra']) ?>"></div>
+                <div class="form-field"><label class="form-label">सूर्योदय</label><input name="sunrise" type="time" class="form-input" value="<?= htmlspecialchars($panchang['sunrise'] ?? $calculated['sunrise']) ?>"></div>
+                <div class="form-field"><label class="form-label">सूर्यास्त</label><input name="sunset" type="time" class="form-input" value="<?= htmlspecialchars($panchang['sunset'] ?? $calculated['sunset']) ?>"></div>
+                <div class="form-field"><label class="form-label">चन्द्र राशि</label><input name="moon_rashi" class="form-input" value="<?= htmlspecialchars($panchang['moon_rashi'] ?? $calculated['moon_rashi'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">राहुकाल</label><input name="rahu_kaal" type="time" class="form-input" value="<?= htmlspecialchars($panchang['rahu_kaal'] ?? '') ?>"></div>
+                <div class="form-field full"><label class="form-label">शुभ समय (प्रति लाइन एक)</label>
+                    <textarea name="auspicious_times" rows="3" class="form-textarea"><?php
                         $times = $panchang ? json_decode($panchang['auspicious_times'] ?? '[]', true) : [];
                         echo htmlspecialchars(implode("\n", $times));
                     ?></textarea>
                 </div>
-                <div class="field"><label>विशेष (नेपाली)</label><input name="special_events_ne" class="form-input" value="<?= htmlspecialchars($panchang['special_events_ne'] ?? '') ?>"></div>
-                <div class="field"><label>विशेष (अङ्ग्रेजी)</label><input name="special_events_en" class="form-input" value="<?= htmlspecialchars($panchang['special_events_en'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">विशेष (नेपाली)</label><input name="special_events_ne" class="form-input" value="<?= htmlspecialchars($panchang['special_events_ne'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">विशेष (अङ्ग्रेजी)</label><input name="special_events_en" class="form-input" value="<?= htmlspecialchars($panchang['special_events_en'] ?? '') ?>"></div>
             </div>
             <div class="form-actions">
                 <button type="submit" name="save_panchang" class="btn btn-primary">पञ्चाङ्ग सुरक्षित गर्नुहोस्</button>
@@ -80,15 +80,15 @@ $recent = $db->query("SELECT date, tithi, nakshatra FROM panchang ORDER BY date 
     </div>
 
     <div>
-        <div class="data-table-wrapper">
-            <table class="data-table">
+        <div class="data-table-wrap">
+            <table class="data-table" role="table" aria-label="Recent panchang entries">
                 <thead>
                     <tr><th>मिति</th><th>तिथि</th><th>नक्षत्र</th></tr>
                 </thead>
                 <tbody>
                     <?php foreach ($recent as $r): ?>
                     <tr>
-                        <td><a href="?date=<?= $r['date'] ?>" style="color:var(--deep-saffron);font-weight:600"><?= $r['date'] ?></a></td>
+                        <td><a href="?date=<?= $r['date'] ?>" style="color:var(--gold-500);font-weight:600"><?= $r['date'] ?></a></td>
                         <td><?= htmlspecialchars($r['tithi']) ?></td>
                         <td><?= htmlspecialchars($r['nakshatra']) ?></td>
                     </tr>
@@ -101,6 +101,28 @@ $recent = $db->query("SELECT date, tithi, nakshatra FROM panchang ORDER BY date 
             • आवश्यक परेमा माथिको फारमबाट म्यानुअल ओभरराइड गर्न सकिन्छ
         </p>
     </div>
+</div>
+
+<div class="mobile-records">
+    <?php if (empty($recent)): ?>
+    <div class="empty-state">कुनै पञ्चाङ्ग डेटा छैन</div>
+    <?php else: foreach ($recent as $r): ?>
+    <div class="mobile-record">
+        <div class="mobile-record-header">
+            <h3 class="mobile-record-title"><a href="?date=<?= $r['date'] ?>" style="color:var(--gold-500);font-weight:600"><?= $r['date'] ?></a></h3>
+        </div>
+        <div class="mobile-record-body">
+            <div class="mobile-record-field">
+                <span>तिथि</span>
+                <strong><?= htmlspecialchars($r['tithi']) ?></strong>
+            </div>
+            <div class="mobile-record-field">
+                <span>नक्षत्र</span>
+                <strong><?= htmlspecialchars($r['nakshatra']) ?></strong>
+            </div>
+        </div>
+    </div>
+    <?php endforeach; endif; ?>
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

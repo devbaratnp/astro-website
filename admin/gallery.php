@@ -81,18 +81,18 @@ function galleryThumb($item) {
             <input type="hidden" name="id" value="<?= $editItem['id'] ?>">
             <?php endif; ?>
             <div class="form-grid">
-                <div class="field">
-                    <label>प्रकार *</label>
-                    <select name="type" class="form-input">
+                <div class="form-field">
+                    <label class="form-label">प्रकार *</label>
+                    <select name="type" class="form-select">
                         <option value="image" <?= $editItem && $editItem['type'] === 'image' ? 'selected' : '' ?>>छवि</option>
                         <option value="video" <?= $editItem && $editItem['type'] === 'video' ? 'selected' : '' ?>>भिडियो</option>
                         <option value="audio" <?= $editItem && $editItem['type'] === 'audio' ? 'selected' : '' ?>>अडियो</option>
                     </select>
                 </div>
-                <div class="field"><label>शीर्षक (नेपाली) *</label><input name="title_ne" required class="form-input" value="<?= htmlspecialchars($editItem['title_ne'] ?? '') ?>"></div>
-                <div class="field"><label>शीर्षक (अङ्ग्रेजी)</label><input name="title_en" class="form-input" value="<?= htmlspecialchars($editItem['title_en'] ?? '') ?>"></div>
-                <div class="field">
-                    <label>छवि / फाइल URL</label>
+                <div class="form-field"><label class="form-label">शीर्षक (नेपाली) *</label><input name="title_ne" required class="form-input" value="<?= htmlspecialchars($editItem['title_ne'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">शीर्षक (अङ्ग्रेजी)</label><input name="title_en" class="form-input" value="<?= htmlspecialchars($editItem['title_en'] ?? '') ?>"></div>
+                <div class="form-field">
+                    <label class="form-label">छवि / फाइल URL</label>
                     <div class="file-upload-wrap" data-field="url">
                         <div class="file-zone" data-field="url" role="button" tabindex="0" aria-label="Upload file">
                             <?php if (!empty($editItem['url'])): ?>
@@ -107,8 +107,8 @@ function galleryThumb($item) {
                         <input type="hidden" name="url" value="<?= htmlspecialchars($editItem['url'] ?? '') ?>" class="file-hidden">
                     </div>
                 </div>
-                <div class="field">
-                    <label>थम्बनेल</label>
+                <div class="form-field">
+                    <label class="form-label">थम्बनेल</label>
                     <div class="file-upload-wrap" data-field="thumbnail">
                         <div class="file-zone" data-field="thumbnail" role="button" tabindex="0" aria-label="Upload thumbnail">
                             <?php if (!empty($editItem['thumbnail'])): ?>
@@ -123,10 +123,10 @@ function galleryThumb($item) {
                         <input type="hidden" name="thumbnail" value="<?= htmlspecialchars($editItem['thumbnail'] ?? '') ?>" class="file-hidden">
                     </div>
                 </div>
-                <div class="field"><label>Embed URL</label><input name="embed_url" class="form-input" placeholder="https://www.youtube.com/embed/..." value="<?= htmlspecialchars($editItem['embed_url'] ?? '') ?>"></div>
-                <div class="field"><label>स्रोत</label><input name="source" class="form-input" placeholder="YouTube / Facebook" value="<?= htmlspecialchars($editItem['source'] ?? '') ?>"></div>
-                <div class="field"><label>क्रम</label><input name="sort_order" type="number" class="form-input" value="<?= (int)($editItem['sort_order'] ?? 0) ?>"></div>
-                <div class="field">
+                <div class="form-field"><label class="form-label">Embed URL</label><input name="embed_url" class="form-input" placeholder="https://www.youtube.com/embed/..." value="<?= htmlspecialchars($editItem['embed_url'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">स्रोत</label><input name="source" class="form-input" placeholder="YouTube / Facebook" value="<?= htmlspecialchars($editItem['source'] ?? '') ?>"></div>
+                <div class="form-field"><label class="form-label">क्रम</label><input name="sort_order" type="number" class="form-input" value="<?= (int)($editItem['sort_order'] ?? 0) ?>"></div>
+                <div class="form-field">
                     <label class="checkbox-label">
                         <input type="checkbox" name="is_active" value="1" <?= $editItem === null || ($editItem['is_active'] ?? 1) ? 'checked' : '' ?>>
                         सक्रिय
@@ -143,16 +143,16 @@ function galleryThumb($item) {
     </div>
 
     <div>
-        <div class="tab-filter-bar">
-            <a href="gallery.php" class="tab-filter <?= $filter === 'all' ? 'active' : '' ?>">सबै</a>
-            <a href="gallery.php?type=image" class="tab-filter <?= $filter === 'image' ? 'active' : '' ?>">छवि</a>
-            <a href="gallery.php?type=video" class="tab-filter <?= $filter === 'video' ? 'active' : '' ?>">भिडियो</a>
-            <a href="gallery.php?type=audio" class="tab-filter <?= $filter === 'audio' ? 'active' : '' ?>">अडियो</a>
+        <div class="section-tabs">
+            <a href="gallery.php" class="section-tab <?= $filter === 'all' ? 'active' : '' ?>">सबै</a>
+            <a href="gallery.php?type=image" class="section-tab <?= $filter === 'image' ? 'active' : '' ?>">छवि</a>
+            <a href="gallery.php?type=video" class="section-tab <?= $filter === 'video' ? 'active' : '' ?>">भिडियो</a>
+            <a href="gallery.php?type=audio" class="section-tab <?= $filter === 'audio' ? 'active' : '' ?>">अडियो</a>
         </div>
-        <div class="data-table-wrapper">
-            <table class="data-table">
+        <div class="data-table-wrap">
+            <table class="data-table" role="table" aria-label="Gallery items">
                 <thead>
-                    <tr><th>थम्बनेल</th><th>शीर्षक</th><th>प्रकार</th><th>स्रोत</th><th>क्रम</th><th>स्थिति</th><th>कार्य</th></tr>
+                    <tr><th>थम्बनेल</th><th>शीर्षक</th><th>प्रकार</th><th>क्रम</th><th>स्थिति</th><th>कार्य</th></tr>
                 </thead>
                 <tbody>
                     <?php foreach ($gallery as $g): ?>
@@ -161,30 +161,58 @@ function galleryThumb($item) {
                             <?php $thumb = galleryThumb($g); if ($thumb): ?>
                             <img src="<?= htmlspecialchars($thumb) ?>" alt="" style="width:60px;height:40px;object-fit:cover;border-radius:4px">
                             <?php else: ?>
-                            <span style="color:var(--muted);font-size:11px">—</span>
+                            <span class="text-muted text-sm">—</span>
                             <?php endif; ?>
                         </td>
-                        <td class="td-name"><?= htmlspecialchars($g['title_ne']) ?><?= $g['title_en'] ? '<br><small style="color:var(--muted)">' . htmlspecialchars($g['title_en']) . '</small>' : '' ?></td>
-                        <td><span class="badge badge-<?= $g['type'] === 'image' ? 'info' : ($g['type'] === 'video' ? 'gold' : 'muted') ?>"><?= $g['type'] ?></span></td>
-                        <td><?= htmlspecialchars($g['source'] ?? '-') ?></td>
+                        <td class="td-name"><?= htmlspecialchars($g['title_ne']) ?><?= $g['title_en'] ? '<br><small class="text-muted">' . htmlspecialchars($g['title_en']) . '</small>' : '' ?></td>
+                        <td><span class="badge badge-<?= $g['type'] === 'image' ? 'confirmed' : ($g['type'] === 'video' ? 'pending' : 'muted') ?>"><?= $g['type'] ?></span></td>
                         <td><?= (int)$g['sort_order'] ?></td>
                         <td><span class="badge badge-<?= $g['is_active'] ? 'confirmed' : 'muted' ?>"><?= $g['is_active'] ? 'सक्रिय' : 'निष्क्रिय' ?></span></td>
                         <td>
                             <div class="action-form">
-                                <a href="?edit=<?= $g['id'] ?>" class="btn-sm">सम्पादन</a>
-                                <a href="?toggle=<?= $g['id'] ?>&<?= csrfQuery() ?>" class="btn-sm"><?= $g['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
-                                <a href="?delete=<?= $g['id'] ?>&<?= csrfQuery() ?>" class="btn-sm btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+                                <a href="?edit=<?= $g['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
+                                <a href="?toggle=<?= $g['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-outline"><?= $g['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
+                                <a href="?delete=<?= $g['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
                             </div>
                         </td>
                     </tr>
                     <?php endforeach; ?>
                     <?php if (empty($gallery)): ?>
-                    <tr><td colspan="7" class="empty-state">ग्यालरी खाली छ</td></tr>
+                    <tr><td colspan="6"><div class="empty-state">ग्यालरी खाली छ</div></td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
     </div>
+</div>
+
+<div class="mobile-records">
+    <?php if (empty($gallery)): ?>
+    <div class="empty-state">ग्यालरी खाली छ</div>
+    <?php else: foreach ($gallery as $g): ?>
+    <div class="mobile-record">
+        <div class="mobile-record-header">
+            <h3 class="mobile-record-title"><?= htmlspecialchars($g['title_ne']) ?></h3>
+            <span class="badge badge-<?= $g['is_active'] ? 'confirmed' : 'muted' ?>"><?= $g['is_active'] ? 'सक्रिय' : 'निष्क्रिय' ?></span>
+        </div>
+        <div class="mobile-record-body">
+            <div class="mobile-record-field">
+                <span>प्रकार</span>
+                <strong><?= $g['type'] ?></strong>
+            </div>
+            <div class="mobile-record-field">
+                <span>क्रम</span>
+                <strong><?= (int)$g['sort_order'] ?></strong>
+            </div>
+        </div>
+        <div class="mobile-record-footer">
+            <a href="?edit=<?= $g['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
+            <a href="?toggle=<?= $g['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-outline"><?= $g['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
+            <a href="?delete=<?= $g['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+        </div>
+    </div>
+    <?php endforeach; endif; ?>
+</div>
 </div>
 
 <script>
