@@ -134,7 +134,7 @@ svg { display: block; flex-shrink: 0; }
 }
 
 .sidebar-close:hover { background: rgba(255,255,255,.08); }
-.sidebar-close svg { width: 20px; height: 20px; }
+.sidebar-close svg { width: 20px; height: 20px; pointer-events: none; }
 
 /* ── Sidebar navigation ── */
 
@@ -242,7 +242,7 @@ svg { display: block; flex-shrink: 0; }
 }
 
 .sidebar-collapse-btn:hover { background: rgba(255,255,255,.12); color: #f9edda; }
-.sidebar-collapse-btn svg { width: 18px; height: 18px; }
+.sidebar-collapse-btn svg { width: 18px; height: 18px; pointer-events: none; }
 
 /* ── Sidebar collapsed (desktop only) ── */
 
@@ -293,7 +293,7 @@ svg { display: block; flex-shrink: 0; }
 
 .header-toggle:hover { background: var(--cream-200); }
 .header-toggle:focus-visible { outline: 3px solid rgba(201,144,46,.45); outline-offset: 2px; }
-.header-toggle svg { width: 22px; height: 22px; }
+.header-toggle svg { width: 22px; height: 22px; pointer-events: none; }
 
 .header-title { min-width: 0; flex: 1; }
 
