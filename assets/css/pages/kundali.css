@@ -255,7 +255,7 @@
   font-weight: 800;
 }
 
-.arrow-line {
+  .arrow-line {
   fill: none;
   stroke: #324e5a;
   stroke-width: 4.2;
@@ -295,12 +295,14 @@
     font-size: 11px;
     padding: 5px 3px;
   }
+  .arrow-line { stroke-width: 3; }
 }
 
 @media (max-width: 430px) {
   .ornament {
     width: 27px;
     background-size: 1.5px 100%, 1.5px 100%, 23px 34px;
+  
   }
 
   .report-content {
@@ -343,6 +345,7 @@
   .node-label {
     font-size: 16px;
   }
+  .arrow-line { stroke-width: 2; }
 }
 
 @media print {

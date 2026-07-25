@@ -1,8 +1,7 @@
-    </main>
+</main>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
     var sidebar = document.getElementById('sidebar');
     var overlay = document.getElementById('sidebarOverlay');
     var toggle  = document.getElementById('sidebarToggle');
@@ -110,10 +109,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     restoreCollapsePref();
-});
 </script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
     var toggleBtns = document.querySelectorAll('[onclick*="toggleDetails"], [onclick*="toggleMsg"]');
     for (var i = 0; i < toggleBtns.length; i++) {
         var btn = toggleBtns[i];
@@ -126,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
-});
 </script>
 </body>
 </html>
