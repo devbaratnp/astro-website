@@ -10,7 +10,6 @@
   var NK_LORDS = ['केतु', 'शुक्र', 'सूर्य', 'चन्द्र', 'मंगल', 'राहु', 'गुरु', 'शनि', 'बुध', 'केतु', 'शुक्र', 'सूर्य', 'चन्द्र', 'मंगल', 'राहु', 'गुरु', 'शनि', 'बुध', 'केतु', 'शुक्र', 'सूर्य', 'चन्द्र', 'मंगल', 'राहु', 'गुरु', 'शनि', 'बुध'];
   var NK_STEP = 360 / 27;
 
-  var RASHI_NAMES = ['मेष', 'वृष', 'मिथुन', 'कर्कट', 'सिंह', 'कन्या', 'तुला', 'वृश्चिक', 'धनु', 'मकर', 'कुम्भ', 'मीन'];
   var GRAHA_SHORT = { su: 'सू', mo: 'चं', ma: 'मं', me: 'बु', ju: 'गु', ve: 'शु', sa: 'श', ra: 'रा', ke: 'के' };
 
   /* Fixed South-Indian chart house positions (540x540) */
@@ -28,8 +27,6 @@
     11: { x: 391, y: 270 },
     12: { x: 504, y: 93 }
   };
-
-  var RASHI_ORDER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   var form = document.getElementById('kundali-form');
   var resultDiv = document.getElementById('kundali-result');
@@ -177,22 +174,12 @@
     ].forEach(function (l) { svg.appendChild(createEl('line', { x1: l[0], y1: l[1], x2: l[2], y2: l[3], class: 'chart-soft-line' })); });
   }
 
-  function getHouseRashi(lagnaIdx, houseNum) {
-    var taken = lagnaIdx + houseNum - 1;
-    if (taken >= 12) taken -= 12;
-    return taken;
-  }
-
   function placeLabels(svg, k, isLagna) {
-    var lagIdx = k.lagna_idx;
     var planets = k.planets;
-    var usedHouses = {};
     var housePlanets = {};
-    var houseIndexMap = {};
 
     for (var hi = 1; hi <= 12; hi++) {
       housePlanets[hi] = [];
-      houseIndexMap[hi] = getHouseRashi(lagIdx, hi);
     }
 
     for (var pk in planets) {
@@ -206,23 +193,16 @@
 
     for (var hi = 1; hi <= 12; hi++) {
       var pos = HOUSE_POS[hi];
-      var rIdx = houseIndexMap[hi];
-      var rn = RASHI_NAMES[rIdx];
 
       /* House number */
       var hText = createEl('text', { x: pos.x, y: pos.y, class: 'house-no' });
       hText.textContent = ne(hi);
       svg.appendChild(hText);
 
-      /* Rashi name below house number */
-      var rText = createEl('text', { x: pos.x, y: pos.y + 34, class: 'planet-label', style: 'font-size:17px' });
-      rText.textContent = rn;
-      svg.appendChild(rText);
-
-      /* Planet labels */
+      /* Planet abbreviations */
       var pts = housePlanets[hi];
       if (pts.length > 0) {
-        var pText = createEl('text', { x: pos.x, y: pos.y + 62, class: 'center-label', style: 'font-size:16px' });
+        var pText = createEl('text', { x: pos.x, y: pos.y + 34, class: 'planet-label' });
         pText.textContent = pts.join(' ');
         svg.appendChild(pText);
       }
