@@ -71,7 +71,6 @@
 .planet-table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
   font-size: clamp(13px, 2.55vw, 18px);
   font-weight: 650;
   line-height: 1.35;
@@ -96,13 +95,13 @@
 
 .planet-table td {
   height: 38px;
-  padding: 4px 7px;
+  padding: 4px 6px;
   text-align: center;
   vertical-align: middle;
   border-right: 1.5px solid var(--green);
   border-bottom: 1.5px solid var(--green);
   background: rgba(255,255,255,.88);
-  white-space: nowrap;
+  word-break: break-word;
 }
 
 .planet-table td:last-child {
@@ -286,7 +285,7 @@
   }
 
   .planet-table td {
-    height: 32px;
+    height: auto;
     padding: 3px 4px;
   }
 
@@ -315,8 +314,8 @@
   }
 
   .planet-table td {
-    height: 28px;
-    padding-inline: 2px;
+    height: auto;
+    padding: 3px 2px;
   }
 
   .planet-table th {
