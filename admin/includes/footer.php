@@ -13,25 +13,34 @@
 
     function isDesktop() { return window.matchMedia('(min-width: 1024px)').matches; }
 
-    function openSidebar() {
-        if (isDesktop()) return;
-        if (!sidebar || !overlay || !toggle) return;
-        lastFocused = document.activeElement;
-        sidebar.classList.add('open');
-        overlay.classList.add('active');
-        toggle.setAttribute('aria-expanded', 'true');
-        document.body.style.overflow = 'hidden';
-        if (closeBtn) setTimeout(function() { closeBtn.focus(); }, 100);
-    }
-
-    function closeSidebar() {
-        if (isDesktop()) return;
-        if (!sidebar || !overlay || !toggle) return;
-        sidebar.classList.remove('open');
-        overlay.classList.remove('active');
-        toggle.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-        if (lastFocused && lastFocused.focus) lastFocused.focus();
+    function toggleSidebar() {
+        if (!sidebar || !toggle) return;
+        if (isDesktop()) {
+            sidebar.classList.toggle('collapsed');
+            if (adminWrapper) adminWrapper.classList.toggle('sidebar-collapsed');
+            var isCollapsed = sidebar.classList.contains('collapsed');
+            if (collapseBtn) {
+                collapseBtn.setAttribute('aria-label', isCollapsed ? 'Expand sidebar' : 'Collapse sidebar');
+                collapseBtn.title = isCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
+            }
+            try { localStorage.setItem('admin_sidebar_collapsed', isCollapsed ? '1' : '0'); } catch(e) {}
+        } else {
+            var isOpen = sidebar.classList.contains('open');
+            if (isOpen) {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+                toggle.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+                if (lastFocused && lastFocused.focus) lastFocused.focus();
+            } else {
+                lastFocused = document.activeElement;
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                toggle.setAttribute('aria-expanded', 'true');
+                document.body.style.overflow = 'hidden';
+                if (closeBtn) setTimeout(function() { closeBtn.focus(); }, 100);
+            }
+        }
     }
 
     function toggleCollapse() {
@@ -60,31 +69,25 @@
         } catch(e) {}
     }
 
-    if (toggle) { toggle.addEventListener('click', function(e) { e.stopPropagation(); openSidebar(); }); }
-    if (overlay) { overlay.addEventListener('click', closeSidebar); }
-    if (closeBtn) { closeBtn.addEventListener('click', closeSidebar); }
+    if (toggle) { toggle.addEventListener('click', function(e) { e.stopPropagation(); toggleSidebar(); }); }
+    if (overlay) { overlay.addEventListener('click', function() { toggleSidebar(); }); }
+    if (closeBtn) { closeBtn.addEventListener('click', function() { toggleSidebar(); }); }
     if (collapseBtn) { collapseBtn.addEventListener('click', function(e) { e.stopPropagation(); toggleCollapse(); }); }
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && sidebar && sidebar.classList.contains('open')) {
-            closeSidebar(); return;
-        }
-        if (e.key !== 'Tab' || !sidebar || !sidebar.classList.contains('open') || isDesktop()) return;
-        var focusable = sidebar.querySelectorAll('a[href], button:not([disabled]):not([tabindex="-1"]), [tabindex]:not([tabindex="-1"])');
-        if (!focusable.length) return;
-        var first = focusable[0];
-        var last = focusable[focusable.length - 1];
-        if (e.shiftKey) {
-            if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-        } else {
-            if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            if (toggle) toggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+            return;
         }
     });
 
     var links = sidebar ? sidebar.querySelectorAll('.sidebar-link') : [];
     for (var i = 0; i < links.length; i++) {
         links[i].addEventListener('click', function() {
-            if (!isDesktop()) setTimeout(closeSidebar, 150);
+            if (!isDesktop()) setTimeout(function() { toggleSidebar(); }, 150);
         });
     }
 
