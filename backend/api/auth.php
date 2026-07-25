@@ -26,6 +26,8 @@ if ($method !== 'POST') {
     jsonError('Method not allowed', 405);
 }
 
+validateCsrf();
+
 $db = Database::getConnection();
 
 $input = getJsonInput();

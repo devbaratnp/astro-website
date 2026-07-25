@@ -1,4 +1,5 @@
 <?php
+session_set_cookie_params(['lifetime'=>0,'path'=>'/','secure'=>(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off'),'httponly'=>true,'samesite'=>'Strict']);
 session_start();
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/../../backend/includes/helpers.php';
@@ -90,6 +91,7 @@ function renderNav($items, $currentPage, $icons) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/admin.css">
+    <script>var CSRF_TOKEN = '<?= generateCsrfToken() ?>';</script>
 </head>
 <body>
 

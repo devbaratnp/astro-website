@@ -323,6 +323,7 @@ $products = $db->query("SELECT * FROM products ORDER BY category, title_ne")->fe
         var fd = new FormData();
         fd.append('file', file);
         fd.append('type', 'general');
+        fd.append('_csrf', CSRF_TOKEN);
 
         fetch(API_BASE + '/upload.php', {
             method: 'POST',

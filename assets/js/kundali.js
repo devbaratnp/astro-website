@@ -55,7 +55,7 @@
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     toast.classList.remove('show');
-    resultDiv.style.display = 'none';
+    if (resultDiv) resultDiv.style.display = 'none';
 
     var data = {};
     var fd = new FormData(form);
@@ -82,7 +82,7 @@
     .then(function (json) {
       if (!json.success) throw new Error(json.message || 'गणना गर्न सकिएन।');
       renderKundali(json.data.kundali);
-      resultDiv.style.display = 'block';
+      if (resultDiv) resultDiv.style.display = 'block';
       resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
       showToast(json.data.message || 'कुण्डली तयार छ।', 'success');
     })
@@ -120,6 +120,7 @@
 
   function renderTable(k) {
     var tbody = document.querySelector('#graha-table tbody');
+    if (!tbody) return;
     var html = '';
     for (var i = 0; i < P_ORDER.length; i++) {
       var key = P_ORDER[i];
@@ -143,10 +144,14 @@
 
   function renderMeta(k) {
     var sun = k.planets.su;
-    if (sun) {
-      document.getElementById('meta-surya-kranti').textContent = sunDeclination(sun.deg);
+    var metaSurya = document.getElementById('meta-surya-kranti');
+    if (sun && metaSurya) {
+      metaSurya.textContent = sunDeclination(sun.deg);
     }
-    document.getElementById('meta-ishtakal').textContent = k.ishtakal_ghati != null ? k.ishtakal_ghati.toFixed(2) + ' घटी' : '—';
+    var metaIshtakal = document.getElementById('meta-ishtakal');
+    if (metaIshtakal) {
+      metaIshtakal.textContent = k.ishtakal_ghati != null ? k.ishtakal_ghati.toFixed(2) + ' घटी' : '—';
+    }
   }
 
   /* ─── SVG Chart ─── */
@@ -284,7 +289,8 @@
   /* ─── Summary Header ─── */
 
   function renderSummary(k) {
-    document.getElementById('kundali-heading').textContent = k.place + ' — ' + k.date;
+    var heading = document.getElementById('kundali-heading');
+    if (heading) heading.textContent = k.place + ' — ' + k.date;
   }
 
   /* ─── Main Render ─── */

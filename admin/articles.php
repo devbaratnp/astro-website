@@ -238,6 +238,7 @@ $articles = $db->query("SELECT id, title_ne, title_en, slug, is_published, excer
         var fd = new FormData();
         fd.append('file', file);
         fd.append('type', 'article');
+        fd.append('_csrf', CSRF_TOKEN);
 
         fetch(API_BASE + '/upload.php', {
             method: 'POST',

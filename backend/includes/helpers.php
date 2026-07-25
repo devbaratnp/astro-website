@@ -34,8 +34,12 @@ function generateCsrfToken(): string {
 }
 
 function validateCsrf(): void {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
+    if (in_array($_SERVER['REQUEST_METHOD'], ['GET', 'HEAD', 'OPTIONS'], true)) return;
     $token = $_POST['_csrf'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+    if (empty($token)) {
+        $input = getJsonInput();
+        $token = $input['_csrf'] ?? '';
+    }
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }

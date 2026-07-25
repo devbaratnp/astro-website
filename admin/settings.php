@@ -198,6 +198,7 @@ while ($row = $stmt->fetch()) $settings[$row['setting_key']] = $row['setting_val
         var fd = new FormData();
         fd.append('file', file);
         fd.append('type', 'general');
+        fd.append('_csrf', CSRF_TOKEN);
 
         fetch(API_BASE + '/upload.php', {
             method: 'POST',

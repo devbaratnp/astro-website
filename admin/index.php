@@ -1,4 +1,5 @@
 <?php
+session_set_cookie_params(['lifetime'=>0,'path'=>'/','secure'=>(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off'),'httponly'=>true,'samesite'=>'Strict']);
 session_start();
 require_once __DIR__ . '/../backend/config/database.php';
 require_once __DIR__ . '/includes/config.php';
@@ -12,7 +13,7 @@ if (isset($_GET['logout'])) {
 }
 
 $error = '';
-$rememberedUser = $_COOKIE['admin_remember'] ?? '';
+$rememberedUser = isset($_COOKIE['admin_remember']) ? (base64_decode($_COOKIE['admin_remember'], true) ?: '') : '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     validateCsrf();
@@ -27,9 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['admin_role'] = $user['role'];
 
         if (!empty($_POST['remember'])) {
-            setcookie('admin_remember', $_POST['username'], time() + 86400 * 30, '/');
+            setcookie('admin_remember', base64_encode($_POST['username']), time() + 86400 * 30, '/', '', true, true);
         } else {
-            setcookie('admin_remember', '', time() - 3600, '/');
+            setcookie('admin_remember', '', time() - 3600, '/', '', true, true);
         }
 
         header('Location: ' . BASE_URL . '/admin/dashboard.php');

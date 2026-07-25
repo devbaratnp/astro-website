@@ -244,6 +244,7 @@ $testimonials = $db->query("SELECT * FROM testimonials ORDER BY sort_order ASC, 
         var fd = new FormData();
         fd.append('file', file);
         fd.append('type', 'testimonial');
+        fd.append('_csrf', CSRF_TOKEN);
 
         fetch(API_BASE + '/upload.php', {
             method: 'POST',

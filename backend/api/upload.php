@@ -4,6 +4,7 @@ require_once __DIR__ . '/../includes/helpers.php';
 
 if (session_status() === PHP_SESSION_NONE) session_start();
 if (empty($_SESSION['admin_id'])) jsonError('Unauthenticated', 401);
+validateCsrf();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') jsonError('Method not allowed', 405);
 

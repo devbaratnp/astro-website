@@ -288,6 +288,7 @@ function galleryThumb($item) {
         var fd = new FormData();
         fd.append('file', file);
         fd.append('type', 'gallery');
+        fd.append('_csrf', CSRF_TOKEN);
 
         fetch(API_BASE + '/upload.php', {
             method: 'POST',
