@@ -82,8 +82,10 @@
     .then(function (json) {
       if (!json.success) throw new Error(json.message || 'गणना गर्न सकिएन।');
       renderKundali(json.data.kundali);
-      if (resultDiv) resultDiv.style.display = 'block';
-      resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (resultDiv) {
+        resultDiv.style.display = 'block';
+        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
       showToast(json.data.message || 'कुण्डली तयार छ।', 'success');
     })
     .catch(function (err) { showToast(err.message || 'कृपया पुनः प्रयास गर्नुहोस्।', 'error'); });
