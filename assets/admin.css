@@ -223,12 +223,12 @@ svg { display: block; flex-shrink: 0; }
 
 .sidebar-overlay {
   position: fixed; inset: 0; z-index: var(--z-overlay);
-  visibility: hidden; opacity: 0;
+  visibility: hidden; opacity: 0; pointer-events: none;
   background: rgba(25,8,9,.56); backdrop-filter: blur(2px);
   transition: opacity .2s, visibility .2s;
 }
 
-.sidebar-overlay.active { visibility: visible; opacity: 1; }
+.sidebar-overlay.active { visibility: visible; opacity: 1; pointer-events: auto; }
 
 /* ── Desktop sidebar collapse toggle ── */
 

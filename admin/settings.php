@@ -62,7 +62,7 @@ while ($row = $stmt->fetch()) $settings[$row['setting_key']] = $row['setting_val
                 <div class="form-field">
                     <label class="form-label">लोगो URL</label>
                     <div class="file-upload-wrap" data-field="logo_url">
-                        <div class="file-zone" data-field="logo_url" role="button" tabindex="0" aria-label="Upload logo">
+                        <div class="file-zone" data-field="logo_url" data-upload-type="general" role="button" tabindex="0" aria-label="Upload logo">
                             <?php if (!empty($settings['logo_url'])): ?>
                             <img src="<?= htmlspecialchars($settings['logo_url']) ?>" alt="preview" class="file-preview">
                             <?php else: ?>
@@ -78,7 +78,7 @@ while ($row = $stmt->fetch()) $settings[$row['setting_key']] = $row['setting_val
                 <div class="form-field">
                     <label class="form-label">फेभिकन URL</label>
                     <div class="file-upload-wrap" data-field="favicon_url">
-                        <div class="file-zone" data-field="favicon_url" role="button" tabindex="0" aria-label="Upload favicon">
+                        <div class="file-zone" data-field="favicon_url" data-upload-type="general" role="button" tabindex="0" aria-label="Upload favicon">
                             <?php if (!empty($settings['favicon_url'])): ?>
                             <img src="<?= htmlspecialchars($settings['favicon_url']) ?>" alt="preview" class="file-preview" style="max-height:40px;max-width:40px">
                             <?php else: ?>
@@ -124,111 +124,5 @@ while ($row = $stmt->fetch()) $settings[$row['setting_key']] = $row['setting_val
         </form>
     </div>
 </div>
-
-<script>
-(function(){
-    var API_BASE = '<?= BASE_URL ?>/backend/api';
-
-    document.addEventListener('click', function(e) {
-        var clearBtn = e.target.closest('.file-clear');
-        if (clearBtn) {
-            var field = clearBtn.dataset.field;
-            var wrap = document.querySelector('.file-upload-wrap[data-field="' + field + '"]');
-            if (!wrap) return;
-            wrap.querySelector('.file-zone').innerHTML = '<span><span class="upload-icon">☁️</span>Drop image here or click to upload</span>';
-            wrap.querySelector('.file-hidden').value = '';
-            var btn = wrap.querySelector('.file-clear');
-            if (btn) btn.remove();
-        }
-    });
-
-    document.addEventListener('change', function(e) {
-        var zone = e.target.closest('.file-zone');
-        if (!zone) return;
-        var fileInput = zone.querySelector('input[type="file"]');
-        if (fileInput && e.target === fileInput) {
-            uploadImage(fileInput, zone);
-        }
-    });
-
-    document.addEventListener('dragover', function(e) {
-        var zone = e.target.closest('.file-zone');
-        if (zone) { e.preventDefault(); zone.classList.add('drag-over'); }
-    });
-
-    document.addEventListener('dragleave', function(e) {
-        var zone = e.target.closest('.file-zone');
-        if (zone) zone.classList.remove('drag-over');
-    });
-
-    document.addEventListener('drop', function(e) {
-        var zone = e.target.closest('.file-zone');
-        if (!zone) return;
-        e.preventDefault();
-        zone.classList.remove('drag-over');
-        var file = e.dataTransfer.files[0];
-        if (file) uploadImageFile(file, zone.dataset.field);
-    });
-
-    document.addEventListener('click', function(e) {
-        var zone = e.target.closest('.file-zone');
-        if (!zone) return;
-        var input = zone.querySelector('input[type="file"]');
-        if (!input) {
-            input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/jpeg,image/png,image/webp,image/gif,image/svg+xml';
-            input.style.display = 'none';
-            zone.appendChild(input);
-        }
-        input.click();
-    });
-
-    function uploadImage(input, zone) {
-        var file = input.files[0];
-        if (!file) return;
-        uploadImageFile(file, zone.dataset.field);
-    }
-
-    function uploadImageFile(file, field) {
-        var zone = document.querySelector('.file-zone[data-field="' + field + '"]');
-        if (!zone) return;
-        zone.innerHTML = '<span><span class="upload-icon">⏳</span>Uploading...</span>';
-
-        var fd = new FormData();
-        fd.append('file', file);
-        fd.append('type', 'general');
-        fd.append('_csrf', CSRF_TOKEN);
-
-        fetch(API_BASE + '/upload.php', {
-            method: 'POST',
-            credentials: 'same-origin',
-            body: fd
-        })
-        .then(function(r) { return r.json(); })
-        .then(function(d) {
-            if (!d.success) throw new Error(d.message || 'Upload failed');
-            var url = d.data.url;
-            zone.innerHTML = '<img src="' + url + '" alt="preview" class="file-preview">';
-            var wrap = document.querySelector('.file-upload-wrap[data-field="' + field + '"]');
-            if (wrap) {
-                wrap.querySelector('.file-hidden').value = url;
-                if (!wrap.querySelector('.file-clear')) {
-                    var btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = 'file-clear';
-                    btn.dataset.field = field;
-                    btn.setAttribute('aria-label', 'Clear image');
-                    btn.textContent = '✕';
-                    wrap.appendChild(btn);
-                }
-            }
-        })
-        .catch(function(e) {
-            zone.innerHTML = '<span><span class="upload-icon">⚠️</span>Upload failed. Try again.</span>';
-        });
-    }
-})();
-</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

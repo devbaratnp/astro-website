@@ -74,7 +74,7 @@ $appointments = $stmt->fetchAll();
                 <td><?= $a['preferred_time'] ? date('h:i A', strtotime($a['preferred_time'])) : '—' ?></td>
                 <td><?= htmlspecialchars($a['consultation_mode']) ?></td>
                 <td><span class="badge badge-<?= $a['status'] ?>"><?= $a['status'] ?></span></td>
-                <td><button class="btn-sm" onclick="toggleDetails(<?= $a['id'] ?>)" aria-expanded="false">विवरण</button></td>
+                <td><button class="btn-sm" data-action="toggle-details" data-id="<?= $a['id'] ?>" aria-expanded="false">विवरण</button></td>
             </tr>
             <tr id="details-<?= $a['id'] ?>" class="details-row" style="display:none">
                 <td colspan="8">
@@ -156,14 +156,5 @@ $appointments = $stmt->fetchAll();
     </div>
     <?php endforeach; endif; ?>
 </div>
-
-<script>
-function toggleDetails(id) {
-    var row = document.getElementById('details-' + id);
-    if (!row) return;
-    var isHidden = row.style.display === 'none' || row.style.display === '';
-    row.style.display = isHidden ? 'table-row' : 'none';
-}
-</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

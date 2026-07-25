@@ -122,7 +122,7 @@ $services = $db->query("SELECT * FROM pooja_services ORDER BY category, title_ne
                         <div class="action-form">
                             <a href="?edit=<?= $s['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
                             <a href="?toggle=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-outline"><?= $s['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
-                            <a href="?delete=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+                            <a href="?delete=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" data-confirm="पक्का मेटाउने?">मेटाउनुहोस्</a>
                         </div>
                     </td>
                 </tr>
@@ -157,7 +157,7 @@ $services = $db->query("SELECT * FROM pooja_services ORDER BY category, title_ne
         <div class="mobile-record-footer">
             <a href="?edit=<?= $s['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
             <a href="?toggle=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-outline"><?= $s['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
-            <a href="?delete=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+            <a href="?delete=<?= $s['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" data-confirm="पक्का मेटाउने?">मेटाउनुहोस्</a>
         </div>
     </div>
     <?php endforeach; endif; ?>

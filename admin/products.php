@@ -101,7 +101,7 @@ $products = $db->query("SELECT * FROM products ORDER BY category, title_ne")->fe
                 <div class="form-field full">
                     <label class="form-label">उत्पादन छविहरू</label>
                     <div class="file-upload-wrap" data-field="product_images">
-                        <div class="file-zone" data-field="product_images" role="button" tabindex="0" aria-label="Upload product image">
+                        <div class="file-zone" data-field="product_images" data-upload-type="product" role="button" tabindex="0" aria-label="Upload product image">
                             <span><span class="upload-icon">☁️</span>Tap to add product image</span>
                         </div>
                         <input type="hidden" name="image_urls" value='<?= htmlspecialchars($editProduct ? ($editProduct['images'] ?? '[]') : '[]') ?>' class="file-hidden" id="product-images-data">
@@ -152,7 +152,7 @@ $products = $db->query("SELECT * FROM products ORDER BY category, title_ne")->fe
                         <div class="action-form">
                             <a href="?edit=<?= $p['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
                             <a href="?toggle=<?= $p['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-outline"><?= $p['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
-                            <a href="?delete=<?= $p['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+                            <a href="?delete=<?= $p['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" data-confirm="पक्का मेटाउने?">मेटाउनुहोस्</a>
                         </div>
                     </td>
                 </tr>
@@ -191,7 +191,7 @@ $products = $db->query("SELECT * FROM products ORDER BY category, title_ne")->fe
         <div class="mobile-record-footer">
             <a href="?edit=<?= $p['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
             <a href="?toggle=<?= $p['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-outline"><?= $p['is_active'] ? 'निष्क्रिय' : 'सक्रिय' ?></a>
-            <a href="?delete=<?= $p['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+            <a href="?delete=<?= $p['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" data-confirm="पक्का मेटाउने?">मेटाउनुहोस्</a>
         </div>
     </div>
     <?php endforeach; endif; ?>
@@ -239,110 +239,5 @@ $products = $db->query("SELECT * FROM products ORDER BY category, title_ne")->fe
 .multi-preview-remove:hover { background: var(--wine-800); }
 .multi-preview-remove:active { transform: scale(.9); }
 </style>
-
-<script>
-(function(){
-    var API_BASE = '<?= BASE_URL ?>/backend/api';
-
-    function getImageUrls() {
-        var el = document.getElementById('product-images-data');
-        try { return JSON.parse(el.value || '[]'); } catch(e) { return []; }
-    }
-
-    function setImageUrls(urls) {
-        document.getElementById('product-images-data').value = JSON.stringify(urls);
-        renderPreview(urls);
-    }
-
-    function renderPreview(urls) {
-        var container = document.getElementById('product-images-preview');
-        container.innerHTML = urls.map(function(url) {
-            return '<div class="multi-preview-item">' +
-                '<img src="' + url.replace(/'/g, "\\'") + '" alt="">' +
-                '<button type="button" class="multi-preview-remove" data-url="' + url.replace(/'/g, "\\'") + '" aria-label="Remove image">✕</button>' +
-            '</div>';
-        }).join('');
-    }
-
-    document.addEventListener('click', function(e) {
-        var removeBtn = e.target.closest('.multi-preview-remove');
-        if (removeBtn) {
-            var url = removeBtn.dataset.url;
-            var urls = getImageUrls().filter(function(u) { return u !== url; });
-            setImageUrls(urls);
-        }
-    });
-
-    document.addEventListener('click', function(e) {
-        var zone = e.target.closest('.file-zone[data-field="product_images"]');
-        if (!zone) return;
-        var input = zone.querySelector('input[type="file"]');
-        if (!input) {
-            input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/jpeg,image/png,image/webp,image/gif';
-            input.style.display = 'none';
-            zone.appendChild(input);
-        }
-        input.click();
-    });
-
-    document.addEventListener('change', function(e) {
-        var zone = e.target.closest('.file-zone[data-field="product_images"]');
-        if (!zone) return;
-        var fileInput = zone.querySelector('input[type="file"]');
-        if (fileInput && e.target === fileInput && fileInput.files[0]) {
-            uploadProductImage(fileInput.files[0]);
-            fileInput.value = '';
-        }
-    });
-
-    document.addEventListener('dragover', function(e) {
-        var zone = e.target.closest('.file-zone[data-field="product_images"]');
-        if (zone) { e.preventDefault(); zone.classList.add('drag-over'); }
-    });
-
-    document.addEventListener('dragleave', function(e) {
-        var zone = e.target.closest('.file-zone[data-field="product_images"]');
-        if (zone) zone.classList.remove('drag-over');
-    });
-
-    document.addEventListener('drop', function(e) {
-        var zone = e.target.closest('.file-zone[data-field="product_images"]');
-        if (!zone) return;
-        e.preventDefault();
-        zone.classList.remove('drag-over');
-        var file = e.dataTransfer.files[0];
-        if (file) uploadProductImage(file);
-    });
-
-    function uploadProductImage(file) {
-        var zone = document.querySelector('.file-zone[data-field="product_images"]');
-        zone.innerHTML = '<span><span class="upload-icon">⏳</span>Uploading...</span>';
-
-        var fd = new FormData();
-        fd.append('file', file);
-        fd.append('type', 'general');
-        fd.append('_csrf', CSRF_TOKEN);
-
-        fetch(API_BASE + '/upload.php', {
-            method: 'POST',
-            credentials: 'same-origin',
-            body: fd
-        })
-        .then(function(r) { return r.json(); })
-        .then(function(d) {
-            if (!d.success) throw new Error(d.message || 'Upload failed');
-            var urls = getImageUrls();
-            urls.push(d.data.url);
-            setImageUrls(urls);
-            zone.innerHTML = '<span><span class="upload-icon">☁️</span>Tap to add product image</span>';
-        })
-        .catch(function(e) {
-            zone.innerHTML = '<span><span class="upload-icon">⚠️</span>Upload failed. Try again.</span>';
-        });
-    }
-})();
-</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

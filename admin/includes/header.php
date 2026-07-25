@@ -91,9 +91,9 @@ function renderNav($items, $currentPage, $icons) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/admin.css">
-    <script>var CSRF_TOKEN = '<?= generateCsrfToken() ?>';</script>
+    <meta name="csrf-token" content="<?= generateCsrfToken() ?>">
 </head>
-<body>
+<body data-api-base="<?= BASE_URL ?>/backend/api">
 
 <a href="#main-content" class="skip-link">मुख्य सामग्रीमा जानुहोस्</a>
 

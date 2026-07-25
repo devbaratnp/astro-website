@@ -113,7 +113,7 @@ $users = $db->query("SELECT id, username, display_name, role, created_at FROM ad
                         <div class="action-form">
                             <a href="?edit=<?= $u['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
                             <?php if ((int)$u['id'] !== (int)$_SESSION['admin_id']): ?>
-                            <a href="?delete=<?= $u['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+                            <a href="?delete=<?= $u['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" data-confirm="पक्का मेटाउने?">मेटाउनुहोस्</a>
                             <?php endif; ?>
                         </div>
                     </td>
@@ -144,7 +144,7 @@ $users = $db->query("SELECT id, username, display_name, role, created_at FROM ad
         <div class="mobile-record-footer">
             <a href="?edit=<?= $u['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
             <?php if ((int)$u['id'] !== (int)$_SESSION['admin_id']): ?>
-            <a href="?delete=<?= $u['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+            <a href="?delete=<?= $u['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" data-confirm="पक्का मेटाउने?">मेटाउनुहोस्</a>
             <?php endif; ?>
         </div>
     </div>

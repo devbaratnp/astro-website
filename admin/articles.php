@@ -76,7 +76,7 @@ $articles = $db->query("SELECT id, title_ne, title_en, slug, is_published, excer
                 <div class="form-field">
                     <label class="form-label">कभर छवि</label>
                     <div class="file-upload-wrap" data-field="cover_image">
-                        <div class="file-zone" data-field="cover_image" role="button" tabindex="0" aria-label="Upload cover image">
+                        <div class="file-zone" data-field="cover_image" data-upload-type="article" role="button" tabindex="0" aria-label="Upload cover image">
                             <?php if (!empty($editArticle['cover_image'])): ?>
                             <img src="<?= htmlspecialchars($editArticle['cover_image']) ?>" alt="preview" class="file-preview">
                             <?php else: ?>
@@ -121,7 +121,7 @@ $articles = $db->query("SELECT id, title_ne, title_en, slug, is_published, excer
                             <a href="<?= BASE_URL ?>/article/<?= urlencode($a['slug']) ?>" target="_blank" rel="noreferrer" class="btn btn-xs btn-gold">हेर्नुहोस्</a>
                             <?php endif; ?>
                             <a href="?edit=<?= $a['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
-                            <a href="?delete=<?= $a['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+                            <a href="?delete=<?= $a['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" data-confirm="पक्का मेटाउने?">मेटाउनुहोस्</a>
                         </div>
                     </td>
                 </tr>
@@ -158,117 +158,11 @@ $articles = $db->query("SELECT id, title_ne, title_en, slug, is_published, excer
             <a href="<?= BASE_URL ?>/article/<?= urlencode($a['slug']) ?>" target="_blank" rel="noreferrer" class="btn btn-xs btn-gold">हेर्नुहोस्</a>
             <?php endif; ?>
             <a href="?edit=<?= $a['id'] ?>" class="btn btn-xs btn-outline">सम्पादन</a>
-            <a href="?delete=<?= $a['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+            <a href="?delete=<?= $a['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" data-confirm="पक्का मेटाउने?">मेटाउनुहोस्</a>
         </div>
     </div>
     <?php endforeach; endif; ?>
 </div>
 </div>
-
-<script>
-(function(){
-    var API_BASE = '<?= BASE_URL ?>/backend/api';
-
-    document.addEventListener('click', function(e) {
-        var clearBtn = e.target.closest('.file-clear');
-        if (clearBtn) {
-            var field = clearBtn.dataset.field;
-            var wrap = document.querySelector('.file-upload-wrap[data-field="' + field + '"]');
-            if (!wrap) return;
-            wrap.querySelector('.file-zone').innerHTML = '<span><span class="upload-icon">☁️</span>Drop image here or click to upload</span>';
-            wrap.querySelector('.file-hidden').value = '';
-            var btn = wrap.querySelector('.file-clear');
-            if (btn) btn.remove();
-        }
-    });
-
-    document.addEventListener('change', function(e) {
-        var zone = e.target.closest('.file-zone');
-        if (!zone) return;
-        var fileInput = zone.querySelector('input[type="file"]');
-        if (fileInput && e.target === fileInput) {
-            uploadArticleImage(fileInput, zone);
-        }
-    });
-
-    document.addEventListener('dragover', function(e) {
-        var zone = e.target.closest('.file-zone');
-        if (zone) { e.preventDefault(); zone.classList.add('drag-over'); }
-    });
-
-    document.addEventListener('dragleave', function(e) {
-        var zone = e.target.closest('.file-zone');
-        if (zone) zone.classList.remove('drag-over');
-    });
-
-    document.addEventListener('drop', function(e) {
-        var zone = e.target.closest('.file-zone');
-        if (!zone) return;
-        e.preventDefault();
-        zone.classList.remove('drag-over');
-        var file = e.dataTransfer.files[0];
-        if (file) uploadArticleImageFile(file, zone.dataset.field);
-    });
-
-    document.addEventListener('click', function(e) {
-        var zone = e.target.closest('.file-zone');
-        if (!zone) return;
-        var input = zone.querySelector('input[type="file"]');
-        if (!input) {
-            input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/jpeg,image/png,image/webp,image/gif,image/svg+xml';
-            input.style.display = 'none';
-            zone.appendChild(input);
-        }
-        input.click();
-    });
-
-    function uploadArticleImage(input, zone) {
-        var file = input.files[0];
-        if (!file) return;
-        uploadArticleImageFile(file, zone.dataset.field);
-    }
-
-    function uploadArticleImageFile(file, field) {
-        var zone = document.querySelector('.file-zone[data-field="' + field + '"]');
-        if (!zone) return;
-        zone.innerHTML = '<span><span class="upload-icon">⏳</span>Uploading...</span>';
-
-        var fd = new FormData();
-        fd.append('file', file);
-        fd.append('type', 'article');
-        fd.append('_csrf', CSRF_TOKEN);
-
-        fetch(API_BASE + '/upload.php', {
-            method: 'POST',
-            credentials: 'same-origin',
-            body: fd
-        })
-        .then(function(r) { return r.json(); })
-        .then(function(d) {
-            if (!d.success) throw new Error(d.message || 'Upload failed');
-            var url = d.data.url;
-            zone.innerHTML = '<img src="' + url + '" alt="preview" class="file-preview">';
-            var wrap = document.querySelector('.file-upload-wrap[data-field="' + field + '"]');
-            if (wrap) {
-                wrap.querySelector('.file-hidden').value = url;
-                if (!wrap.querySelector('.file-clear')) {
-                    var btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = 'file-clear';
-                    btn.dataset.field = field;
-                    btn.setAttribute('aria-label', 'Clear image');
-                    btn.textContent = '✕';
-                    wrap.appendChild(btn);
-                }
-            }
-        })
-        .catch(function(e) {
-            zone.innerHTML = '<span><span class="upload-icon">⚠️</span>Upload failed. Try again.</span>';
-        });
-    }
-})();
-</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

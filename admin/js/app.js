@@ -166,7 +166,6 @@ function openSidebar() {
   if (sidebar) sidebar.classList.add('open');
   if (overlay) overlay.classList.add('active');
   document.body.style.overflow = 'hidden';
-  // Focus trap: focus close button
   var closeBtn = document.querySelector('.sidebar-close');
   if (closeBtn) setTimeout(function () { closeBtn.focus(); }, 100);
 }
@@ -177,7 +176,6 @@ function closeSidebar() {
   if (sidebar) sidebar.classList.remove('open');
   if (overlay) overlay.classList.remove('active');
   document.body.style.overflow = '';
-  // Return focus to toggle button
   var toggle = document.querySelector('.header-toggle');
   if (toggle) toggle.focus();
 }
@@ -192,7 +190,8 @@ function toggleSidebar(e) {
       openSidebar();
     }
   } else {
-    document.querySelector('.admin-shell').classList.toggle('sidebar-collapsed');
+    var shell = document.querySelector('.admin-shell');
+    if (shell) shell.classList.toggle('sidebar-collapsed');
   }
 }
 
@@ -828,6 +827,10 @@ window.addEventListener('resize', function () {
   if (!isMobile()) {
     closeSidebar();
   }
+});
+
+window.addEventListener('beforeunload', function () {
+  document.body.style.overflow = '';
 });
 
 /* ── File upload ── */

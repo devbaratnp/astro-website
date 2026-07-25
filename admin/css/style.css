@@ -322,10 +322,12 @@ svg { display: block; flex-shrink: 0; }
   z-index: var(--z-overlay);
   -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
+  pointer-events: none;
 }
 
 .sidebar-overlay.active {
   display: block;
+  pointer-events: auto;
 }
 
 /* ── Header ── */

@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/admin.css">
+    <meta name="csrf-token" content="<?= generateCsrfToken() ?>">
 </head>
 <body class="login-page">
     <div class="login-box">
@@ -104,22 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="<?= BASE_URL ?>" class="back-link">← Back to website</a>
     </div>
 
-<script>
-(function(){
-    var toggle = document.getElementById('pwToggle');
-    var pw = document.getElementById('loginPassword');
-    if (toggle && pw) {
-        toggle.addEventListener('click', function(){
-            var show = pw.type === 'password';
-            pw.type = show ? 'text' : 'password';
-            document.getElementById('eyeSlash1').style.display = show ? 'block' : 'none';
-            document.getElementById('eyeSlash2').style.display = show ? 'block' : 'none';
-            document.getElementById('eyeIcon').style.display = show ? 'none' : 'block';
-            document.getElementById('eyePupil').style.display = show ? 'none' : 'block';
-            toggle.setAttribute('aria-label', show ? 'पासवर्ड लुकाउनुहोस्' : 'पासवर्ड देखानुहोस्');
-        });
-    }
-})();
-</script>
+<script src="<?= BASE_URL ?>/admin/js/admin-pages.js" defer></script>
 </body>
 </html>

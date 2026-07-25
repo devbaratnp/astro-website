@@ -61,11 +61,11 @@ $unreadCount = $db->query("SELECT COUNT(*) FROM contact_messages WHERE is_read =
                 <td><?= $m['created_at'] ?></td>
                 <td>
                     <div class="action-form">
-                        <button class="btn-sm" onclick="toggleMsg(<?= $m['id'] ?>)" aria-expanded="false">विवरण</button>
+                        <button class="btn-sm" data-action="toggle-msg" data-id="<?= $m['id'] ?>" aria-expanded="false">विवरण</button>
                         <?php if (!$m['is_read']): ?>
                         <a href="?mark_read=<?= $m['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-primary">पढियो</a>
                         <?php endif; ?>
-                        <a href="?delete=<?= $m['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+                        <a href="?delete=<?= $m['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" data-confirm="पक्का मेटाउने?">मेटाउनुहोस्</a>
                     </div>
                 </td>
             </tr>
@@ -103,23 +103,14 @@ $unreadCount = $db->query("SELECT COUNT(*) FROM contact_messages WHERE is_read =
             </div>
         </div>
         <div class="mobile-record-footer">
-            <button class="btn btn-xs btn-outline" onclick="toggleMsg(<?= $m['id'] ?>)">पूरा विवरण</button>
+            <button class="btn btn-xs btn-outline" data-action="toggle-msg" data-id="<?= $m['id'] ?>">पूरा विवरण</button>
             <?php if (!$m['is_read']): ?>
             <a href="?mark_read=<?= $m['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-primary">पढियो</a>
             <?php endif; ?>
-            <a href="?delete=<?= $m['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" onclick="return confirm('पक्का मेटाउने?')">मेटाउनुहोस्</a>
+            <a href="?delete=<?= $m['id'] ?>&<?= csrfQuery() ?>" class="btn btn-xs btn-danger" data-confirm="पक्का मेटाउने?">मेटाउनुहोस्</a>
         </div>
     </div>
     <?php endforeach; endif; ?>
 </div>
-
-<script>
-function toggleMsg(id) {
-    var row = document.getElementById('msg-' + id);
-    if (!row) return;
-    var isHidden = row.style.display === 'none' || row.style.display === '';
-    row.style.display = isHidden ? 'table-row' : 'none';
-}
-</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
