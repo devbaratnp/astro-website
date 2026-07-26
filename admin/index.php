@@ -102,7 +102,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button class="btn btn-primary" type="submit">लगइन</button>
         </form>
 
-        <a href="<?= BASE_URL ?>" class="back-link">← Back to website</a>
+        <div class="login-links">
+            <a href="<?= BASE_URL ?>/admin/forget-password.php" class="forgot-link">पासवर्ड भुल्नुभयो?</a>
+            <a href="<?= BASE_URL ?>" class="back-link">← Back to website</a>
+        </div>
     </div>
 
 <script src="<?= BASE_URL ?>/admin/js/admin-pages.js" defer></script>

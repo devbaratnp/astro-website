@@ -925,6 +925,15 @@ svg { display: block; flex-shrink: 0; }
   background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;
   padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 18px; text-align: center;
 }
+.login-box .alert-success {
+  background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;
+  padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 18px; text-align: center;
+}
+
+.login-links { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 20px; }
+.login-links .back-link { margin-top: 0; }
+.forgot-link { color: var(--wine-800); font-size: 12px; font-weight: 600; }
+.forgot-link:hover { text-decoration: underline; }
 
 /* ═══════════════════════════════════════════
    RESPONSIVE — TABLET (640px+)
