@@ -430,6 +430,19 @@ button, input, select, textarea { font: inherit; }
   background: rgba(0, 29, 23, .18);
 }
 
+.footer .copyright .footer-credit {
+  display: block;
+  margin-top: 4px;
+}
+
+.footer .copyright .footer-credit a {
+  color: #d7ae4f;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.footer .copyright .footer-credit a:hover { text-decoration: underline; }
+
 .floating-whatsapp {
   position: fixed;
   right: 22px;
