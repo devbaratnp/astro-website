@@ -56,7 +56,9 @@ function renderPublicFooter(array $extraJs = []): void {
             </div>
           </div>
         </div>
-        <div class="copyright">© २०२६ श्रीहरि पूजा भण्डार एवं ज्योतिष परामर्श केन्द्र नेपाल । सर्वाधिकार सुरक्षित।</div>
+        <div class="copyright">© २०२६ श्रीहरि पूजा भण्डार एवं ज्योतिष परामर्श केन्द्र नेपाल । सर्वाधिकार सुरक्षित।
+          <span class="footer-credit">Designed &amp; Developed by <a href="https://isoftro.com" target="_blank" rel="noopener" title="Powered by iSoftro">iSoftro</a></span>
+        </div>
       </footer>
 
       <a class="floating-whatsapp" href="https://wa.me/<?php echo PHONE; ?>" target="_blank" rel="noreferrer" aria-label="WhatsApp">
